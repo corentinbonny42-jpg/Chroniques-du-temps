@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quest of Knights - RPG d'Habitudes Médiéval</title>
+    <title>Chronqiues du temps</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -164,7 +164,7 @@
                             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-900/60 text-red-300 border border-red-700 uppercase tracking-widest">Menace du Royaume</span>
                         </div>
                         <h2 id="boss-name" class="font-medieval text-xl sm:text-2xl font-bold text-amber-200">--</h2>
-                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Accomplissez vos quêtes quotidiennes pour frapper le monstre ! Ne pas accomplir vos devoirs le laissera attaquer votre Chevalier.</p>
+                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Accomplissez vos quêtes quotidiennes pour frapper le monstre ! Ne pas accomplir vos devoirs le laissera vous attaquer.</p>
                     </div>
                 </div>
 
@@ -184,11 +184,11 @@
 
         <!-- ONGLETS DE NAVIGATION -->
         <nav class="flex border-b border-medieval-border gap-2 overflow-x-auto pb-1">
+            <button onclick="switchTab('hero')" id="tab-hero" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
+                <i class="fa-solid fa-user-shield text-amber-400"></i> Tableau de Bord
+            </button>
             <button onclick="switchTab('quests')" id="tab-quests" class="nav-tab active px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap">
                 <i class="fa-solid fa-scroll text-amber-400"></i> Quêtes & Habitudes
-            </button>
-            <button onclick="switchTab('hero')" id="tab-hero" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
-                <i class="fa-solid fa-user-shield text-amber-400"></i> Mon Chevalier
             </button>
             <button onclick="switchTab('shop')" id="tab-shop" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
                 <i class="fa-solid fa-store text-amber-400"></i> Armurerie & Boutique
@@ -200,8 +200,74 @@
                 <i class="fa-solid fa-cubes text-amber-400"></i> Royaume
             </button>
         </nav>
+        
+        <!-- SECTION 1 : MON CHEVALIER & ÉQUIPEMENT -->
+        <section id="content-hero" class="tab-content hidden flex-col gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Carte d'Avatar & Titres -->
+                <div class="bg-medieval-card rounded-2xl border-2 border-medieval-border p-6 flex flex-col items-center text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-2 gold-gradient"></div>
+                    
+                    <span id="hero-title-badge" class="px-3 py-1 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">Écuyer du Royaume</span>
 
-        <!-- SECTION 1 : QUÊTES & HABITUDES -->
+                    <!-- Representation visuelle de l'avatar -->
+                    <div class="relative mb-4 group">
+                        <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-400 shadow-2xl relative z-10">
+                            <i class="fa-solid fa-user-ninja"></i>
+                        </div>
+                        <div class="absolute inset-0 rounded-full bg-amber-500/20 blur-xl"></div>
+                    </div>
+
+                    <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Sir Galahad</h2>
+                    <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4">Lame d'Acier</p>
+
+                    <!-- Bouton Modifier Profil -->
+                    <button onclick="openModal('edit-hero-modal')" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square"></i> Modifier l'Ordre
+                    </button>
+                </div>
+
+                <!-- Statistiques détaillées -->
+                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-6 flex flex-col gap-5 md:col-span-2">
+                    <h3 class="font-medieval text-lg font-bold text-amber-200 border-b border-medieval-border pb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-amber-400"></i> Attributs de Combat
+                    </h3>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
+                            <i class="fa-solid fa-hand-fist text-red-400 text-2xl mb-1"></i>
+                            <div id="stat-str" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div class="text-xs text-stone-400 font-semibold uppercase">Force</div>
+                        </div>
+                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
+                            <i class="fa-solid fa-shield text-blue-400 text-2xl mb-1"></i>
+                            <div id="stat-def" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div class="text-xs text-stone-400 font-semibold uppercase">Défense</div>
+                        </div>
+                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
+                            <i class="fa-solid fa-brain text-purple-400 text-2xl mb-1"></i>
+                            <div id="stat-wis" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div class="text-xs text-stone-400 font-semibold uppercase">Sagesse</div>
+                        </div>
+                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
+                            <i class="fa-solid fa-heart text-emerald-400 text-2xl mb-1"></i>
+                            <div id="stat-end" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div class="text-xs text-stone-400 font-semibold uppercase">Endurance</div>
+                        </div>
+                    </div>
+
+                    <!-- Équipement Actuel -->
+                    <h4 class="font-medieval text-md font-bold text-slate-200 mt-2">Armure & Reliques Équipées</h4>
+                    <div id="equipped-items-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Dynamique via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        
+        <!-- SECTION 2 : QUÊTES & HABITUDES -->
         <section id="content-quests" class="tab-content flex flex-col gap-6">
             
             <!-- Actions Rapides / Ajout de Quêtes -->
@@ -269,71 +335,7 @@
             </div>
         </section>
 
-        <!-- SECTION 2 : MON CHEVALIER & ÉQUIPEMENT -->
-        <section id="content-hero" class="tab-content hidden flex-col gap-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                <!-- Carte d'Avatar & Titres -->
-                <div class="bg-medieval-card rounded-2xl border-2 border-medieval-border p-6 flex flex-col items-center text-center relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-2 gold-gradient"></div>
-                    
-                    <span id="hero-title-badge" class="px-3 py-1 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">Écuyer du Royaume</span>
-
-                    <!-- Representation visuelle de l'avatar -->
-                    <div class="relative mb-4 group">
-                        <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-400 shadow-2xl relative z-10">
-                            <i class="fa-solid fa-user-ninja"></i>
-                        </div>
-                        <div class="absolute inset-0 rounded-full bg-amber-500/20 blur-xl"></div>
-                    </div>
-
-                    <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Sir Galahad</h2>
-                    <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4">Lame d'Acier</p>
-
-                    <!-- Bouton Modifier Profil -->
-                    <button onclick="openModal('edit-hero-modal')" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition flex items-center gap-2">
-                        <i class="fa-solid fa-pen-to-square"></i> Modifier l'Ordre
-                    </button>
-                </div>
-
-                <!-- Statistiques détaillées -->
-                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-6 flex flex-col gap-5 md:col-span-2">
-                    <h3 class="font-medieval text-lg font-bold text-amber-200 border-b border-medieval-border pb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-line text-amber-400"></i> Attributs de Combat
-                    </h3>
-
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
-                            <i class="fa-solid fa-hand-fist text-red-400 text-2xl mb-1"></i>
-                            <div id="stat-str" class="text-2xl font-bold text-slate-100 font-mono">10</div>
-                            <div class="text-xs text-stone-400 font-semibold uppercase">Force</div>
-                        </div>
-                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
-                            <i class="fa-solid fa-shield text-blue-400 text-2xl mb-1"></i>
-                            <div id="stat-def" class="text-2xl font-bold text-slate-100 font-mono">10</div>
-                            <div class="text-xs text-stone-400 font-semibold uppercase">Défense</div>
-                        </div>
-                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
-                            <i class="fa-solid fa-brain text-purple-400 text-2xl mb-1"></i>
-                            <div id="stat-wis" class="text-2xl font-bold text-slate-100 font-mono">10</div>
-                            <div class="text-xs text-stone-400 font-semibold uppercase">Sagesse</div>
-                        </div>
-                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
-                            <i class="fa-solid fa-heart text-emerald-400 text-2xl mb-1"></i>
-                            <div id="stat-end" class="text-2xl font-bold text-slate-100 font-mono">10</div>
-                            <div class="text-xs text-stone-400 font-semibold uppercase">Endurance</div>
-                        </div>
-                    </div>
-
-                    <!-- Équipement Actuel -->
-                    <h4 class="font-medieval text-md font-bold text-slate-200 mt-2">Armure & Reliques Équipées</h4>
-                    <div id="equipped-items-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <!-- Dynamique via JS -->
-                    </div>
-                </div>
-
-            </div>
-        </section>
+        
 
         <!-- SECTION 3 : ARMURERIE & BOUTIQUE -->
         <section id="content-shop" class="tab-content hidden flex-col gap-6">
@@ -582,14 +584,14 @@
 
         // Liste des Bosses
         const BOSSES = [
-            { name: 'Gobelin Voleur de Temps', hp: 80, maxHp: 80, icon: 'fa-skull', rewardGold: 30 },
-            { name: 'Chevalier Noir du Decouragement', hp: 150, maxHp: 150, icon: 'fa-ghost', rewardGold: 60 },
-            { name: 'Dragon de la Procrastination', hp: 300, maxHp: 300, icon: 'fa-dragon', rewardGold: 120 }
+            { name: 'Gobelin Voleur de Poules', hp: 80, maxHp: 80, icon: 'fa-skull', rewardGold: 30 },
+            { name: 'Chevalier Noir', hp: 150, maxHp: 150, icon: 'fa-ghost', rewardGold: 60 },
+            { name: 'Dragon Rubis', hp: 300, maxHp: 300, icon: 'fa-dragon', rewardGold: 120 }
         ];
 
         // Titres par niveau
         const TITLES = [
-            'Écuyer Novice', 'Garde de la Tour', 'Chevalier Errant',
+            'Déjection Humaine', Écuyer Novice', 'Garde de la Tour', 'Chevalier Errant',
             'Capitaine de la Garde', 'Paladin du Royaume', 'Seigneur de Guerre', 'Légende Vivante'
         ];
 
@@ -614,8 +616,8 @@
         // État par défaut
         let state = {
             hero: {
-                name: 'Sir Galahad',
-                title: 'Écuyer Novice',
+                name: 'Jacquouille',
+                title: 'Déjection Humaine',
                 className: 'Lame d\'Acier',
                 avatarIcon: 'fa-user-ninja',
                 level: 1,
@@ -630,10 +632,10 @@
             bossIndex: 0,
             bossHp: 80,
             quests: [
-                { id: '1', title: 'Faire 15 minutes d\'exercice', type: 'daily', difficulty: 'medium', completed: false },
-                { id: '2', title: 'Lire un chapitre d\'un livre', type: 'daily', difficulty: 'easy', completed: false },
+                { id: '1', title: 'Faire 30 minutes d\'exercice', type: 'daily', difficulty: 'medium', completed: false },
+                { id: '2', title: 'Lire 10 pages chapitre d\'un livre', type: 'daily', difficulty: 'easy', completed: false },
                 { id: '3', title: 'Manger un repas équilibré', type: 'habit', difficulty: 'easy' },
-                { id: '4', title: 'Nettoyer le donjon (chambre)', type: 'todo', difficulty: 'medium', completed: false }
+                { id: '4', title: 'Gravir l'Everest', type: 'todo', difficulty: 'hard', completed: false }
             ],
             stats: {
                 completedQuests: 0,
