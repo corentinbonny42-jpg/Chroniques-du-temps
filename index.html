@@ -156,7 +156,7 @@
                         <div class="flex items-center justify-center md:justify-start gap-2">
                             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-900/60 text-red-300 border border-red-700 uppercase tracking-widest">Menace du Royaume</span>
                         </div>
-                        <h2 id="boss-name" class="font-medieval text-xl sm:text-2xl font-bold text-amber-200">Dragon Rouge d'Infernus</h2>
+                        <h2 id="boss-name" class="font-medieval text-xl sm:text-2xl font-bold text-amber-200">Dragon Rouge</h2>
                         <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Accomplissez vos quêtes quotidiennes pour frapper le monstre !</p>
                     </div>
                 </div>
@@ -197,16 +197,16 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-medieval-card rounded-2xl border-2 border-medieval-border p-6 flex flex-col items-center text-center relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-full h-2 gold-gradient"></div>
-                    <span id="hero-title-badge" class="px-3 py-1 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">Écuyer du Royaume</span>
+                    <span id="hero-title-badge" class="px-3 py-1 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">Troubadour</span>
                     <div class="relative mb-4 group">
                         <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-400 shadow-2xl relative z-10">
-                            <i class="fa-solid fa-helmet-safety"></i>
+                            <i class="fa-solid fa-toilet"></i>
                         </div>
                     </div>
-                    <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Sir Galahad</h2>
-                    <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4">Lame d'Acier</p>
+                    <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Jacquouille</h2>
+                    <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4">Templier</p>
                     <button onclick="openModal('edit-hero-modal')" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition flex items-center gap-2">
-                        <i class="fa-solid fa-pen-to-square"></i> Modifier l'Ordre
+                        <i class="fa-solid fa-pen-to-square"></i> Modifier le Héros
                     </button>
                 </div>
 
@@ -217,22 +217,22 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
                             <i class="fa-solid fa-hand-fist text-red-400 text-2xl mb-1"></i>
-                            <div id="stat-str" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div id="stat-str" class="text-2xl font-bold text-slate-100 font-mono">0</div>
                             <div class="text-xs text-stone-400 font-semibold uppercase">Force</div>
                         </div>
                         <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
                             <i class="fa-solid fa-shield text-blue-400 text-2xl mb-1"></i>
-                            <div id="stat-def" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div id="stat-def" class="text-2xl font-bold text-slate-100 font-mono">0</div>
                             <div class="text-xs text-stone-400 font-semibold uppercase">Défense</div>
                         </div>
                         <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
                             <i class="fa-solid fa-brain text-purple-400 text-2xl mb-1"></i>
-                            <div id="stat-wis" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div id="stat-wis" class="text-2xl font-bold text-slate-100 font-mono">0</div>
                             <div class="text-xs text-stone-400 font-semibold uppercase">Sagesse</div>
                         </div>
                         <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
                             <i class="fa-solid fa-heart text-emerald-400 text-2xl mb-1"></i>
-                            <div id="stat-end" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div id="stat-end" class="text-2xl font-bold text-slate-100 font-mono">0</div>
                             <div class="text-xs text-stone-400 font-semibold uppercase">Endurance</div>
                         </div>
                     </div>
@@ -457,10 +457,10 @@
                 hp: 50,
                 hpMax: 50,
                 gold: 50,
-                stats: { str: 10, def: 10, wis: 10, end: 10 }
+                stats: { str: 00, def: 00, wis: 00, end: 00 }
             },
             boss: {
-                name: "Dragon Rouge d'Infernus",
+                name: "Dragon Rouge",
                 hp: 100,
                 hpMax: 100,
                 defeated: 0
@@ -468,7 +468,7 @@
             quests: [
                 { id: '1', title: 'Faire 20 pompes', type: 'daily', difficulty: 'medium', completed: false },
                 { id: '2', title: 'Boire 2L d\'eau', type: 'habit', difficulty: 'easy', streak: 2 },
-                { id: '3', title: 'Nettoyer le château', type: 'todo', difficulty: 'hard', completed: false }
+                { id: '3', title: 'Gravir l'Everest', type: 'todo', difficulty: 'hard', completed: false }
             ],
             inventory: [],
             buildingsPurchased: ['cabane'],
