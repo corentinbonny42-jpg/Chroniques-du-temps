@@ -127,7 +127,7 @@
 
             <!-- Actions globales -->
             <div class="flex items-center gap-2">
-                <button onclick="openModal('backup-modal')" title="Sauvegarde & Export" class="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-400 border border-amber-900/50 rounded-lg text-xs font-semibold flex items-center gap-2 transition">
+                <button onclick="openModal('backup-modal')" title="Sauvegarde & Export" class="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-400 border border-amber-900/50 rounded-lg text-xs transition">
                     <i class="fa-solid fa-floppy-disk"></i>
                     <span class="hidden sm:inline">Sauvegarde</span>
                 </button>
@@ -149,7 +149,7 @@
             
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="flex items-center gap-4 text-center md:text-left w-full md:w-auto">
-                    <div id="boss-avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-red-900/40 border-2 border-red-500/50 flex items-center justify-center text-3xl sm:text-4xl text-red-400 shadow-inner flex-shrink-0 animate-float">
+                    <div id="boss-avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-red-900/40 border-2 border-red-500/50 flex items-center justify-center text-3xl sm:text-4xl text-red-400 shadow-lg">
                         <i class="fa-solid fa-dragon"></i>
                     </div>
                     <div class="flex-1">
@@ -175,19 +175,19 @@
 
         <!-- ONGLETS DE NAVIGATION -->
         <nav class="flex border-b border-medieval-border gap-2 overflow-x-auto pb-1">
-            <button onclick="switchTab('hero')" id="tab-hero" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
+            <button onclick="switchTab('hero')" id="tab-hero" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-300 hover:text-amber-200 border-transparent">
                 <i class="fa-solid fa-user-shield text-amber-400"></i> Tableau de Bord
             </button>
-            <button onclick="switchTab('quests')" id="tab-quests" class="nav-tab active px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap">
+            <button onclick="switchTab('quests')" id="tab-quests" class="nav-tab active px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-300 hover:text-amber-200 border-transparent">
                 <i class="fa-solid fa-scroll text-amber-400"></i> Quêtes & Habitudes
             </button>
-            <button onclick="switchTab('shop')" id="tab-shop" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
+            <button onclick="switchTab('shop')" id="tab-shop" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-300 hover:text-amber-200 border-transparent">
                 <i class="fa-solid fa-store text-amber-400"></i> Armurerie & Boutique
             </button>
-            <button onclick="switchTab('stats')" id="tab-stats" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
+            <button onclick="switchTab('stats')" id="tab-stats" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-300 hover:text-amber-200 border-transparent">
                 <i class="fa-solid fa-trophy text-amber-400"></i> Succès & Distinctions
             </button>
-            <button onclick="switchTab('world')" id="tab-world" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
+            <button onclick="switchTab('world')" id="tab-world" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-300 hover:text-amber-200 border-transparent">
                 <i class="fa-solid fa-cubes text-amber-400"></i> Royaume
             </button>
         </nav>
@@ -199,13 +199,13 @@
                     <div class="absolute top-0 left-0 w-full h-2 gold-gradient"></div>
                     <span id="hero-title-badge" class="px-3 py-1 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">Troubadour</span>
                     <div class="relative mb-4 group">
-                        <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-400 shadow-2xl relative z-10">
+                        <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-300 shadow-[0_0_30px_rgba(212,175,55,0.25)]">
                             <i class="fa-solid fa-toilet"></i>
                         </div>
                     </div>
                     <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Jacquouille</h2>
                     <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4">Templier</p>
-                    <button onclick="openModal('edit-hero-modal')" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition flex items-center gap-2">
+                    <button onclick="openModal('edit-hero-modal')" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition">
                         <i class="fa-solid fa-pen-to-square"></i> Modifier le Héros
                     </button>
                 </div>
@@ -252,7 +252,7 @@
                         <p class="text-xs text-stone-400">Forgez de bonnes habitudes pour renforcer le Royaume</p>
                     </div>
                 </div>
-                <button onclick="openModal('add-quest-modal')" class="w-full sm:w-auto px-5 py-2.5 gold-gradient hover:brightness-110 text-stone-900 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm">
+                <button onclick="openModal('add-quest-modal')" class="w-full sm:w-auto px-5 py-2.5 gold-gradient hover:brightness-110 text-stone-900 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-plus"></i> Forger une Quête
                 </button>
             </div>
@@ -361,7 +361,7 @@
     <!-- MODALES -->
 
     <!-- Modal 1: Ajouter une Quête -->
-    <div id="add-quest-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div id="add-quest-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
             <button onclick="closeModal('add-quest-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
@@ -397,7 +397,7 @@
     </div>
 
     <!-- Modal 2: Éditer le Chevalier -->
-    <div id="edit-hero-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div id="edit-hero-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
             <button onclick="closeModal('edit-hero-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
@@ -425,7 +425,7 @@
     </div>
 
     <!-- Modal 3: Sauvegarde / Importation -->
-    <div id="backup-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div id="backup-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
             <button onclick="closeModal('backup-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
@@ -437,7 +437,7 @@
                 </button>
                 <div class="border-t border-medieval-border pt-4">
                     <label class="block text-xs font-semibold text-stone-300 mb-2">Importer un fichier de sauvegarde</label>
-                    <input type="file" id="import-file" accept=".json" onchange="importData(event)" class="text-xs text-stone-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-600 file:text-stone-950 hover:file:bg-amber-500">
+                    <input type="file" id="import-file" accept=".json" onchange="importData(event)" class="text-xs text-stone-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-amber-500 file:text-stone-950 hover:file:bg-amber-400">
                 </div>
             </div>
         </div>
@@ -468,7 +468,7 @@
             quests: [
                 { id: '1', title: 'Faire 20 pompes', type: 'daily', difficulty: 'medium', completed: false },
                 { id: '2', title: 'Boire 2L d\'eau', type: 'habit', difficulty: 'easy', streak: 2 },
-                { id: '3', title: 'Gravir l'Everest', type: 'todo', difficulty: 'hard', completed: false }
+                { id: '3', title: 'Gravir l\'Everest', type: 'todo', difficulty: 'hard', completed: false }
             ],
             inventory: [],
             buildingsPurchased: ['cabane'],
@@ -518,7 +518,10 @@
         // --- GESTION DES ONGLETS & MODALES ---
         function switchTab(tabId) {
             document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.tab-content').forEach(c => {
+                c.classList.add('hidden');
+                c.classList.remove('flex');
+            });
             
             const btn = document.getElementById('tab-' + tabId);
             const content = document.getElementById('content-' + tabId);
@@ -532,12 +535,22 @@
             }
         }
 
-        function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+        function openModal(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.remove('hidden');
+            el.classList.add('flex');
+        }
+
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.add('hidden');
+            el.classList.remove('flex');
+        }
 
         // --- RENDU GÉNÉRAL ---
         function renderAll() {
-            // Stats Header
             const h = gameState.hero;
             document.getElementById('header-stats').innerHTML = `
                 <span class="text-amber-300 font-bold">Niv. ${h.level}</span>
@@ -545,13 +558,11 @@
                 <span class="text-amber-400 font-bold"><i class="fa-solid fa-coins"></i> ${h.gold}</span>
             `;
 
-            // Boss
             const b = gameState.boss;
             document.getElementById('boss-name').innerText = b.name;
             document.getElementById('boss-hp-text').innerText = `${b.hp} / ${b.hpMax}`;
             document.getElementById('boss-hp-bar').style.width = `${Math.max(0, (b.hp / b.hpMax) * 100)}%`;
 
-            // Hero Tab
             document.getElementById('hero-name-display').innerText = h.name;
             document.getElementById('hero-class-display').innerText = h.class;
             document.getElementById('stat-str').innerText = h.stats.str;
@@ -559,15 +570,9 @@
             document.getElementById('stat-wis').innerText = h.stats.wis;
             document.getElementById('stat-end').innerText = h.stats.end;
 
-            // Quests
             renderQuests();
-
-            // Shop
             renderShop();
-
-            // World Shop
             renderWorldShop();
-
             saveGame();
         }
 
@@ -596,7 +601,7 @@
                 } else if (q.type === 'daily') {
                     card.innerHTML = `
                         <span class="text-sm font-semibold ${q.completed ? 'line-through text-stone-500' : ''}">${q.title}</span>
-                        <button onclick="triggerQuest('${q.id}', true)" ${q.completed ? 'disabled' : ''} class="px-3 py-1 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-600' : 'bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold'} text-xs">
+                        <button onclick="triggerQuest('${q.id}', true)" ${q.completed ? 'disabled' : ''} class="px-3 py-1 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-600' : 'bg-amber-600 hover:bg-amber-500 text-stone-950'} text-xs font-bold">
                             ${q.completed ? 'Fait' : 'Valider'}
                         </button>
                     `;
@@ -604,7 +609,7 @@
                 } else {
                     card.innerHTML = `
                         <span class="text-sm font-semibold ${q.completed ? 'line-through text-stone-500' : ''}">${q.title}</span>
-                        <button onclick="triggerQuest('${q.id}', true)" ${q.completed ? 'disabled' : ''} class="px-3 py-1 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-600' : 'bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-bold'} text-xs">
+                        <button onclick="triggerQuest('${q.id}', true)" ${q.completed ? 'disabled' : ''} class="px-3 py-1 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-600' : 'bg-emerald-600 hover:bg-emerald-500 text-stone-950'} text-xs font-bold">
                             ${q.completed ? 'Accompli' : 'Terminer'}
                         </button>
                     `;
@@ -645,7 +650,6 @@
 
                 if (q.type !== 'habit') q.completed = true;
 
-                // Level Up Check
                 if (gameState.hero.xp >= gameState.hero.xpMax) {
                     gameState.hero.level++;
                     gameState.hero.xp = 0;
@@ -770,13 +774,11 @@
             const originX = canvas.width / 2;
             const originY = 80;
 
-            // Dessin des cases
             for (let x = 0; x < N; x++) {
                 for (let y = 0; y < N; y++) {
                     const isoX = originX + (x - y) * (tileWidth / 2);
                     const isoY = originY + (x + y) * (tileHeight / 2);
 
-                    // Case
                     ctx.beginPath();
                     ctx.moveTo(isoX, isoY);
                     ctx.lineTo(isoX + tileWidth / 2, isoY + tileHeight / 2);
@@ -789,7 +791,6 @@
                     ctx.strokeStyle = '#4A5568';
                     ctx.stroke();
 
-                    // Bâtiment
                     const key = `${x},${y}`;
                     if (gameState.world.placedBuildings[key]) {
                         const bKey = gameState.world.placedBuildings[key];
@@ -797,7 +798,6 @@
                         ctx.fillRect(isoX - 10, isoY - 15, 20, 20);
                     }
 
-                    // Chevalier
                     if (gameState.world.knightPos.x === x && gameState.world.knightPos.y === y) {
                         ctx.fillStyle = '#FFE259';
                         ctx.beginPath();
