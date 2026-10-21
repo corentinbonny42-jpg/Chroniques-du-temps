@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest of Knights - RPG d'Habitudes Médiéval</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        medieval: {
+                            gold: '#D4AF37',
+                            'gold-dark': '#AA820A',
+                            crimson: '#800020',
+                            steel: '#4A5568',
+                            wood: '#3D2314',
+                            parchment: '#F4E8C1',
+                            'parchment-dark': '#2A241E',
+                            bg: '#121110',
+                            card: '#1D1A17',
+                            border: '#3A332C'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'Georgia', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121110;
+            color: #E2E8F0;
+            background-image: radial-gradient(#2A241E 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        
+        .font-medieval {
+            font-family: 'Cinzel', serif;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #FFE259 0%, #FFA751 100%);
+        }
+
+        .gold-text-gradient {
+            background: linear-gradient(135deg, #FFF099 0%, #D4AF37 50%, #AA820A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .crimson-gradient {
+            background: linear-gradient(135deg, #990000 0%, #550000 100%);
+        }
+
+        .medieval-border {
+            border: 2px solid #D4AF37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .medieval-card {
+            background: rgba(29, 26, 23, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid #3A332C;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121110;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3A332C;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+        }
+        .pulse-gold {
+            animation: pulse-gold 3s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-200 antialiased selection:bg-amber-500 selection:text-black">
+
+    <!-- BARRE SUPÉRIEURE DE NAVIGATION ET PROGRES -->
+    <header class="sticky top-0 z-50 bg-medieval-bg/95 backdrop-blur border-b border-medieval-border px-4 py-3 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            
+            <!-- Logo & Titre -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg gold-gradient flex items-center justify-center text-slate-900 shadow-lg text-xl font-bold border border-amber-200">
+                    <i class="fa-solid fa-jedi"></i>
+                </div>
+                <div>
+                    <h1 class="font-medieval text-lg sm:text-xl font-bold tracking-wider gold-text-gradient">Chroniques du temps</h1>
+                    <p class="text-xs text-amber-500/80 font-serif">Ordre de Chevalerie</p>
+                </div>
+            </div>
+
+            <!-- Stats rapides Hero (Niveau, XP, Écus, PV) -->
+            <div id="header-stats" class="flex items-center gap-3 sm:gap-6 text-sm bg-black/40 px-4 py-2 rounded-xl border border-medieval-border">
+                <!-- Dynamique via JS -->
+            </div>
+
+            <!-- Actions globales (Sauvegarde/Restauration/Titre) -->
+            <div class="flex items-center gap-2">
+                <button onclick="openModal('backup-modal')" title="Sauvegarde & Export" class="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-400 border border-amber-900/50 rounded-lg text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span class="hidden sm:inline">Sauvegarde</span>
+                </button>
+                <button onclick="resetGame()" title="Réinitialiser le jeu" class="px-2.5 py-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800/40 rounded-lg text-xs transition">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENU PRINCIPAL & NAVIGATION -->
+    <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-1 flex flex-col gap-6">
+
+        <!-- BOSS DU ROYAUME (BANNIÈRE DE COMBAT) -->
+        <section id="boss-banner" class="relative overflow-hidden rounded-2xl border-2 border-red-900/60 bg-gradient-to-r from-red-950/80 via-stone-900/90 to-amber-950/80 p-5 shadow-2xl">
+            <!-- Arrière-plan SVG subtil -->
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-red-500 text-9xl pointer-events-none">
+                <i class="fa-solid fa-dragon"></i>
+            </div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <!-- Infos Boss -->
+                <div class="flex items-center gap-4 text-center md:text-left w-full md:w-auto">
+                    <div id="boss-avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-red-900/40 border-2 border-red-500/50 flex items-center justify-center text-3xl sm:text-4xl text-red-400 shadow-inner flex-shrink-0 animate-float">
+                        <!-- Dynamique JS -->
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-center md:justify-start gap-2">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-900/60 text-red-300 border border-red-700 uppercase tracking-widest">Menace du Royaume</span>
+                        </div>
+                        <h2 id="boss-name" class="font-medieval text-xl sm:text-2xl font-bold text-amber-200">--</h2>
+                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Accomplissez vos quêtes quotidiennes pour frapper le monstre ! Ne pas accomplir vos devoirs le laissera attaquer votre Chevalier.</p>
+                    </div>
+                </div>
+
+                <!-- Barre de vie du Boss -->
+                <div class="w-full md:w-80 bg-black/60 p-3 rounded-xl border border-red-900/40 flex flex-col gap-2">
+                    <div class="flex justify-between text-xs font-bold">
+                        <span class="text-red-400 flex items-center gap-1"><i class="fa-solid fa-heart-pulse"></i> Santé du Boss</span>
+                        <span id="boss-hp-text" class="text-amber-300">100 / 100</span>
+                    </div>
+                    <div class="w-full bg-stone-900 h-4 rounded-full overflow-hidden border border-red-950/80 p-0.5">
+                        <div id="boss-hp-bar" class="h-full bg-gradient-to-r from-red-700 via-red-500 to-amber-500 rounded-full transition-all duration-500" style="width: 100%"></div>
+                    </div>
+                    <p class="text-[10px] text-right text-stone-400 italic">Dégâts infligés par vos victoires aujourd'hui !</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ONGLETS DE NAVIGATION -->
+        <nav class="flex border-b border-medieval-border gap-2 overflow-x-auto pb-1">
+            <button onclick="switchTab('quests')" id="tab-quests" class="nav-tab active px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap">
+                <i class="fa-solid fa-scroll text-amber-400"></i> Quêtes & Habitudes
+            </button>
+            <button onclick="switchTab('hero')" id="tab-hero" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
+                <i class="fa-solid fa-user-shield text-amber-400"></i> Mon Chevalier
+            </button>
+            <button onclick="switchTab('shop')" id="tab-shop" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
+                <i class="fa-solid fa-store text-amber-400"></i> Armurerie & Boutique
+            </button>
+            <button onclick="switchTab('stats')" id="tab-stats" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
+                <i class="fa-solid fa-trophy text-amber-400"></i> Succès & Hautes Distinctions
+            </button>
+            <button onclick="switchTab('world')" id="tab-world" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-400 border-transparent hover:text-stone-200">
+                <i class="fa-solid fa-cubes text-amber-400"></i> Royaume
+            </button>
+        </nav>
+
+        <!-- SECTION 1 : QUÊTES & HABITUDES -->
+        <section id="content-quests" class="tab-content flex flex-col gap-6">
+            
+            <!-- Actions Rapides / Ajout de Quêtes -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-medieval-card p-4 rounded-xl border border-medieval-border">
+                <div class="flex items-center gap-3">
+                    <span class="text-amber-400 text-xl"><i class="fa-solid fa-circle-plus"></i></span>
+                    <div>
+                        <h3 class="font-medieval text-base font-bold text-amber-100">Nouvelle Tâche ou Habitude</h3>
+                        <p class="text-xs text-stone-400">Forgez de bonnes habitudes pour renforcer le Royaume</p>
+                    </div>
+                </div>
+                <button onclick="openModal('add-quest-modal')" class="w-full sm:w-auto px-5 py-2.5 gold-gradient hover:brightness-110 text-stone-900 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-plus"></i> Forger une Quête
+                </button>
+            </div>
+
+            <!-- Colonnes des Tâches / Quêtes -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- 1. HABITUDES (Bonus / Malus) -->
+                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col gap-4">
+                    <div class="flex items-center justify-between border-b border-medieval-border pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                            <h3 class="font-medieval text-base font-bold text-slate-200">Habitudes</h3>
+                        </div>
+                        <span id="count-habits" class="text-xs bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full font-mono">0</span>
+                    </div>
+                    <p class="text-xs text-stone-400 italic">Actions fréquentes. Cliquez sur + si accomplie, ou - si manquée.</p>
+                    <div id="list-habits" class="flex flex-col gap-3 min-h-[150px]">
+                        <!-- Rempli par JS -->
+                    </div>
+                </div>
+
+                <!-- 2. QUÊTES QUOTIDIENNES (Dailies) -->
+                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col gap-4">
+                    <div class="flex items-center justify-between border-b border-medieval-border pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                            <h3 class="font-medieval text-base font-bold text-slate-200">Quêtes Quotidiennes</h3>
+                        </div>
+                        <span id="count-dailies" class="text-xs bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full font-mono">0</span>
+                    </div>
+                    <p class="text-xs text-stone-400 italic">À réaliser chaque jour. Se réinitialisent à minuit.</p>
+                    <div id="list-dailies" class="flex flex-col gap-3 min-h-[150px]">
+                        <!-- Rempli par JS -->
+                    </div>
+                </div>
+
+                <!-- 3. DEVOIRS PONCTUELS (To-Do) -->
+                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col gap-4">
+                    <div class="flex items-center justify-between border-b border-medieval-border pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                            <h3 class="font-medieval text-base font-bold text-slate-200">Hauts faits</h3>
+                        </div>
+                        <span id="count-todos" class="text-xs bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full font-mono">0</span>
+                    </div>
+                    <p class="text-xs text-stone-400 italic">Objectifs uniques à accomplir une seule fois.</p>
+                    <div id="list-todos" class="flex flex-col gap-3 min-h-[150px]">
+                        <!-- Rempli par JS -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2 : MON CHEVALIER & ÉQUIPEMENT -->
+        <section id="content-hero" class="tab-content hidden flex-col gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Carte d'Avatar & Titres -->
+                <div class="bg-medieval-card rounded-2xl border-2 border-medieval-border p-6 flex flex-col items-center text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-2 gold-gradient"></div>
+                    
+                    <span id="hero-title-badge" class="px-3 py-1 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">Écuyer du Royaume</span>
+
+                    <!-- Representation visuelle de l'avatar -->
+                    <div class="relative mb-4 group">
+                        <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-400 shadow-2xl relative z-10">
+                            <i class="fa-solid fa-user-ninja"></i>
+                        </div>
+                        <div class="absolute inset-0 rounded-full bg-amber-500/20 blur-xl"></div>
+                    </div>
+
+                    <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Sir Galahad</h2>
+                    <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4">Lame d'Acier</p>
+
+                    <!-- Bouton Modifier Profil -->
+                    <button onclick="openModal('edit-hero-modal')" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square"></i> Modifier l'Ordre
+                    </button>
+                </div>
+
+                <!-- Statistiques détaillées -->
+                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-6 flex flex-col gap-5 md:col-span-2">
+                    <h3 class="font-medieval text-lg font-bold text-amber-200 border-b border-medieval-border pb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-amber-400"></i> Attributs de Combat
+                    </h3>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
+                            <i class="fa-solid fa-hand-fist text-red-400 text-2xl mb-1"></i>
+                            <div id="stat-str" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div class="text-xs text-stone-400 font-semibold uppercase">Force</div>
+                        </div>
+                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
+                            <i class="fa-solid fa-shield text-blue-400 text-2xl mb-1"></i>
+                            <div id="stat-def" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div class="text-xs text-stone-400 font-semibold uppercase">Défense</div>
+                        </div>
+                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
+                            <i class="fa-solid fa-brain text-purple-400 text-2xl mb-1"></i>
+                            <div id="stat-wis" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div class="text-xs text-stone-400 font-semibold uppercase">Sagesse</div>
+                        </div>
+                        <div class="bg-black/40 p-4 rounded-xl border border-stone-800 text-center">
+                            <i class="fa-solid fa-heart text-emerald-400 text-2xl mb-1"></i>
+                            <div id="stat-end" class="text-2xl font-bold text-slate-100 font-mono">10</div>
+                            <div class="text-xs text-stone-400 font-semibold uppercase">Endurance</div>
+                        </div>
+                    </div>
+
+                    <!-- Équipement Actuel -->
+                    <h4 class="font-medieval text-md font-bold text-slate-200 mt-2">Armure & Reliques Équipées</h4>
+                    <div id="equipped-items-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Dynamique via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3 : ARMURERIE & BOUTIQUE -->
+        <section id="content-shop" class="tab-content hidden flex-col gap-6">
+            <div class="bg-medieval-card p-4 rounded-2xl border border-medieval-border flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <h3 class="font-medieval text-lg font-bold text-amber-200">Boutique du Royaume</h3>
+                    <p class="text-xs text-stone-400">Échangez vos Écus d'Or gagnés à la sueur de vos devoirs contre de prestigieux équipements.</p>
+                </div>
+                <div class="flex items-center gap-2 bg-black/60 px-4 py-2 rounded-xl border border-amber-500/40 text-amber-400 font-bold font-mono">
+                    <i class="fa-solid fa-coins text-amber-400 text-lg"></i>
+                    <span id="shop-gold-display">0</span> Écus
+                </div>
+            </div>
+
+            <!-- Grille de la Boutique -->
+            <div id="shop-items-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Rempli par JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 4 : STATISTIQUES & SUCCÈS -->
+        <section id="content-stats" class="tab-content hidden flex-col gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Résumé des hauts faits -->
+                <div class="bg-medieval-card p-6 rounded-2xl border border-medieval-border flex flex-col gap-4">
+                    <h3 class="font-medieval text-lg font-bold text-amber-200 border-b border-medieval-border pb-2">
+                        <i class="fa-solid fa-book-bookmark text-amber-400"></i> Bilan des Vertus
+                    </h3>
+                    
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between items-center py-1 border-b border-stone-800">
+                            <span class="text-stone-400">Quêtes Validées</span>
+                            <span id="stat-completed-quests" class="font-bold text-amber-400 font-mono">0</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1 border-b border-stone-800">
+                            <span class="text-stone-400">Boss Vaincus</span>
+                            <span id="stat-bosses-slain" class="font-bold text-red-400 font-mono">0</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1 border-b border-stone-800">
+                            <span class="text-stone-400">Écus Amassés au total</span>
+                            <span id="stat-total-gold" class="font-bold text-amber-300 font-mono">0</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1">
+                            <span class="text-stone-400">Série Actuelle (Jours)</span>
+                            <span id="stat-streak-days" class="font-bold text-emerald-400 font-mono">1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Liste des Succès / Achievements -->
+                <div class="bg-medieval-card p-6 rounded-2xl border border-medieval-border md:col-span-2 flex flex-col gap-4">
+                    <h3 class="font-medieval text-lg font-bold text-amber-200 border-b border-medieval-border pb-2">
+                        <i class="fa-solid fa-medal text-amber-400"></i> Hauts Faits du Chevalier
+                    </h3>
+                    <div id="achievements-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Dynamique via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 5 : ROYAUME 3D ISOMÉTRIQUE (STYLE DOFUS) -->
+        <section id="content-world" class="tab-content hidden flex-col gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                
+                <!-- Vue du canvas Isométrique -->
+                <div class="lg:col-span-3 bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col items-center justify-center relative min-h-[460px]">
+                    <div class="absolute top-4 left-4 z-10 flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-black/80 border border-amber-500/40 rounded-xl text-xs text-amber-300 font-mono font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-chess-board"></i> Grille : <span id="world-grid-size-display">5x5</span>
+                        </span>
+                        <span id="building-selected-badge" class="px-3 py-1 bg-amber-950/90 border border-amber-500 rounded-xl text-xs text-amber-200 font-bold hidden flex items-center gap-1">
+                            <i class="fa-solid fa-hand-pointer"></i> Mode Pose : <span id="selected-building-name">--</span>
+                        </span>
+                    </div>
+
+                    <div class="absolute top-4 right-4 z-10 flex gap-2">
+                        <button onclick="clearSelectedBuilding()" class="px-3 py-1 bg-stone-800 hover:bg-stone-700 border border-stone-600 rounded-xl text-xs text-stone-300 font-bold transition">
+                            <i class="fa-solid fa-xmark"></i> Annuler la Pose
+                        </button>
+                    </div>
+
+                    <!-- Canvas Isométrique 3D -->
+                    <canvas id="isometric-canvas" class="cursor-pointer max-w-full rounded-xl"></canvas>
+
+                    <p class="text-[11px] text-stone-400 mt-2 italic flex items-center gap-1">
+                        <i class="fa-solid fa-circle-info"></i> Cliquez sur une case pour déplacer Sir Chevalier ou pour poser un bâtiment acheté !
+                    </p>
+                </div>
+
+                <!-- Panneau Latéral : Boutique de Bâtiments & Extensions -->
+                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col gap-4">
+                    <h3 class="font-medieval text-base font-bold text-amber-200 border-b border-medieval-border pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-campground text-amber-400"></i> Bâtiments du Royaume
+                    </h3>
+
+                    <!-- Liste des Bâtiments Achetables -->
+                    <div id="building-shop-list" class="flex flex-col gap-3 overflow-y-auto max-h-[300px] pr-1">
+                        <!-- Dynamique via JS -->
+                    </div>
+
+                    <hr class="border-medieval-border">
+
+                    <!-- Extension du Domaine -->
+                    <div class="bg-black/40 p-3 rounded-xl border border-stone-800 flex flex-col gap-2">
+                        <h4 class="text-xs font-bold text-amber-300 font-medieval flex items-center gap-1">
+                            <i class="fa-solid fa-expand text-amber-400"></i> Agrandir le Domaine
+                        </h4>
+                        <p class="text-[11px] text-stone-400">Étendez la grille de votre échiquier (+1 case en largeur/longueur) pour bâtir plus !</p>
+                        <button onclick="expandGrid()" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow">
+                            <i class="fa-solid fa-coins"></i> Extension (<span id="expand-cost-display">100</span> Écus)
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PIED DE PAGE -->
+    <footer class="border-t border-medieval-border bg-black/60 py-4 px-4 text-center text-xs text-stone-500">
+        <p>Chroniques du temps - Ordre de chevalerie. Forgez vos habitudes, bâtissez votre légende.</p>
+    </footer>
+
+    <!-- MODALES -->
+
+    <!-- Modal 1: Ajouter / Éditer une Quête -->
+    <div id="add-quest-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('add-quest-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="font-medieval text-xl font-bold text-amber-200 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-scroll text-amber-400"></i> Forger une Quête
+            </h3>
+
+            <form id="form-quest" onsubmit="saveQuest(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Titre du Devoir / Habitude</label>
+                    <input type="text" id="quest-title" required placeholder="Ex: Faire 20 pompes, Lire 15 min..." class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Type de Quête</label>
+                    <select id="quest-type" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                        <option value="habit">Habitude (Positives/Négatives régulières)</option>
+                        <option value="daily">Quotidienne (À faire chaque jour)</option>
+                        <option value="todo">Devoir Ponctuel (Tâche à faire une fois)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Difficulté / Récompense</label>
+                    <select id="quest-difficulty" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                        <option value="easy">Facile (10 XP, 5 Écus)</option>
+                        <option value="medium" selected>Moyenne (20 XP, 12 Écus)</option>
+                        <option value="hard">Épique (40 XP, 25 Écus)</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal('add-quest-modal')" class="px-4 py-2 bg-stone-800 text-stone-300 text-xs font-bold rounded-xl hover:bg-stone-700">Annuler</button>
+                    <button type="submit" class="px-5 py-2 gold-gradient text-stone-900 font-bold text-xs rounded-xl shadow-lg hover:brightness-110">Créer la Quête</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 2: Éditer le Chevalier -->
+    <div id="edit-hero-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('edit-hero-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="font-medieval text-xl font-bold text-amber-200 mb-4">Modifier le Chevalier</h3>
+
+            <form id="form-hero" onsubmit="saveHeroProfile(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Nom du Chevalier</label>
+                    <input type="text" id="hero-name-input" required class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Classe de Chevalerie</label>
+                    <select id="hero-class-input" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                        <option value="Paladin du Soleil">Paladin du Soleil</option>
+                        <option value="Lame d'Acier">Lame d'Acier</option>
+                        <option value="Archer du Royaume">Archer du Royaume</option>
+                        <option value="Gardien des Sages">Gardien des Sages</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Icône d'Avatar</label>
+                    <select id="hero-avatar-input" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                        <option value="fa-user-ninja">Guerrier Masqué</option>
+                        <option value="fa-shield-halved">Bouclier Noble</option>
+                        <option value="fa-hat-wizard">Mage d'Arme</option>
+                        <option value="fa-crown">Souverain</option>
+                        <option value="fa-chess-knight">Cavalier</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal('edit-hero-modal')" class="px-4 py-2 bg-stone-800 text-stone-300 text-xs font-bold rounded-xl hover:bg-stone-700">Annuler</button>
+                    <button type="submit" class="px-5 py-2 gold-gradient text-stone-900 font-bold text-xs rounded-xl shadow-lg hover:brightness-110">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 3: Sauvegarde & Export/Import -->
+    <div id="backup-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('backup-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="font-medieval text-xl font-bold text-amber-200 mb-2">Gestion des Sauvegardes</h3>
+            <p class="text-xs text-stone-400 mb-4">Vos données sont conservées automatiquement dans votre navigateur. Vous pouvez exporter un fichier de sauvegarde pour ne jamais perdre votre progression.</p>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Exporter votre progression (JSON)</label>
+                    <button onclick="exportSave()" class="w-full py-2.5 bg-stone-800 hover:bg-stone-700 text-amber-300 font-bold rounded-xl border border-amber-900/50 text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-download"></i> Télécharger le Parchemin de Sauvegarde
+                    </button>
+                </div>
+
+                <hr class="border-stone-800">
+
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Importer une sauvegarde (JSON)</label>
+                    <input type="file" id="import-file" accept=".json" onchange="importSave(event)" class="w-full text-xs text-stone-400 border border-medieval-border rounded-xl bg-stone-900 p-2 cursor-pointer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE LOGIQUE DU JEU -->
+    <script>
+        /* --- DONNÉES ET ÉTAT DU JEU --- */
+        const STORAGE_KEY = 'KNIGHT_GAME_SAVE_V1';
+
+        // Liste des Bosses
+        const BOSSES = [
+            { name: 'Gobelin Voleur de Temps', hp: 80, maxHp: 80, icon: 'fa-skull', rewardGold: 30 },
+            { name: 'Chevalier Noir du Decouragement', hp: 150, maxHp: 150, icon: 'fa-ghost', rewardGold: 60 },
+            { name: 'Dragon de la Procrastination', hp: 300, maxHp: 300, icon: 'fa-dragon', rewardGold: 120 }
+        ];
+
+        // Titres par niveau
+        const TITLES = [
+            'Écuyer Novice', 'Garde de la Tour', 'Chevalier Errant',
+            'Capitaine de la Garde', 'Paladin du Royaume', 'Seigneur de Guerre', 'Légende Vivante'
+        ];
+
+        // Boutique d'équipements
+        const SHOP_ITEMS = [
+            { id: 'sword_iron', name: 'Épée d\'Acier', type: 'weapon', cost: 30, stat: '+5 Force', icon: 'fa-sword', stats: { str: 5 } },
+            { id: 'shield_iron', name: 'Bouclier de Garde', type: 'shield', cost: 40, stat: '+5 Défense', icon: 'fa-shield-halved', stats: { def: 5 } },
+            { id: 'helmet_knight', name: 'Casque Basset', type: 'helmet', cost: 50, stat: '+5 Endurance', icon: 'fa-helmet-safety', stats: { end: 5 } },
+            { id: 'ring_wisdom', name: 'Anneau de Sagesse', type: 'accessory', cost: 60, stat: '+8 Sagesse', icon: 'fa-ring', stats: { wis: 8 } },
+            { id: 'pendant_valeur', name: 'Pendentif de Bravoure', type: 'accessory', cost: 100, stat: '+10 Force & Def', icon: 'fa-gem', stats: { str: 10, def: 10 } }
+        ];
+
+        // Catalogue des Bâtiments 3D
+        const BUILDINGS_CATALOG = [
+            { id: 'forge', name: 'Forge Royale', cost: 50, color: '#e74c3c', roofColor: '#c0392b', icon: 'fa-fire-burner', desc: 'Forge les armes du royaume' },
+            { id: 'windmill', name: 'Moulin à Vent', cost: 75, color: '#f39c12', roofColor: '#d35400', icon: 'fa-wind', desc: 'Nourrit le village' },
+            { id: 'watchtower', name: 'Tour de Garde', cost: 120, color: '#7f8c8d', roofColor: '#2c3e50', icon: 'fa-gopural', desc: 'Surveille la frontière' },
+            { id: 'fountain', name: 'Fontaine Bénie', cost: 150, color: '#3498db', roofColor: '#2980b9', icon: 'fa-faucet-drip', desc: 'Procure la paix aux âmes' },
+            { id: 'castle', name: 'Château Fort', cost: 300, color: '#8e44ad', roofColor: '#2c3e50', icon: 'fa-castle', desc: 'Le bastion suprême' }
+        ];
+
+        // État par défaut
+        let state = {
+            hero: {
+                name: 'Sir Galahad',
+                title: 'Écuyer Novice',
+                className: 'Lame d\'Acier',
+                avatarIcon: 'fa-user-ninja',
+                level: 1,
+                xp: 0,
+                maxXp: 100,
+                hp: 100,
+                maxHp: 100,
+                gold: 150,
+                stats: { str: 10, def: 10, wis: 10, end: 10 },
+                inventory: []
+            },
+            bossIndex: 0,
+            bossHp: 80,
+            quests: [
+                { id: '1', title: 'Faire 15 minutes d\'exercice', type: 'daily', difficulty: 'medium', completed: false },
+                { id: '2', title: 'Lire un chapitre d\'un livre', type: 'daily', difficulty: 'easy', completed: false },
+                { id: '3', title: 'Manger un repas équilibré', type: 'habit', difficulty: 'easy' },
+                { id: '4', title: 'Nettoyer le donjon (chambre)', type: 'todo', difficulty: 'medium', completed: false }
+            ],
+            stats: {
+                completedQuests: 0,
+                bossesSlain: 0,
+                totalGold: 150,
+                streak: 1
+            },
+            world: {
+                gridSize: 5,
+                knightPos: { x: 2, y: 2 },
+                buildings: [
+                    { id: 'fountain', x: 0, y: 0 }
+                ],
+                purchasedBuildings: []
+            }
+        };
+
+        // Variable temporaire de sélection de bâtiment pour pose
+        let selectedBuildingToPlace = null;
+
+        /* --- INITIALISATION ET NAVIGATION --- */
+        window.addEventListener('load', () => {
+            loadGame();
+            renderAll();
+            initIsometricWorld();
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.classList.remove('active', 'border-amber-500', 'text-amber-300', 'bg-stone-900/50');
+                el.classList.add('text-stone-400', 'border-transparent');
+            });
+
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            activeTab.classList.add('active', 'border-amber-500', 'text-amber-300', 'bg-stone-900/50');
+            activeTab.classList.remove('text-stone-400', 'border-transparent');
+
+            if (tabId === 'world') {
+                drawIsometricGrid();
+            }
+        }
+
+        /* --- SAUVEGARDE & CHARGEMENT --- */
+        function saveGame() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+
+        function loadGame() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (data) {
+                try {
+                    const parsed = JSON.parse(data);
+                    state = { ...state, ...parsed };
+                    if (!state.world) {
+                        state.world = { gridSize: 5, knightPos: { x: 2, y: 2 }, buildings: [], purchasedBuildings: [] };
+                    }
+                } catch (e) {
+                    console.error("Erreur de sauvegarde", e);
+                }
+            }
+        }
+
+        function resetGame() {
+            if (confirm("Voulez-vous vraiment réinitialiser toute votre progression de Chevalier ?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        function exportSave() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", `Chevalier_Sauvegarde_${state.hero.name}.json`);
+            dlAnchorElem.click();
+        }
+
+        function importSave(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedState = JSON.parse(e.target.result);
+                    if (importedState.hero) {
+                        state = importedState;
+                        saveGame();
+                        renderAll();
+                        closeModal('backup-modal');
+                        alert("Sauvegarde chargée avec succès !");
+                    }
+                } catch (err) {
+                    alert("Fichier de sauvegarde invalide.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        /* --- RENDU DU JEU --- */
+        function renderAll() {
+            renderHeader();
+            renderBoss();
+            renderQuests();
+            renderHero();
+            renderShop();
+            renderStats();
+            renderBuildingShop();
+            drawIsometricGrid();
+            saveGame();
+        }
+
+        // Rendu En-tête
+        function renderHeader() {
+            const hero = state.hero;
+            const html = `
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 text-xs">Niv. ${hero.level}</span>
+                </div>
+                <div class="flex flex-col w-20 sm:w-28">
+                    <div class="flex justify-between text-[10px] text-amber-300 font-semibold">
+                        <span>XP</span>
+                        <span>${hero.xp}/${hero.maxXp}</span>
+                    </div>
+                    <div class="w-full bg-stone-900 h-2 rounded-full overflow-hidden border border-stone-700">
+                        <div class="bg-gradient-to-r from-amber-500 to-yellow-300 h-full" style="width: ${(hero.xp/hero.maxXp)*100}%"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5 text-amber-400 font-bold font-mono">
+                    <i class="fa-solid fa-coins"></i>
+                    <span>${hero.gold}</span>
+                </div>
+            `;
+            document.getElementById('header-stats').innerHTML = html;
+        }
+
+        // Rendu Boss
+        function renderBoss() {
+            const boss = BOSSES[state.bossIndex] || BOSSES[0];
+            document.getElementById('boss-avatar').innerHTML = `<i class="fa-solid ${boss.icon}"></i>`;
+            document.getElementById('boss-name').innerText = boss.name;
+            document.getElementById('boss-hp-text').innerText = `${state.bossHp} / ${boss.maxHp}`;
+            
+            const pct = Math.max(0, (state.bossHp / boss.maxHp) * 100);
+            document.getElementById('boss-hp-bar').style.width = `${pct}%`;
+        }
+
+        // Rendu Quêtes
+        function renderQuests() {
+            const habits = state.quests.filter(q => q.type === 'habit');
+            const dailies = state.quests.filter(q => q.type === 'daily');
+            const todos = state.quests.filter(q => q.type === 'todo');
+
+            document.getElementById('count-habits').innerText = habits.length;
+            document.getElementById('count-dailies').innerText = dailies.length;
+            document.getElementById('count-todos').innerText = todos.length;
+
+            renderQuestList('list-habits', habits);
+            renderQuestList('list-dailies', dailies);
+            renderQuestList('list-todos', todos);
+        }
+
+        function renderQuestList(containerId, quests) {
+            const container = document.getElementById(containerId);
+            if (quests.length === 0) {
+                container.innerHTML = `<p class="text-xs text-stone-600 text-center py-6">Aucune quête inscrite.</p>`;
+                return;
+            }
+
+            container.innerHTML = quests.map(q => {
+                let rewards = q.difficulty === 'easy' ? { xp: 10, gold: 5 } : (q.difficulty === 'medium' ? { xp: 20, gold: 12 } : { xp: 40, gold: 25 });
+                
+                return `
+                    <div class="bg-stone-900/80 border border-stone-800 rounded-xl p-3 flex items-center justify-between gap-3 hover:border-amber-900/50 transition ${q.completed ? 'opacity-50 line-through' : ''}">
+                        <div class="flex-1">
+                            <h4 class="text-xs font-bold text-slate-200">${escapeHtml(q.title)}</h4>
+                            <div class="flex items-center gap-2 text-[10px] text-amber-500/80 mt-1 font-mono">
+                                <span>+${rewards.xp} XP</span> • <span>+${rewards.gold} Écus</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-1">
+                            ${q.type === 'habit' ? `
+                                <button onclick="completeQuest('${q.id}', 1)" class="w-7 h-7 rounded-lg bg-emerald-900/40 hover:bg-emerald-800 text-emerald-400 border border-emerald-700/50 flex items-center justify-center text-xs">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                                <button onclick="penalizeHabit()" class="w-7 h-7 rounded-lg bg-red-900/40 hover:bg-red-800 text-red-400 border border-red-700/50 flex items-center justify-center text-xs">
+                                    <i class="fa-solid fa-minus"></i>
+                                </button>
+                            ` : `
+                                <button onclick="completeQuest('${q.id}', 1)" class="px-2.5 py-1 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-500' : 'bg-amber-500 text-stone-950 font-bold hover:brightness-110'} text-xs flex items-center gap-1">
+                                    <i class="fa-solid fa-check"></i> ${q.completed ? 'Fait' : 'Valider'}
+                                </button>
+                            `}
+                            <button onclick="deleteQuest('${q.id}')" class="text-stone-600 hover:text-red-400 p-1 text-xs">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Rendu Héros
+        function renderHero() {
+            const hero = state.hero;
+            
+            // Titre dynamique basé sur le niveau
+            const titleIndex = Math.min(Math.floor((hero.level - 1) / 3), TITLES.length - 1);
+            hero.title = TITLES[titleIndex];
+
+            document.getElementById('hero-title-badge').innerText = hero.title;
+            document.getElementById('hero-name-display').innerText = hero.name;
+            document.getElementById('hero-class-display').innerText = hero.className;
+            document.getElementById('hero-avatar-display').innerHTML = `<i class="fa-solid ${hero.avatarIcon}"></i>`;
+
+            // Calcul stats avec équipements
+            let bonusStr = 0, bonusDef = 0, bonusWis = 0, bonusEnd = 0;
+            hero.inventory.forEach(itemId => {
+                const item = SHOP_ITEMS.find(i => i.id === itemId);
+                if (item && item.stats) {
+                    bonusStr += item.stats.str || 0;
+                    bonusDef += item.stats.def || 0;
+                    bonusWis += item.stats.wis || 0;
+                    bonusEnd += item.stats.end || 0;
+                }
+            });
+
+            document.getElementById('stat-str').innerText = hero.stats.str + bonusStr;
+            document.getElementById('stat-def').innerText = hero.stats.def + bonusDef;
+            document.getElementById('stat-wis').innerText = hero.stats.wis + bonusWis;
+            document.getElementById('stat-end').innerText = hero.stats.end + bonusEnd;
+
+            // Rendu Équipements
+            const equippedContainer = document.getElementById('equipped-items-list');
+            if (hero.inventory.length === 0) {
+                equippedContainer.innerHTML = `<p class="text-xs text-stone-500 italic col-span-2">Aucune relique ou armure équipée pour le moment.</p>`;
+            } else {
+                equippedContainer.innerHTML = hero.inventory.map(itemId => {
+                    const item = SHOP_ITEMS.find(i => i.id === itemId);
+                    if (!item) return '';
+                    return `
+                        <div class="bg-black/40 border border-amber-900/40 p-2.5 rounded-xl flex items-center gap-3">
+                            <span class="text-amber-400 text-lg"><i class="fa-solid ${item.icon}"></i></span>
+                            <div>
+                                <h5 class="text-xs font-bold text-amber-200">${item.name}</h5>
+                                <span class="text-[10px] text-emerald-400 font-mono">${item.stat}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Rendu Boutique
+        function renderShop() {
+            document.getElementById('shop-gold-display').innerText = state.hero.gold;
+            const grid = document.getElementById('shop-items-grid');
+
+            grid.innerHTML = SHOP_ITEMS.map(item => {
+                const owned = state.hero.inventory.includes(item.id);
+                return `
+                    <div class="bg-medieval-card border border-medieval-border p-5 rounded-2xl flex flex-col justify-between gap-4 relative overflow-hidden">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="w-10 h-10 rounded-xl bg-amber-950/60 border border-amber-700/50 text-amber-400 flex items-center justify-center text-xl">
+                                    <i class="fa-solid ${item.icon}"></i>
+                                </span>
+                                <span class="text-xs font-bold px-2 py-0.5 rounded bg-stone-800 text-amber-400 border border-stone-700 font-mono">
+                                    ${item.cost} Écus
+                                </span>
+                            </div>
+                            <h4 class="font-medieval text-sm font-bold text-amber-100">${item.name}</h4>
+                            <p class="text-xs text-emerald-400 font-mono mt-1">${item.stat}</p>
+                        </div>
+
+                        <button onclick="buyItem('${item.id}')" ${owned ? 'disabled' : ''} class="w-full py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 ${owned ? 'bg-stone-800 text-stone-500 border border-stone-700' : 'gold-gradient text-stone-900 hover:brightness-110 shadow-md'}">
+                            ${owned ? '<i class="fa-solid fa-check"></i> Acquis' : '<i class="fa-solid fa-cart-shopping"></i> Acquérir'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Rendu Statistiques
+        function renderStats() {
+            document.getElementById('stat-completed-quests').innerText = state.stats.completedQuests;
+            document.getElementById('stat-bosses-slain').innerText = state.stats.bossesSlain;
+            document.getElementById('stat-total-gold').innerText = state.stats.totalGold;
+            document.getElementById('stat-streak-days').innerText = state.stats.streak;
+
+            // Hauts Faits
+            const achList = [
+                { title: 'Premier Devoir', desc: 'Accomplir 1 quête', done: state.stats.completedQuests >= 1 },
+                { title: 'Tueur de Monstre', desc: 'Vaincre un Boss du Royaume', done: state.stats.bossesSlain >= 1 },
+                { title: 'Riche Chevalier', desc: 'Accumuler 100 Écus', done: state.stats.totalGold >= 100 },
+                { title: 'Vétéran de l\'Ordre', desc: 'Atteindre le niveau 5', done: state.hero.level >= 5 }
+            ];
+
+            document.getElementById('achievements-list').innerHTML = achList.map(a => `
+                <div class="bg-black/40 p-3 rounded-xl border ${a.done ? 'border-amber-500/50 bg-amber-950/10' : 'border-stone-800 opacity-60'} flex items-center gap-3">
+                    <span class="text-xl ${a.done ? 'text-amber-400' : 'text-stone-600'}"><i class="fa-solid fa-trophy"></i></span>
+                    <div>
+                        <h5 class="text-xs font-bold ${a.done ? 'text-amber-200' : 'text-stone-400'}">${a.title}</h5>
+                        <p class="text-[10px] text-stone-500">${a.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Rendu Boutique Bâtiments
+        function renderBuildingShop() {
+            const container = document.getElementById('building-shop-list');
+            document.getElementById('world-grid-size-display').innerText = `${state.world.gridSize}x${state.world.gridSize}`;
+            document.getElementById('expand-cost-display').innerText = state.world.gridSize * 40;
+
+            container.innerHTML = BUILDINGS_CATALOG.map(b => {
+                const isOwned = state.world.purchasedBuildings.includes(b.id) || state.world.buildings.some(placed => placed.id === b.id);
+                const isSelected = selectedBuildingToPlace === b.id;
+
+                return `
+                    <div class="bg-black/40 border border-stone-800 p-2.5 rounded-xl flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-stone-800 text-amber-400 border border-stone-700 flex items-center justify-center text-sm">
+                                <i class="fa-solid ${b.icon}"></i>
+                            </span>
+                            <div>
+                                <h5 class="text-xs font-bold text-slate-200">${b.name}</h5>
+                                <span class="text-[10px] text-amber-400 font-mono">${b.cost} Écus</span>
+                            </div>
+                        </div>
+
+                        ${isOwned ? `
+                            <button onclick="selectBuildingToPlace('${b.id}')" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition ${isSelected ? 'bg-amber-500 text-black border-amber-400' : 'bg-stone-800 text-amber-300 border-amber-900 hover:bg-stone-700'}">
+                                ${isSelected ? 'Poser...' : 'Placer'}
+                            </button>
+                        ` : `
+                            <button onclick="buyBuilding('${b.id}')" class="px-2 py-1 gold-gradient text-stone-950 font-bold text-xs rounded-lg hover:brightness-110 shadow">
+                                Acheter
+                            </button>
+                        `}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* --- LOGIQUE DU MONDE 3D ISOMÉTRIQUE (STYLE DOFUS) --- */
+        let isoCanvas, isoCtx;
+        const tileWidth = 60;
+        const tileHeight = 30;
+
+        function initIsometricWorld() {
+            isoCanvas = document.getElementById('isometric-canvas');
+            if (!isoCanvas) return;
+            isoCtx = isoCanvas.getContext('2d');
+
+            isoCanvas.width = 650;
+            isoCanvas.height = 420;
+
+            isoCanvas.addEventListener('click', handleCanvasClick);
+            drawIsometricGrid();
+        }
+
+        function drawIsometricGrid() {
+            if (!isoCtx) return;
+
+            isoCtx.clearRect(0, 0, isoCanvas.width, isoCanvas.height);
+
+            const grid = state.world.gridSize;
+            const originX = isoCanvas.width / 2;
+            const originY = 80;
+
+            // Dessiner la grille de l'échiquier
+            for (let x = 0; x < grid; x++) {
+                for (let y = 0; y < grid; y++) {
+                    const screenX = originX + (x - y) * (tileWidth / 2);
+                    const screenY = originY + (x + y) * (tileHeight / 2);
+
+                    const isHovered = false;
+                    const isKnight = state.world.knightPos.x === x && state.world.knightPos.y === y;
+                    const building = state.world.buildings.find(b => b.x === x && b.y === y);
+
+                    // Couleur alternée style échiquier / Dofus
+                    const isEven = (x + y) % 2 === 0;
+                    const tileColor = isEven ? '#2d3748' : '#1a202c';
+                    const borderColor = '#4a5568';
+
+                    // Dessin Tuile Isométrique
+                    drawIsoTile(screenX, screenY, tileColor, borderColor);
+
+                    // Dessin Bâtiment 3D si présent
+                    if (building) {
+                        const bData = BUILDINGS_CATALOG.find(b => b.id === building.id);
+                        if (bData) drawIsoBuilding(screenX, screenY, bData);
+                    }
+
+                    // Dessin Avatar Chevalier
+                    if (isKnight) {
+                        drawIsoKnight(screenX, screenY);
+                    }
+                }
+            }
+        }
+
+        function drawIsoTile(x, y, color, border) {
+            isoCtx.beginPath();
+            isoCtx.moveTo(x, y);
+            isoCtx.lineTo(x + tileWidth / 2, y + tileHeight / 2);
+            isoCtx.lineTo(x, y + tileHeight);
+            isoCtx.lineTo(x - tileWidth / 2, y + tileHeight / 2);
+            isoCtx.closePath();
+
+            isoCtx.fillStyle = color;
+            isoCtx.fill();
+            isoCtx.strokeStyle = border;
+            isoCtx.lineWidth = 1;
+            isoCtx.stroke();
+        }
+
+        function drawIsoBuilding(x, y, bData) {
+            const h = 35; // Hauteur 3D
+            const color = bData.color;
+            const roofColor = bData.roofColor;
+
+            // Face Avant Gauche
+            isoCtx.beginPath();
+            isoCtx.moveTo(x - tileWidth / 2, y + tileHeight / 2);
+            isoCtx.lineTo(x, y + tileHeight);
+            isoCtx.lineTo(x, y + tileHeight - h);
+            isoCtx.lineTo(x - tileWidth / 2, y + tileHeight / 2 - h);
+            isoCtx.closePath();
+            isoCtx.fillStyle = color;
+            isoCtx.fill();
+
+            // Face Avant Droite
+            isoCtx.beginPath();
+            isoCtx.moveTo(x, y + tileHeight);
+            isoCtx.lineTo(x + tileWidth / 2, y + tileHeight / 2);
+            isoCtx.lineTo(x + tileWidth / 2, y + tileHeight / 2 - h);
+            isoCtx.lineTo(x, y + tileHeight - h);
+            isoCtx.closePath();
+            isoCtx.fillStyle = color;
+            isoCtx.fill();
+
+            // Toit Isométrique
+            isoCtx.beginPath();
+            isoCtx.moveTo(x, y - h);
+            isoCtx.lineTo(x + tileWidth / 2, y + tileHeight / 2 - h);
+            isoCtx.lineTo(x, y + tileHeight - h);
+            isoCtx.lineTo(x - tileWidth / 2, y + tileHeight / 2 - h);
+            isoCtx.closePath();
+            isoCtx.fillStyle = roofColor;
+            isoCtx.fill();
+
+            // Petite icône centrale sur le toit
+            isoCtx.fillStyle = '#ffffff';
+            isoCtx.font = '10px FontAwesome';
+            isoCtx.textAlign = 'center';
+            isoCtx.fillText('🏛️', x, y + tileHeight / 2 - h);
+        }
+
+        function drawIsoKnight(x, y) {
+            // Socle de lumière sous le chevalier
+            isoCtx.beginPath();
+            isoCtx.ellipse(x, y + tileHeight / 2, tileWidth / 3, tileHeight / 3, 0, 0, 2 * Math.PI);
+            isoCtx.fillStyle = 'rgba(212, 175, 55, 0.4)';
+            isoCtx.fill();
+
+            // Représentation Chevalier Style Piyon Dofus
+            isoCtx.fillStyle = '#d4af37';
+            isoCtx.beginPath();
+            isoCtx.arc(x, y + tileHeight / 2 - 20, 12, 0, Math.PI * 2);
+            isoCtx.fill();
+            isoCtx.strokeStyle = '#ffffff';
+            isoCtx.lineWidth = 2;
+            isoCtx.stroke();
+
+            // Plume / Casque
+            isoCtx.fillStyle = '#e74c3c';
+            isoCtx.fillRect(x - 2, y + tileHeight / 2 - 36, 4, 10);
+        }
+
+        function handleCanvasClick(e) {
+            const rect = isoCanvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            const grid = state.world.gridSize;
+            const originX = isoCanvas.width / 2;
+            const originY = 80;
+
+            // Détection approximative de la case cliquée dans la grille isométrique
+            for (let x = 0; x < grid; x++) {
+                for (let y = 0; y < grid; y++) {
+                    const screenX = originX + (x - y) * (tileWidth / 2);
+                    const screenY = originY + (x + y) * (tileHeight / 2);
+
+                    const dx = clickX - screenX;
+                    const dy = clickY - (screenY + tileHeight / 2);
+
+                    if (Math.abs(dx) / (tileWidth / 2) + Math.abs(dy) / (tileHeight / 2) <= 1) {
+                        // Case trouvée
+                        if (selectedBuildingToPlace) {
+                            // Poser le bâtiment sélectionné
+                            state.world.buildings = state.world.buildings.filter(b => !(b.x === x && b.y === y));
+                            state.world.buildings.push({ id: selectedBuildingToPlace, x, y });
+                            selectedBuildingToPlace = null;
+                            document.getElementById('building-selected-badge').classList.add('hidden');
+                        } else {
+                            // Déplacer le chevalier sur la case
+                            state.world.knightPos = { x, y };
+                        }
+                        renderAll();
+                        return;
+                    }
+                }
+            }
+        }
+
+        function buyBuilding(buildingId) {
+            const b = BUILDINGS_CATALOG.find(item => item.id === buildingId);
+            if (!b) return;
+
+            if (state.hero.gold >= b.cost) {
+                state.hero.gold -= b.cost;
+                state.world.purchasedBuildings.push(b.id);
+                selectedBuildingToPlace = b.id;
+                renderAll();
+            } else {
+                alert("Pas assez d'Écus d'Or pour acheter ce bâtiment !");
+            }
+        }
+
+        function selectBuildingToPlace(buildingId) {
+            selectedBuildingToPlace = buildingId;
+            const b = BUILDINGS_CATALOG.find(item => item.id === buildingId);
+            document.getElementById('selected-building-name').innerText = b ? b.name : '--';
+            document.getElementById('building-selected-badge').classList.remove('hidden');
+            renderBuildingShop();
+        }
+
+        function clearSelectedBuilding() {
+            selectedBuildingToPlace = null;
+            document.getElementById('building-selected-badge').classList.add('hidden');
+            renderBuildingShop();
+        }
+
+        function expandGrid() {
+            const cost = state.world.gridSize * 40;
+            if (state.hero.gold >= cost) {
+                state.hero.gold -= cost;
+                state.world.gridSize += 1;
+                renderAll();
+            } else {
+                alert(`Il vous faut ${cost} Écus pour agrandir votre échiquier !`);
+            }
+        }
+
+        /* --- LOGIQUE DU JEU & QUÊTES --- */
+        function completeQuest(id, multiplier = 1) {
+            const quest = state.quests.find(q => q.id === id);
+            if (!quest) return;
+
+            let rewards = quest.difficulty === 'easy' ? { xp: 10, gold: 5 } : (quest.difficulty === 'medium' ? { xp: 20, gold: 12 } : { xp: 40, gold: 25 });
+            
+            // Marquer accomplie si Todo/Daily
+            if (quest.type !== 'habit') {
+                quest.completed = true;
+            }
+
+            // Gains
+            addRewards(rewards.xp * multiplier, rewards.gold * multiplier);
+            damageBoss(rewards.xp * multiplier);
+
+            state.stats.completedQuests += 1;
+            renderAll();
+        }
+
+        function penalizeHabit() {
+            // Perte légère de points si mauvaise habitude
+            state.hero.xp = Math.max(0, state.hero.xp - 5);
+            renderAll();
+        }
+
+        function addRewards(xpGained, goldGained) {
+            const hero = state.hero;
+            hero.xp += xpGained;
+            hero.gold += goldGained;
+            state.stats.totalGold += goldGained;
+
+            // Montee de Niveau
+            while (hero.xp >= hero.maxXp) {
+                hero.xp -= hero.maxXp;
+                hero.level += 1;
+                hero.maxXp = Math.floor(hero.maxXp * 1.3);
+                hero.stats.str += 2;
+                hero.stats.def += 2;
+                hero.stats.wis += 2;
+                hero.stats.end += 2;
+                alert(`🎉 MONTE DE NIVEAU ! Vous êtes désormais Niveau ${hero.level} ! Vos attributs ont augmenté !`);
+            }
+        }
+
+        function damageBoss(dmg) {
+            let boss = BOSSES[state.bossIndex];
+            state.bossHp -= dmg;
+
+            if (state.bossHp <= 0) {
+                state.stats.bossesSlain += 1;
+                alert(`⚔️ VICTOIRE ! Vous avez vaincu le ${boss.name} ! Le royaume vous récompense de ${boss.rewardGold} Écus !`);
+                addRewards(50, boss.rewardGold);
+                
+                // Boss Suivant
+                state.bossIndex = (state.bossIndex + 1) % BOSSES.length;
+                state.bossHp = BOSSES[state.bossIndex].maxHp;
+            }
+        }
+
+        function buyItem(itemId) {
+            const item = SHOP_ITEMS.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (state.hero.gold >= item.cost && !state.hero.inventory.includes(itemId)) {
+                state.hero.gold -= item.cost;
+                state.hero.inventory.push(itemId);
+                renderAll();
+            } else if (state.hero.gold < item.cost) {
+                alert("Pas assez d'Écus d'Or ! Accomplissez plus de quêtes.");
+            }
+        }
+
+        function saveQuest(e) {
+            e.preventDefault();
+            const title = document.getElementById('quest-title').value;
+            const type = document.getElementById('quest-type').value;
+            const difficulty = document.getElementById('quest-difficulty').value;
+
+            const newQuest = {
+                id: Date.now().toString(),
+                title,
+                type,
+                difficulty,
+                completed: false
+            };
+
+            state.quests.push(newQuest);
+            closeModal('add-quest-modal');
+            document.getElementById('form-quest').reset();
+            renderAll();
+        }
+
+        function deleteQuest(id) {
+            state.quests = state.quests.filter(q => q.id !== id);
+            renderAll();
+        }
+
+        function saveHeroProfile(e) {
+            e.preventDefault();
+            state.hero.name = document.getElementById('hero-name-input').value;
+            state.hero.className = document.getElementById('hero-class-input').value;
+            state.hero.avatarIcon = document.getElementById('hero-avatar-input').value;
+
+            closeModal('edit-hero-modal');
+            renderAll();
+        }
+
+        /* --- UTILITAIRES MODALES & XSS --- */
+        function openModal(id) {
+            if (id === 'edit-hero-modal') {
+                document.getElementById('hero-name-input').value = state.hero.name;
+                document.getElementById('hero-class-input').value = state.hero.className;
+                document.getElementById('hero-avatar-input').value = state.hero.avatarIcon;
+            }
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
