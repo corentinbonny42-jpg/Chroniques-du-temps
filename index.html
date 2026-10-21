@@ -482,7 +482,7 @@
         };
 
         const SHOP_ITEMS = [
-            { id: 'sword_1', name: 'Épée en Acier', type: 'weapon', cost: 30, icon: 'fa-sword', stats: { str: 5 } },
+            { id: 'sword_1', name: 'Épée en Acier', type: 'weapon', cost: 30, icon: 'fa-gavel', stats: { str: 5 } },
             { id: 'shield_1', name: 'Bouclier de Garde', type: 'shield', cost: 40, icon: 'fa-shield-halved', stats: { def: 6 } },
             { id: 'potion_1', name: 'Potion de Soin', type: 'consumable', cost: 15, icon: 'fa-flask', heal: 25 }
         ];
@@ -518,10 +518,7 @@
         // --- GESTION DES ONGLETS & MODALES ---
         function switchTab(tabId) {
             document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => {
-                c.classList.add('hidden');
-                c.classList.remove('flex');
-            });
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
             
             const btn = document.getElementById('tab-' + tabId);
             const content = document.getElementById('content-' + tabId);
@@ -535,44 +532,53 @@
             }
         }
 
-        function openModal(id) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            el.classList.remove('hidden');
-            el.classList.add('flex');
+        function openModal(id) { 
+            const m = document.getElementById(id);
+            if (m) {
+                m.classList.remove('hidden');
+                m.classList.add('flex');
+            }
         }
-
-        function closeModal(id) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            el.classList.add('hidden');
-            el.classList.remove('flex');
+        function closeModal(id) { 
+            const m = document.getElementById(id);
+            if (m) {
+                m.classList.add('hidden');
+                m.classList.remove('flex');
+            }
         }
 
         // --- RENDU GÉNÉRAL ---
         function renderAll() {
+            // Stats Header
             const h = gameState.hero;
-            document.getElementById('header-stats').innerHTML = `
-                <span class="text-amber-300 font-bold">Niv. ${h.level}</span>
-                <span class="text-stone-400">XP: ${h.xp}/${h.xpMax}</span>
-                <span class="text-amber-400 font-bold"><i class="fa-solid fa-coins"></i> ${h.gold}</span>
-            `;
+            const headerStats = document.getElementById('header-stats');
+            if (headerStats) {
+                headerStats.innerHTML = `
+                    <span class="text-amber-300 font-bold">Niv. ${h.level}</span>
+                    <span class="text-stone-400 font-mono">XP: ${h.xp}/${h.xpMax}</span>
+                    <span class="text-amber-400 font-bold font-mono"><i class="fa-solid fa-coins"></i> ${h.gold}</span>
+                `;
+            }
 
+            // Boss Banner
             const b = gameState.boss;
-            document.getElementById('boss-name').innerText = b.name;
-            document.getElementById('boss-hp-text').innerText = `${b.hp} / ${b.hpMax}`;
-            document.getElementById('boss-hp-bar').style.width = `${Math.max(0, (b.hp / b.hpMax) * 100)}%`;
+            if (document.getElementById('boss-name')) document.getElementById('boss-name').innerText = b.name;
+            if (document.getElementById('boss-hp-text')) document.getElementById('boss-hp-text').innerText = `${b.hp} / ${b.hpMax}`;
+            if (document.getElementById('boss-hp-bar')) document.getElementById('boss-hp-bar').style.width = `${Math.max(0, (b.hp / b.hpMax) * 100)}%`;
 
-            document.getElementById('hero-name-display').innerText = h.name;
-            document.getElementById('hero-class-display').innerText = h.class;
-            document.getElementById('stat-str').innerText = h.stats.str;
-            document.getElementById('stat-def').innerText = h.stats.def;
-            document.getElementById('stat-wis').innerText = h.stats.wis;
-            document.getElementById('stat-end').innerText = h.stats.end;
+            // Hero Tab
+            if (document.getElementById('hero-name-display')) document.getElementById('hero-name-display').innerText = h.name;
+            if (document.getElementById('hero-class-display')) document.getElementById('hero-class-display').innerText = h.class;
+            if (document.getElementById('stat-str')) document.getElementById('stat-str').innerText = h.stats.str;
+            if (document.getElementById('stat-def')) document.getElementById('stat-def').innerText = h.stats.def;
+            if (document.getElementById('stat-wis')) document.getElementById('stat-wis').innerText = h.stats.wis;
+            if (document.getElementById('stat-end')) document.getElementById('stat-end').innerText = h.stats.end;
 
+            // Render sub-components
             renderQuests();
             renderShop();
             renderWorldShop();
+
             saveGame();
         }
 
@@ -582,40 +588,51 @@
             const dailiesContainer = document.getElementById('list-dailies');
             const todosContainer = document.getElementById('list-todos');
 
+            if (!habitsContainer || !dailiesContainer || !todosContainer) return;
+
             habitsContainer.innerHTML = '';
             dailiesContainer.innerHTML = '';
             todosContainer.innerHTML = '';
 
+            let countH = 0, countD = 0, countT = 0;
+
             gameState.quests.forEach(q => {
                 const card = document.createElement('div');
-                card.className = "bg-stone-900/90 border border-stone-800 p-3 rounded-xl flex items-center justify-between gap-2";
+                card.className = "bg-stone-900/90 border border-stone-800 p-3 rounded-xl flex items-center justify-between gap-2 shadow-sm";
 
                 if (q.type === 'habit') {
+                    countH++;
                     card.innerHTML = `
-                        <span class="text-sm font-semibold">${q.title}</span>
+                        <span class="text-sm font-semibold text-slate-200">${q.title}</span>
                         <div class="flex gap-1">
-                            <button onclick="triggerQuest('${q.id}', true)" class="w-8 h-8 rounded-lg bg-emerald-900/50 hover:bg-emerald-800 text-emerald-400 font-bold">+</button>
+                            <button onclick="triggerQuest('${q.id}', true)" class="w-8 h-8 rounded-lg bg-emerald-900/50 hover:bg-emerald-800 text-emerald-400 font-bold transition">+</button>
                         </div>
                     `;
                     habitsContainer.appendChild(card);
                 } else if (q.type === 'daily') {
+                    countD++;
                     card.innerHTML = `
-                        <span class="text-sm font-semibold ${q.completed ? 'line-through text-stone-500' : ''}">${q.title}</span>
-                        <button onclick="triggerQuest('${q.id}', true)" ${q.completed ? 'disabled' : ''} class="px-3 py-1 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-600' : 'bg-amber-600 hover:bg-amber-500 text-stone-950'} text-xs font-bold">
+                        <span class="text-sm font-semibold ${q.completed ? 'line-through text-stone-500' : 'text-slate-200'}">${q.title}</span>
+                        <button onclick="triggerQuest('${q.id}', true)" ${q.completed ? 'disabled' : ''} class="px-3 py-1.5 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-600' : 'bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold'} text-xs transition">
                             ${q.completed ? 'Fait' : 'Valider'}
                         </button>
                     `;
                     dailiesContainer.appendChild(card);
                 } else {
+                    countT++;
                     card.innerHTML = `
-                        <span class="text-sm font-semibold ${q.completed ? 'line-through text-stone-500' : ''}">${q.title}</span>
-                        <button onclick="triggerQuest('${q.id}', true)" ${q.completed ? 'disabled' : ''} class="px-3 py-1 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-600' : 'bg-emerald-600 hover:bg-emerald-500 text-stone-950'} text-xs font-bold">
+                        <span class="text-sm font-semibold ${q.completed ? 'line-through text-stone-500' : 'text-slate-200'}">${q.title}</span>
+                        <button onclick="triggerQuest('${q.id}', true)" ${q.completed ? 'disabled' : ''} class="px-3 py-1.5 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-600' : 'bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-bold'} text-xs transition">
                             ${q.completed ? 'Accompli' : 'Terminer'}
                         </button>
                     `;
                     todosContainer.appendChild(card);
                 }
             });
+
+            if (document.getElementById('count-habits')) document.getElementById('count-habits').innerText = countH;
+            if (document.getElementById('count-dailies')) document.getElementById('count-dailies').innerText = countD;
+            if (document.getElementById('count-todos')) document.getElementById('count-todos').innerText = countT;
         }
 
         function saveQuest(e) {
@@ -663,12 +680,13 @@
         // --- BOUTIQUE ---
         function renderShop() {
             const grid = document.getElementById('shop-items-grid');
-            document.getElementById('shop-gold-display').innerText = gameState.hero.gold;
+            if (!grid) return;
+            if (document.getElementById('shop-gold-display')) document.getElementById('shop-gold-display').innerText = gameState.hero.gold;
             grid.innerHTML = '';
 
             SHOP_ITEMS.forEach(item => {
                 const div = document.createElement('div');
-                div.className = "bg-medieval-card border border-medieval-border p-4 rounded-xl flex flex-col justify-between gap-3";
+                div.className = "bg-medieval-card border border-medieval-border p-4 rounded-xl flex flex-col justify-between gap-3 shadow-md";
                 div.innerHTML = `
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-lg bg-amber-950/60 border border-amber-600/40 flex items-center justify-center text-amber-400">
@@ -699,9 +717,10 @@
             }
         }
 
-        // --- ROYAUME 3D ISOMÉTRIQUE ---
+        // --- DOMAINE / ROYAUME 3D ISOMÉTRIQUE ---
         function renderWorldShop() {
             const list = document.getElementById('building-shop-list');
+            if (!list) return;
             list.innerHTML = '';
 
             for (let key in BUILDINGS_DATA) {
@@ -715,8 +734,8 @@
                         <span class="text-xs font-bold text-slate-200">${b.name}</span>
                     </div>
                     ${owned ? 
-                        `<button onclick="selectBuildingToPlace('${key}')" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-bold text-[10px] rounded">Placer</button>` :
-                        `<button onclick="buyBuilding('${key}')" class="px-2 py-1 bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-[10px] rounded">${b.cost} Écus</button>`
+                        `<button onclick="selectBuildingToPlace('${key}')" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-bold text-[10px] rounded transition">Placer</button>` :
+                        `<button onclick="buyBuilding('${key}')" class="px-2 py-1 bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-[10px] rounded transition">${b.cost} Écus</button>`
                     }
                 `;
                 list.appendChild(div);
@@ -736,13 +755,13 @@
 
         function selectBuildingToPlace(key) {
             selectedBuildingToPlace = key;
-            document.getElementById('building-selected-badge').classList.remove('hidden');
-            document.getElementById('selected-building-name').innerText = BUILDINGS_DATA[key].name;
+            document.getElementById('building-selected-badge')?.classList.remove('hidden');
+            if (document.getElementById('selected-building-name')) document.getElementById('selected-building-name').innerText = BUILDINGS_DATA[key].name;
         }
 
         function clearSelectedBuilding() {
             selectedBuildingToPlace = null;
-            document.getElementById('building-selected-badge').classList.add('hidden');
+            document.getElementById('building-selected-badge')?.classList.add('hidden');
         }
 
         function expandGrid() {
@@ -767,7 +786,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const N = gameState.world.gridSize;
-            document.getElementById('world-grid-size-display').innerText = `${N}x${N}`;
+            if (document.getElementById('world-grid-size-display')) document.getElementById('world-grid-size-display').innerText = `${N}x${N}`;
 
             const tileWidth = 50;
             const tileHeight = 25;
@@ -808,7 +827,7 @@
             }
         }
 
-        // Clic sur Canvas Domaine
+        // Clics canvas
         document.getElementById('isometric-canvas')?.addEventListener('click', (e) => {
             const canvas = e.target;
             const rect = canvas.getBoundingClientRect();
@@ -844,7 +863,6 @@
             }
         });
 
-        // Profil Modifier
         function saveHeroProfile(e) {
             e.preventDefault();
             gameState.hero.name = document.getElementById('hero-name-input').value;
@@ -853,7 +871,6 @@
             renderAll();
         }
 
-        // Export / Import
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(gameState));
             const dlAnchorElem = document.createElement('a');
