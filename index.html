@@ -71,14 +71,18 @@
             border: 1px solid #3A332C;
         }
 
-        /* Nav Tabs Active Styling */
         .nav-tab.active {
             border-color: #D4AF37 #3A332C transparent #3A332C;
             background-color: rgba(29, 26, 23, 0.95);
             color: #FFE259;
         }
 
-        /* Custom Scrollbar */
+        .achievement-card-bg {
+            background: linear-gradient(180deg, rgba(45, 30, 10, 0.9) 0%, rgba(20, 15, 8, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.15), 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -93,7 +97,6 @@
             background: #D4AF37;
         }
 
-        /* Animations */
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-6px); }
@@ -105,11 +108,9 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between text-slate-200 antialiased selection:bg-amber-500 selection:text-black">
 
-    <!-- BARRE SUPÉRIEURE DE NAVIGATION ET PROGRÈS -->
+    <!-- BARRE SUPÉRIEURE -->
     <header class="sticky top-0 z-50 bg-medieval-bg/95 backdrop-blur border-b border-medieval-border px-4 py-3 shadow-2xl">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-            
-            <!-- Logo & Titre -->
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg gold-gradient flex items-center justify-center text-slate-900 shadow-lg text-xl font-bold border border-amber-200">
                     <i class="fa-solid fa-shield-halved"></i>
@@ -120,12 +121,10 @@
                 </div>
             </div>
 
-            <!-- Stats rapides Hero (Niveau, XP, Écus, PV) -->
             <div id="header-stats" class="flex items-center gap-3 sm:gap-6 text-sm bg-black/40 px-4 py-2 rounded-xl border border-medieval-border">
-                <!-- Dynamique via JS -->
+                <!-- Dynamique JS -->
             </div>
 
-            <!-- Actions globales -->
             <div class="flex items-center gap-2">
                 <button onclick="openModal('backup-modal')" title="Sauvegarde & Export" class="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-400 border border-amber-900/50 rounded-lg text-xs transition">
                     <i class="fa-solid fa-floppy-disk"></i>
@@ -138,10 +137,10 @@
         </div>
     </header>
 
-    <!-- CONTENU PRINCIPAL & NAVIGATION -->
+    <!-- MAIN -->
     <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-1 flex flex-col gap-6">
 
-        <!-- BOSS DU ROYAUME -->
+        <!-- BOSS -->
         <section id="boss-banner" class="relative overflow-hidden rounded-2xl border-2 border-red-900/60 bg-gradient-to-r from-red-950/80 via-stone-900/90 to-amber-950/80 p-5 shadow-2xl">
             <div class="absolute -right-10 -bottom-10 opacity-10 text-red-500 text-9xl pointer-events-none">
                 <i class="fa-solid fa-dragon"></i>
@@ -149,7 +148,7 @@
             
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="flex items-center gap-4 text-center md:text-left w-full md:w-auto">
-                    <div id="boss-avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-red-900/40 border-2 border-red-500/50 flex items-center justify-center text-3xl sm:text-4xl text-red-400 shadow-lg">
+                    <div id="boss-avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-red-900/40 border-2 border-red-500/50 flex items-center justify-center text-3xl sm:text-4xl text-red-400 shadow-lg animate-float">
                         <i class="fa-solid fa-dragon"></i>
                     </div>
                     <div class="flex-1">
@@ -157,7 +156,7 @@
                             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-900/60 text-red-300 border border-red-700 uppercase tracking-widest">Menace du Royaume</span>
                         </div>
                         <h2 id="boss-name" class="font-medieval text-xl sm:text-2xl font-bold text-amber-200">Dragon Rouge</h2>
-                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Accomplissez vos quêtes quotidiennes pour frapper le monstre !</p>
+                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Chaque point d'XP gagné inflige des dégâts équivalents au Boss !</p>
                     </div>
                 </div>
 
@@ -173,7 +172,7 @@
             </div>
         </section>
 
-        <!-- ONGLETS DE NAVIGATION -->
+        <!-- NAVIGATION -->
         <nav class="flex border-b border-medieval-border gap-2 overflow-x-auto pb-1">
             <button onclick="switchTab('hero')" id="tab-hero" class="nav-tab px-4 py-2.5 rounded-t-xl font-medieval text-sm font-semibold flex items-center gap-2 border-t-2 border-x transition whitespace-nowrap text-stone-300 hover:text-amber-200 border-transparent">
                 <i class="fa-solid fa-user-shield text-amber-400"></i> Tableau de Bord
@@ -191,8 +190,8 @@
                 <i class="fa-solid fa-cubes text-amber-400"></i> Royaume
             </button>
         </nav>
-        
-        <!-- SECTION 1 : CHEVALIER -->
+
+        <!-- CHEVALIER -->
         <section id="content-hero" class="tab-content hidden flex-col gap-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-medieval-card rounded-2xl border-2 border-medieval-border p-6 flex flex-col items-center text-center relative overflow-hidden">
@@ -200,7 +199,7 @@
                     <span id="hero-title-badge" class="px-3 py-1 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">Troubadour</span>
                     <div class="relative mb-4 group">
                         <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-300 shadow-[0_0_30px_rgba(212,175,55,0.25)]">
-                            <i class="fa-solid fa-toilet"></i>
+                            <i class="fa-solid fa-helmet-safety"></i>
                         </div>
                     </div>
                     <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Jacquouille</h2>
@@ -236,55 +235,82 @@
                             <div class="text-xs text-stone-400 font-semibold uppercase">Endurance</div>
                         </div>
                     </div>
-                    <h4 class="font-medieval text-md font-bold text-slate-200 mt-2">Équipement Possédé</h4>
-                    <div id="equipped-items-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
                 </div>
             </div>
         </section>
         
-        <!-- SECTION 2 : QUÊTES -->
+        <!-- SECTION QUÊTES -->
         <section id="content-quests" class="tab-content flex flex-col gap-6">
+            <!-- BANNIÈRE : AJOUT PERSONNALISÉ CRÉATEUR DE QUÊTE -->
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-medieval-card p-4 rounded-xl border border-medieval-border">
                 <div class="flex items-center gap-3">
-                    <span class="text-amber-400 text-xl"><i class="fa-solid fa-circle-plus"></i></span>
+                    <span class="text-amber-400 text-xl"><i class="fa-solid fa-plus-circle"></i></span>
                     <div>
-                        <h3 class="font-medieval text-base font-bold text-amber-100">Nouvelle Tâche ou Habitude</h3>
-                        <p class="text-xs text-stone-400">Forgez de bonnes habitudes pour renforcer le Royaume</p>
+                        <h3 class="font-medieval text-base font-bold text-amber-100">Créer une Quête Personnalisée</h3>
+                        <p class="text-xs text-stone-400">Définissez vos propres objectifs avec difficulté et récompenses sur mesure</p>
                     </div>
                 </div>
-                <button onclick="openModal('add-quest-modal')" class="w-full sm:w-auto px-5 py-2.5 gold-gradient hover:brightness-110 text-stone-900 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-plus"></i> Forger une Quête
+                <button onclick="openModal('create-custom-quest-modal')" class="w-full sm:w-auto px-5 py-2.5 gold-gradient hover:brightness-110 text-stone-900 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-xs">
+                    <i class="fa-solid fa-hammer"></i> Forger une Quête
                 </button>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col gap-4">
-                    <div class="flex items-center justify-between border-b border-medieval-border pb-3">
-                        <h3 class="font-medieval text-base font-bold text-slate-200">Habitudes</h3>
-                        <span id="count-habits" class="text-xs bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full font-mono">0</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 1. QUÊTES QUOTIDIENNES -->
+                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col gap-3">
+                    <div class="flex items-center justify-between border-b border-medieval-border pb-2">
+                        <h3 class="font-medieval text-sm font-bold text-slate-200">Quotidiennes</h3>
+                        <span id="count-daily" class="text-xs bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full font-mono">0</span>
                     </div>
-                    <div id="list-habits" class="flex flex-col gap-3 min-h-[150px]"></div>
+                    <button onclick="openDbModalForCategory('daily')" class="w-full py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-400 border border-amber-900/40 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-book-bookmark"></i> Choisir une quête
+                    </button>
+                    <div id="list-daily" class="flex flex-col gap-3 min-h-[150px]"></div>
                 </div>
 
-                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col gap-4">
-                    <div class="flex items-center justify-between border-b border-medieval-border pb-3">
-                        <h3 class="font-medieval text-base font-bold text-slate-200">Quêtes Quotidiennes</h3>
-                        <span id="count-dailies" class="text-xs bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full font-mono">0</span>
+                <!-- 2. QUÊTES HEBDOMADAIRES -->
+                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col gap-3">
+                    <div class="flex items-center justify-between border-b border-medieval-border pb-2">
+                        <h3 class="font-medieval text-sm font-bold text-slate-200">Hebdomadaires</h3>
+                        <span id="count-weekly" class="text-xs bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full font-mono">0</span>
                     </div>
-                    <div id="list-dailies" class="flex flex-col gap-3 min-h-[150px]"></div>
+                    <button onclick="openDbModalForCategory('weekly')" class="w-full py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-400 border border-amber-900/40 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-book-bookmark"></i> Choisir une quête
+                    </button>
+                    <div id="list-weekly" class="flex flex-col gap-3 min-h-[150px]"></div>
                 </div>
 
-                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col gap-4">
-                    <div class="flex items-center justify-between border-b border-medieval-border pb-3">
-                        <h3 class="font-medieval text-base font-bold text-slate-200">Hauts faits</h3>
-                        <span id="count-todos" class="text-xs bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full font-mono">0</span>
+                <!-- 3. QUÊTES MENSUELLES -->
+                <div class="bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col gap-3">
+                    <div class="flex items-center justify-between border-b border-medieval-border pb-2">
+                        <h3 class="font-medieval text-sm font-bold text-slate-200">Mensuelles</h3>
+                        <span id="count-monthly" class="text-xs bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full font-mono">0</span>
                     </div>
-                    <div id="list-todos" class="flex flex-col gap-3 min-h-[150px]"></div>
+                    <button onclick="openDbModalForCategory('monthly')" class="w-full py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-400 border border-amber-900/40 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-book-bookmark"></i> Choisir une quête
+                    </button>
+                    <div id="list-monthly" class="flex flex-col gap-3 min-h-[150px]"></div>
+                </div>
+
+                <!-- 4. HAUTS FAITS (GRILLE CARÉE EN 2 COLONNES) -->
+                <div class="achievement-card-bg rounded-2xl p-4 flex flex-col gap-3 relative overflow-hidden shadow-2xl">
+                    <div class="flex items-center justify-between border-b border-amber-500/40 pb-2 z-10">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-crown text-amber-400 text-xs"></i>
+                            <h3 class="font-medieval text-sm font-bold gold-text-gradient uppercase">Hauts Faits</h3>
+                        </div>
+                        <span id="count-achievements" class="text-xs bg-amber-950/80 text-amber-300 border border-amber-500/50 px-2 py-0.5 rounded-full font-mono font-bold">0</span>
+                    </div>
+                    <button onclick="openDbModalForCategory('achievements')" class="w-full py-1.5 bg-amber-950/80 hover:bg-amber-900/90 text-amber-300 border border-amber-500/60 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 z-10">
+                        <i class="fa-solid fa-book-bookmark"></i> Choisir une quête
+                    </button>
+                    <!-- CONTENEUR GRILLE EN 2 COLONNES POUR FORMAT CARRÉ -->
+                    <div id="list-achievements" class="grid grid-cols-2 gap-2.5 min-h-[150px] z-10"></div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 3 : BOUTIQUE -->
+        <!-- BOUTIQUE -->
         <section id="content-shop" class="tab-content hidden flex-col gap-6">
             <div class="bg-medieval-card p-4 rounded-2xl border border-medieval-border flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
@@ -299,7 +325,7 @@
             <div id="shop-items-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- SECTION 4 : SUCCÈS -->
+        <!-- SUCCÈS -->
         <section id="content-stats" class="tab-content hidden flex-col gap-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-medieval-card p-6 rounded-2xl border border-medieval-border flex flex-col gap-4">
@@ -315,14 +341,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-medieval-card p-6 rounded-2xl border border-medieval-border md:col-span-2 flex flex-col gap-4">
-                    <h3 class="font-medieval text-lg font-bold text-amber-200 border-b border-medieval-border pb-2">Hauts Faits du Chevalier</h3>
-                    <div id="achievements-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-                </div>
             </div>
         </section>
 
-        <!-- SECTION 5 : ROYAUME 3D ISOMÉTRIQUE -->
+        <!-- ROYAUME ISOMÉTRIQUE -->
         <section id="content-world" class="tab-content hidden flex-col gap-6">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <div class="lg:col-span-3 bg-medieval-card rounded-2xl border border-medieval-border p-4 flex flex-col items-center justify-center relative min-h-[460px]">
@@ -353,50 +375,86 @@
 
     </main>
 
-    <!-- PIED DE PAGE -->
+    <!-- FOOTER -->
     <footer class="border-t border-medieval-border bg-black/60 py-4 px-4 text-center text-xs text-stone-500">
         <p>Chroniques du temps - Ordre de chevalerie. Forgez vos habitudes, bâtissez votre légende.</p>
     </footer>
 
-    <!-- MODALES -->
-
-    <!-- Modal 1: Ajouter une Quête -->
-    <div id="add-quest-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
-            <button onclick="closeModal('add-quest-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
+    <!-- MODALE 1 : CREATION PERSONNALISÉE (POUR TOUTES CATEGORIES) -->
+    <div id="create-custom-quest-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('create-custom-quest-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 class="font-medieval text-xl font-bold text-amber-200 mb-4">Forger une Quête</h3>
-            <form id="form-quest" onsubmit="saveQuest(event)" class="space-y-4">
+            <h3 class="font-medieval text-xl font-bold text-amber-200 mb-4">Forger une Quête Personnalisée</h3>
+            <form id="form-custom-quest" onsubmit="saveCustomQuest(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-stone-300 mb-1">Titre du Devoir / Habitude</label>
-                    <input type="text" id="quest-title" required placeholder="Ex: Faire 20 pompes, Lire 15 min..." class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Titre de la Quête</label>
+                    <input type="text" id="custom-quest-title" required placeholder="Ex: Lire 30 pages..." class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-stone-300 mb-1">Type de Quête</label>
-                    <select id="quest-type" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
-                        <option value="habit">Habitude (Positives/Négatives)</option>
-                        <option value="daily">Quotidienne (Chaque jour)</option>
-                        <option value="todo">Devoir Ponctuel (Une fois)</option>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Catégorie</label>
+                    <select id="custom-quest-category" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                        <option value="daily">Quotidienne</option>
+                        <option value="weekly">Hebdomadaire</option>
+                        <option value="monthly">Mensuelle</option>
+                        <option value="achievements">Hauts Faits</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-stone-300 mb-1">Difficulté / Récompense</label>
-                    <select id="quest-difficulty" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
-                        <option value="easy">Facile (10 XP, 5 Écus)</option>
-                        <option value="medium" selected>Moyenne (20 XP, 12 Écus)</option>
-                        <option value="hard">Épique (40 XP, 25 Écus)</option>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Difficulté / Récompense XP</label>
+                    <select id="custom-quest-difficulty" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                        <option value="easy">Facile (15 XP)</option>
+                        <option value="medium" selected>Moyenne (60 XP)</option>
+                        <option value="hard">Difficile (120 XP)</option>
+                        <option value="epic">Épique (300 XP)</option>
+                        <option value="honor">Honorifique (0 XP - Hauts Faits)</option>
                     </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Nombre d'étapes requises</label>
+                    <input type="number" id="custom-quest-target" value="1" min="1" max="100" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
                 </div>
                 <div class="flex justify-end gap-3 pt-2">
-                    <button type="button" onclick="closeModal('add-quest-modal')" class="px-4 py-2 bg-stone-800 text-stone-300 text-xs font-bold rounded-xl hover:bg-stone-700">Annuler</button>
-                    <button type="submit" class="px-5 py-2 gold-gradient text-stone-900 font-bold text-xs rounded-xl shadow-lg hover:brightness-110">Créer la Quête</button>
+                    <button type="button" onclick="closeModal('create-custom-quest-modal')" class="px-4 py-2 bg-stone-800 text-stone-300 text-xs font-bold rounded-xl hover:bg-stone-700">Annuler</button>
+                    <button type="submit" class="px-5 py-2 gold-gradient text-stone-900 font-bold text-xs rounded-xl shadow-lg">Ajouter la Quête</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal 2: Éditer le Chevalier -->
+    <!-- MODALE 2 : CHOISIR DEPUIS LA BANQUE DE DONNEES -->
+    <div id="add-quest-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('add-quest-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="font-medieval text-xl font-bold text-amber-200 mb-1">Banque de Quêtes du Royaume</h3>
+            <p id="modal-category-subtitle" class="text-xs text-amber-500 font-semibold mb-4">Catégorie : --</p>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Quêtes Disponibles (Niveau Joueur <span id="modal-player-level">1</span>)</label>
+                    <select id="quest-database-select" onchange="previewDatabaseQuest()" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500"></select>
+                </div>
+
+                <div id="quest-preview-box" class="bg-black/50 p-3 rounded-xl border border-stone-800 text-xs space-y-1">
+                    <div class="flex justify-between font-bold text-amber-300">
+                        <span id="preview-title">--</span>
+                        <span id="preview-xp">--</span>
+                    </div>
+                    <div class="text-stone-400" id="preview-desc">--</div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal('add-quest-modal')" class="px-4 py-2 bg-stone-800 text-stone-300 text-xs font-bold rounded-xl hover:bg-stone-700">Annuler</button>
+                    <button type="button" onclick="addSelectedQuestFromDb()" class="px-5 py-2 gold-gradient text-stone-900 font-bold text-xs rounded-xl shadow-lg">Activer la Quête</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Éditer le Chevalier -->
     <div id="edit-hero-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
             <button onclick="closeModal('edit-hero-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
@@ -424,7 +482,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Sauvegarde / Importation -->
+    <!-- Modale Sauvegarde -->
     <div id="backup-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
             <button onclick="closeModal('backup-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
@@ -445,44 +503,53 @@
 
     <!-- JAVASCRIPT DU JEU -->
     <script>
-        // --- ÉTAT DU JEU ---
+        // BANQUE DE DONNÉES
+        const QUEST_DATABASE = [
+            // Quotidiennes
+            { id: 'db_d1', title: 'Méditation 15 minutes', category: 'daily', xp: 15, target: 1, minLevel: 1, desc: 'Esprit clair et apaisé.' },
+            { id: 'db_d2', title: 'Méditation 30 minutes', category: 'daily', xp: 30, target: 1, minLevel: 2, desc: 'Annule et remplace la méditation 15 minutes.' },
+            { id: 'db_d3', title: '10 000 pas', category: 'daily', xp: 60, target: 1, minLevel: 1, desc: 'Marche quotidienne du chevalier.' },
+
+            // Hebdomadaires
+            { id: 'db_w1', title: 'Méditation (messe)', category: 'weekly', xp: 60, target: 1, minLevel: 1, desc: 'Recueillement spirituel hebdomadaire.' },
+            { id: 'db_w2', title: 'Activité sportive', category: 'weekly', xp: 120, target: 3, minLevel: 1, desc: 'Entraînement physique (3 séances).' },
+
+            // Mensuelles
+            { id: 'db_m1', title: 'Jour sans Insta', category: 'monthly', xp: 500, target: 10, minLevel: 1, desc: '10 jours sans réseaux sociaux.' },
+            { id: 'db_m2', title: 'Lieu découvert', category: 'monthly', xp: 200, target: 3, minLevel: 1, desc: 'Exploration de 3 nouveaux lieux.' },
+
+            // Hauts Faits
+            { id: 'db_a1', title: 'Randonnée - Club des 3 000m d’altitude', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Ascension d’un sommet >3 000m.' },
+            { id: 'db_a2', title: 'Randonnée - Club des 4 000m d’altitude', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Ascension d’un sommet >4 000m.' }
+        ];
+
+        // QUÊTES INITIALES
+        const DEFAULT_QUESTS = [
+            { id: 'q_d1', title: 'Méditation 15 minutes', category: 'daily', xp: 15, current: 0, target: 1, completed: false },
+            { id: 'q_d3', title: '10 000 pas', category: 'daily', xp: 60, current: 0, target: 1, completed: false },
+            { id: 'q_w1', title: 'Méditation (messe)', category: 'weekly', xp: 60, current: 0, target: 1, completed: false },
+            { id: 'q_w2', title: 'Activité sportive', category: 'weekly', xp: 120, current: 0, target: 3, completed: false },
+            { id: 'q_m1', title: 'Jour sans Insta', category: 'monthly', xp: 500, current: 0, target: 10, completed: false },
+            { id: 'q_m2', title: 'Lieu découvert', category: 'monthly', xp: 200, current: 0, target: 3, completed: false },
+            { id: 'q_a1', title: 'Randonnée - Club des 3 000m d’altitude', category: 'achievements', xp: 0, current: 0, target: 1, completed: false },
+            { id: 'q_a2', title: 'Randonnée - Club des 4 000m d’altitude', category: 'achievements', xp: 0, current: 0, target: 1, completed: false }
+        ];
+
+        let currentActiveCategoryForModal = 'daily';
+
         let gameState = {
-            hero: {
-                name: "Jacquouille",
-                title: "Troubadour",
-                class: "Templier",
-                level: 1,
-                xp: 0,
-                xpMax: 100,
-                hp: 50,
-                hpMax: 50,
-                gold: 50,
-                stats: { str: 10, def: 10, wis: 10, end: 10 }
-            },
-            boss: {
-                name: "Dragon Rouge",
-                hp: 100,
-                hpMax: 100,
-                defeated: 0
-            },
-            quests: [
-                { id: '1', title: 'Faire 20 pompes', type: 'daily', difficulty: 'medium', completed: false },
-                { id: '2', title: 'Boire 2L d\'eau', type: 'habit', difficulty: 'easy', streak: 2 },
-                { id: '3', title: 'Gravir l\'Everest', type: 'todo', difficulty: 'hard', completed: false }
-            ],
+            lastReset: { day: new Date().toDateString(), timestamp: Date.now() },
+            hero: { name: "Jacquouille", title: "Troubadour", class: "Templier", level: 1, xp: 0, xpMax: 100, hp: 50, hpMax: 50, gold: 50, stats: { str: 10, def: 10, wis: 10, end: 10 } },
+            boss: { name: "Dragon Rouge", hp: 100, hpMax: 100, defeated: 0 },
+            quests: JSON.parse(JSON.stringify(DEFAULT_QUESTS)),
             inventory: [],
             buildingsPurchased: ['cabane'],
-            world: {
-                gridSize: 5,
-                expansionCost: 100,
-                knightPos: { x: 2, y: 2 },
-                placedBuildings: {} // ex: "0,0": "cabane"
-            },
+            world: { gridSize: 5, expansionCost: 100, knightPos: { x: 2, y: 2 }, placedBuildings: {} },
             stats: { completedQuests: 0 }
         };
 
         const SHOP_ITEMS = [
-            { id: 'sword_1', name: 'Épée en Acier', type: 'weapon', cost: 30, icon: 'fa-gavel', stats: { str: 5 } },
+            { id: 'sword_1', name: 'Épée en Acier', type: 'weapon', cost: 30, icon: 'fa-hand-fist', stats: { str: 5 } },
             { id: 'shield_1', name: 'Bouclier de Garde', type: 'shield', cost: 40, icon: 'fa-shield-halved', stats: { def: 6 } },
             { id: 'potion_1', name: 'Potion de Soin', type: 'consumable', cost: 15, icon: 'fa-flask', heal: 25 }
         ];
@@ -495,12 +562,31 @@
 
         let selectedBuildingToPlace = null;
 
-        // --- CHARGEMENT / SAUVEGARDE ---
+        // CHECK RESET HORLOGE
+        function checkAndApplyResets() {
+            const now = new Date();
+            const lastResetDate = gameState.lastReset ? new Date(gameState.lastReset.timestamp) : new Date(0);
+
+            if (now.toDateString() !== lastResetDate.toDateString()) {
+                gameState.quests.filter(q => q.category === 'daily').forEach(q => { q.current = 0; q.completed = false; });
+                const diffDays = Math.floor((now - lastResetDate) / (1000 * 60 * 60 * 24));
+                if (diffDays >= 7) {
+                    gameState.quests.filter(q => q.category === 'weekly').forEach(q => { q.current = 0; q.completed = false; });
+                }
+                if (now.getMonth() !== lastResetDate.getMonth() || diffDays >= 30) {
+                    gameState.quests.filter(q => q.category === 'monthly').forEach(q => { q.current = 0; q.completed = false; });
+                }
+                gameState.lastReset = { day: now.toDateString(), timestamp: now.getTime() };
+                saveGame();
+            }
+        }
+
         function loadGame() {
             const saved = localStorage.getItem('quest_knights_save');
             if (saved) {
                 try { gameState = JSON.parse(saved); } catch (e) { console.error(e); }
             }
+            checkAndApplyResets();
             renderAll();
         }
 
@@ -515,11 +601,9 @@
             }
         }
 
-        // --- GESTION DES ONGLETS & MODALES ---
         function switchTab(tabId) {
             document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-            
             const btn = document.getElementById('tab-' + tabId);
             const content = document.getElementById('content-' + tabId);
             if (btn && content) {
@@ -527,19 +611,18 @@
                 content.classList.remove('hidden');
                 content.classList.add('flex');
             }
-            if (tabId === 'world') {
-                renderIsometricWorld();
-            }
+            if (tabId === 'world') renderIsometricWorld();
         }
 
-        function openModal(id) { 
+        function openModal(id) {
             const m = document.getElementById(id);
             if (m) {
                 m.classList.remove('hidden');
                 m.classList.add('flex');
             }
         }
-        function closeModal(id) { 
+
+        function closeModal(id) {
             const m = document.getElementById(id);
             if (m) {
                 m.classList.add('hidden');
@@ -547,9 +630,7 @@
             }
         }
 
-        // --- RENDU GÉNÉRAL ---
         function renderAll() {
-            // Stats Header
             const h = gameState.hero;
             const headerStats = document.getElementById('header-stats');
             if (headerStats) {
@@ -560,13 +641,11 @@
                 `;
             }
 
-            // Boss Banner
             const b = gameState.boss;
             if (document.getElementById('boss-name')) document.getElementById('boss-name').innerText = b.name;
             if (document.getElementById('boss-hp-text')) document.getElementById('boss-hp-text').innerText = `${b.hp} / ${b.hpMax}`;
             if (document.getElementById('boss-hp-bar')) document.getElementById('boss-hp-bar').style.width = `${Math.max(0, (b.hp / b.hpMax) * 100)}%`;
 
-            // Hero Tab
             if (document.getElementById('hero-name-display')) document.getElementById('hero-name-display').innerText = h.name;
             if (document.getElementById('hero-class-display')) document.getElementById('hero-class-display').innerText = h.class;
             if (document.getElementById('stat-str')) document.getElementById('stat-str').innerText = h.stats.str;
@@ -574,110 +653,208 @@
             if (document.getElementById('stat-wis')) document.getElementById('stat-wis').innerText = h.stats.wis;
             if (document.getElementById('stat-end')) document.getElementById('stat-end').innerText = h.stats.end;
 
-            // Render sub-components
             renderQuests();
             renderShop();
             renderWorldShop();
-
             saveGame();
         }
 
-        // --- GESTION DES QUÊTES ---
+        // RENDU DES QUÊTES AVEC FORMAT CARRÉ EN 2 COLONNES POUR HAUTS FAITS
         function renderQuests() {
-            const habitsContainer = document.getElementById('list-habits');
-            const dailiesContainer = document.getElementById('list-dailies');
-            const todosContainer = document.getElementById('list-todos');
+            const categories = ['daily', 'weekly', 'monthly', 'achievements'];
 
-            if (!habitsContainer || !dailiesContainer || !todosContainer) return;
+            categories.forEach(cat => {
+                const container = document.getElementById(`list-${cat}`);
+                const countBadge = document.getElementById(`count-${cat}`);
+                if (!container) return;
 
-            habitsContainer.innerHTML = '';
-            dailiesContainer.innerHTML = '';
-            todosContainer.innerHTML = '';
+                container.innerHTML = '';
+                const catQuests = gameState.quests.filter(q => q.category === cat);
+                if (countBadge) countBadge.innerText = catQuests.length;
 
-            let countH = 0, countD = 0, countT = 0;
+                catQuests.forEach(q => {
+                    const card = document.createElement('div');
+                    const isAchievement = cat === 'achievements';
+                    
+                    if (isAchievement) {
+                        // FORMAT CARRÉ POUR LES HAUTS FAITS
+                        card.className = "bg-black/70 border border-amber-500/50 p-3 rounded-xl flex flex-col justify-between aspect-square shadow-lg text-center relative";
+                        card.innerHTML = `
+                            <div class="text-amber-400 text-lg mb-1"><i class="fa-solid fa-trophy"></i></div>
+                            <span class="text-[11px] font-bold text-amber-100 leading-tight">${q.title}</span>
+                            <div class="pt-2">
+                                ${q.completed ? 
+                                    `<span class="text-[9px] font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800"><i class="fa-solid fa-check"></i> Acquis</span>` :
+                                    `<button onclick="incrementQuest('${q.id}')" class="w-full py-1 gold-gradient text-stone-950 font-bold text-[10px] rounded-lg transition">Valider</button>`
+                                }
+                            </div>
+                        `;
+                    } else {
+                        // FORMAT PAR DÉFAUT
+                        card.className = "bg-stone-900/90 border border-stone-800 p-3 rounded-xl flex flex-col gap-2 shadow-sm";
+                        const isMultiStep = q.target > 1;
+                        const percent = Math.min(100, Math.round((q.current / q.target) * 100));
 
-            gameState.quests.forEach(q => {
-                const card = document.createElement('div');
-                card.className = "bg-stone-900/90 border border-stone-800 p-3 rounded-xl flex items-center justify-between gap-2 shadow-sm";
+                        card.innerHTML = `
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-xs font-semibold ${q.completed ? 'line-through text-stone-500' : 'text-slate-100'}">${q.title}</span>
+                                <span class="text-[10px] font-mono font-bold text-amber-400">+${q.xp} XP</span>
+                            </div>
 
-                if (q.type === 'habit') {
-                    countH++;
-                    card.innerHTML = `
-                        <span class="text-sm font-semibold text-slate-200">${q.title}</span>
-                        <div class="flex gap-1">
-                            <button onclick="triggerQuest('${q.id}', true)" class="w-8 h-8 rounded-lg bg-emerald-900/50 hover:bg-emerald-800 text-emerald-400 font-bold transition">+</button>
-                        </div>
-                    `;
-                    habitsContainer.appendChild(card);
-                } else if (q.type === 'daily') {
-                    countD++;
-                    card.innerHTML = `
-                        <span class="text-sm font-semibold ${q.completed ? 'line-through text-stone-500' : 'text-slate-200'}">${q.title}</span>
-                        <button onclick="triggerQuest('${q.id}', true)" ${q.completed ? 'disabled' : ''} class="px-3 py-1.5 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-600' : 'bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold'} text-xs transition">
-                            ${q.completed ? 'Fait' : 'Valider'}
-                        </button>
-                    `;
-                    dailiesContainer.appendChild(card);
-                } else {
-                    countT++;
-                    card.innerHTML = `
-                        <span class="text-sm font-semibold ${q.completed ? 'line-through text-stone-500' : 'text-slate-200'}">${q.title}</span>
-                        <button onclick="triggerQuest('${q.id}', true)" ${q.completed ? 'disabled' : ''} class="px-3 py-1.5 rounded-lg ${q.completed ? 'bg-stone-800 text-stone-600' : 'bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-bold'} text-xs transition">
-                            ${q.completed ? 'Accompli' : 'Terminer'}
-                        </button>
-                    `;
-                    todosContainer.appendChild(card);
-                }
+                            ${isMultiStep ? `
+                                <div class="w-full bg-stone-950 h-2 rounded-full overflow-hidden border border-stone-800">
+                                    <div class="bg-amber-500 h-full transition-all" style="width: ${percent}%"></div>
+                                </div>
+                                <div class="flex justify-between items-center text-[10px] text-stone-400 font-mono">
+                                    <span>${q.current} / ${q.target}</span>
+                                    <span>${percent}%</span>
+                                </div>
+                            ` : ''}
+
+                            <div class="flex justify-end pt-1">
+                                ${q.completed ? 
+                                    `<span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800"><i class="fa-solid fa-check"></i> Validé</span>` :
+                                    `<button onclick="incrementQuest('${q.id}')" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs rounded-lg transition flex items-center gap-1">
+                                        <i class="fa-solid fa-plus"></i> ${isMultiStep ? 'Avancer' : 'Valider'}
+                                     </button>`
+                                }
+                            </div>
+                        `;
+                    }
+                    container.appendChild(card);
+                });
             });
-
-            if (document.getElementById('count-habits')) document.getElementById('count-habits').innerText = countH;
-            if (document.getElementById('count-dailies')) document.getElementById('count-dailies').innerText = countD;
-            if (document.getElementById('count-todos')) document.getElementById('count-todos').innerText = countT;
         }
 
-        function saveQuest(e) {
-            e.preventDefault();
-            const title = document.getElementById('quest-title').value;
-            const type = document.getElementById('quest-type').value;
-            const difficulty = document.getElementById('quest-difficulty').value;
-
-            gameState.quests.push({
-                id: Date.now().toString(),
-                title, type, difficulty,
-                completed: false
-            });
-
-            closeModal('add-quest-modal');
-            document.getElementById('form-quest').reset();
-            renderAll();
-        }
-
-        function triggerQuest(id, success) {
+        function incrementQuest(id) {
             const q = gameState.quests.find(item => item.id === id);
-            if (!q) return;
+            if (!q || q.completed) return;
 
-            if (success) {
-                let rewardXp = q.difficulty === 'easy' ? 10 : q.difficulty === 'medium' ? 20 : 40;
-                let rewardGold = q.difficulty === 'easy' ? 5 : q.difficulty === 'medium' ? 12 : 25;
+            q.current = (q.current || 0) + 1;
 
-                gameState.hero.xp += rewardXp;
-                gameState.hero.gold += rewardGold;
-                gameState.boss.hp = Math.max(0, gameState.boss.hp - 10);
+            if (q.current >= q.target) {
+                q.completed = true;
+                if (q.xp > 0) {
+                    gameState.hero.xp += q.xp;
+                    gameState.hero.gold += Math.round(q.xp / 2);
+                    gameState.boss.hp = Math.max(0, gameState.boss.hp - q.xp);
+                    
+                    if (gameState.boss.hp <= 0) {
+                        gameState.boss.defeated++;
+                        gameState.boss.hpMax += 100;
+                        gameState.boss.hp = gameState.boss.hpMax;
+                        alert(`💥 Boss Vaincu ! Un monstre de ${gameState.boss.hpMax} PV apparaît !`);
+                    }
+                }
+
                 gameState.stats.completedQuests = (gameState.stats.completedQuests || 0) + 1;
-
-                if (q.type !== 'habit') q.completed = true;
 
                 if (gameState.hero.xp >= gameState.hero.xpMax) {
                     gameState.hero.level++;
-                    gameState.hero.xp = 0;
+                    gameState.hero.xp -= gameState.hero.xpMax;
                     gameState.hero.xpMax += 50;
-                    alert(`Niveau supérieur ! Vous êtes maintenant niveau ${gameState.hero.level}`);
+                    alert(`⭐ Niveau Supérieur ! Vous êtes maintenant Niveau ${gameState.hero.level} !`);
                 }
             }
             renderAll();
         }
 
-        // --- BOUTIQUE ---
+        // CRÉER UNE QUÊTE PERSONNALISÉE LIBREMENT
+        function saveCustomQuest(e) {
+            e.preventDefault();
+            const title = document.getElementById('custom-quest-title').value;
+            const category = document.getElementById('custom-quest-category').value;
+            const difficulty = document.getElementById('custom-quest-difficulty').value;
+            const target = parseInt(document.getElementById('custom-quest-target').value) || 1;
+
+            let xp = difficulty === 'easy' ? 15 : difficulty === 'medium' ? 60 : difficulty === 'hard' ? 120 : difficulty === 'epic' ? 300 : 0;
+
+            gameState.quests.push({
+                id: Date.now().toString(),
+                title, category, xp,
+                current: 0, target,
+                completed: false
+            });
+
+            closeModal('create-custom-quest-modal');
+            document.getElementById('form-custom-quest').reset();
+            renderAll();
+        }
+
+        // BANQUE DE QUÊTES PAR ONGLET
+        function openDbModalForCategory(cat) {
+            currentActiveCategoryForModal = cat;
+            const titles = { daily: 'Quotidiennes', weekly: 'Hebdomadaires', monthly: 'Mensuelles', achievements: 'Hauts Faits' };
+            document.getElementById('modal-category-subtitle').innerText = `Catégorie : Quêtes ${titles[cat]}`;
+            
+            openModal('add-quest-modal');
+            populateDatabaseModal();
+        }
+
+        function populateDatabaseModal() {
+            document.getElementById('modal-player-level').innerText = gameState.hero.level;
+            const select = document.getElementById('quest-database-select');
+            select.innerHTML = '';
+
+            const available = QUEST_DATABASE.filter(dq => dq.category === currentActiveCategoryForModal && dq.minLevel <= gameState.hero.level);
+
+            if (available.length === 0) {
+                const opt = document.createElement('option');
+                opt.innerText = "Aucune quête disponible à votre niveau actuel";
+                select.appendChild(opt);
+                return;
+            }
+
+            available.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.innerText = `${item.title} (${item.xp > 0 ? item.xp + ' XP' : 'Haut Fait'})`;
+                select.appendChild(opt);
+            });
+
+            previewDatabaseQuest();
+        }
+
+        function previewDatabaseQuest() {
+            const id = document.getElementById('quest-database-select').value;
+            const item = QUEST_DATABASE.find(q => q.id === id);
+            if (!item) return;
+
+            document.getElementById('preview-title').innerText = item.title;
+            document.getElementById('preview-xp').innerText = item.xp > 0 ? `+${item.xp} XP` : 'Haut Fait';
+            document.getElementById('preview-desc').innerText = item.desc;
+        }
+
+        function addSelectedQuestFromDb() {
+            const id = document.getElementById('quest-database-select').value;
+            const item = QUEST_DATABASE.find(q => q.id === id);
+            if (!item) return;
+
+            // Remplacement spécial : Méditation 30 min remplace Méditation 15 min
+            if (item.id === 'db_d2') {
+                gameState.quests = gameState.quests.filter(q => q.title !== 'Méditation 15 minutes');
+            }
+
+            if (gameState.quests.some(q => q.title === item.title)) {
+                alert("Cette quête est déjà présente dans votre journal !");
+                return;
+            }
+
+            gameState.quests.push({
+                id: Date.now().toString(),
+                title: item.title,
+                category: item.category,
+                xp: item.xp,
+                current: 0,
+                target: item.target,
+                completed: false
+            });
+
+            closeModal('add-quest-modal');
+            renderAll();
+        }
+
+        // BOUTIQUE ET DOMAINE ISOMÉTRIQUE
         function renderShop() {
             const grid = document.getElementById('shop-items-grid');
             if (!grid) return;
@@ -707,17 +884,12 @@
             const item = SHOP_ITEMS.find(i => i.id === id);
             if (item && gameState.hero.gold >= item.cost) {
                 gameState.hero.gold -= item.cost;
-                if (item.stats) {
-                    for (let s in item.stats) gameState.hero.stats[s] += item.stats[s];
-                }
+                if (item.stats) { for (let s in item.stats) gameState.hero.stats[s] += item.stats[s]; }
                 alert(`Acheté : ${item.name}`);
                 renderAll();
-            } else {
-                alert("Écus insuffisants !");
-            }
+            } else { alert("Écus insuffisants !"); }
         }
 
-        // --- DOMAINE / ROYAUME 3D ISOMÉTRIQUE ---
         function renderWorldShop() {
             const list = document.getElementById('building-shop-list');
             if (!list) return;
@@ -748,9 +920,7 @@
                 gameState.hero.gold -= b.cost;
                 gameState.buildingsPurchased.push(key);
                 renderAll();
-            } else {
-                alert("Écus insuffisants !");
-            }
+            } else { alert("Écus insuffisants !"); }
         }
 
         function selectBuildingToPlace(key) {
@@ -771,9 +941,7 @@
                 gameState.world.expansionCost += 100;
                 renderAll();
                 renderIsometricWorld();
-            } else {
-                alert("Écus insuffisants pour l'extension !");
-            }
+            } else { alert("Écus insuffisants pour l'extension !"); }
         }
 
         function renderIsometricWorld() {
@@ -782,16 +950,12 @@
             const ctx = canvas.getContext('2d');
             canvas.width = 500;
             canvas.height = 380;
-
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const N = gameState.world.gridSize;
             if (document.getElementById('world-grid-size-display')) document.getElementById('world-grid-size-display').innerText = `${N}x${N}`;
 
-            const tileWidth = 50;
-            const tileHeight = 25;
-            const originX = canvas.width / 2;
-            const originY = 80;
+            const tileWidth = 50, tileHeight = 25, originX = canvas.width / 2, originY = 80;
 
             for (let x = 0; x < N; x++) {
                 for (let y = 0; y < N; y++) {
@@ -827,26 +991,18 @@
             }
         }
 
-        // Clics canvas
         document.getElementById('isometric-canvas')?.addEventListener('click', (e) => {
             const canvas = e.target;
             const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
+            const mouseX = e.clientX - rect.left, mouseY = e.clientY - rect.top;
 
-            const N = gameState.world.gridSize;
-            const tileWidth = 50;
-            const tileHeight = 25;
-            const originX = canvas.width / 2;
-            const originY = 80;
+            const N = gameState.world.gridSize, tileWidth = 50, tileHeight = 25, originX = canvas.width / 2, originY = 80;
 
             for (let x = 0; x < N; x++) {
                 for (let y = 0; y < N; y++) {
                     const isoX = originX + (x - y) * (tileWidth / 2);
                     const isoY = originY + (x + y) * (tileHeight / 2);
-
-                    const dx = mouseX - isoX;
-                    const dy = mouseY - (isoY + tileHeight / 2);
+                    const dx = mouseX - isoX, dy = mouseY - (isoY + tileHeight / 2);
 
                     if (Math.abs(dx) / (tileWidth / 2) + Math.abs(dy) / (tileHeight / 2) <= 1) {
                         if (selectedBuildingToPlace) {
@@ -884,17 +1040,15 @@
             fileReader.onload = function (event) {
                 try {
                     gameState = JSON.parse(event.target.result);
+                    checkAndApplyResets();
                     renderAll();
                     closeModal('backup-modal');
                     alert("Sauvegarde chargée avec succès !");
-                } catch (err) {
-                    alert("Fichier de sauvegarde invalide.");
-                }
+                } catch (err) { alert("Fichier de sauvegarde invalide."); }
             };
             fileReader.readAsText(e.target.files[0]);
         }
 
-        // INITIALISATION
         window.onload = loadGame;
     </script>
 </body>
