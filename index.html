@@ -199,7 +199,7 @@
                     <span id="hero-title-badge" class="px-3 py-1 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">Troubadour</span>
                     <div class="relative mb-4 group">
                         <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-300 shadow-[0_0_30px_rgba(212,175,55,0.25)]">
-                            <i class="fa-solid fa-helmet-safety"></i>
+                            <i class="fa-solid fa-user-astronaut"></i>
                         </div>
                     </div>
                     <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Jacquouille</h2>
@@ -251,7 +251,7 @@
                     </div>
                 </div>
                 <button onclick="openModal('create-custom-quest-modal')" class="w-full sm:w-auto px-5 py-2.5 gold-gradient hover:brightness-110 text-stone-900 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-xs">
-                    <i class="fa-solid fa-hammer"></i> Forger une Quête
+                    <i class="fa-solid fa-gavel"></i> Forger une Quête
                 </button>
             </div>
 
@@ -302,7 +302,7 @@
                         <span id="count-achievements" class="text-xs bg-amber-950/80 text-amber-300 border border-amber-500/50 px-2 py-0.5 rounded-full font-mono font-bold">0</span>
                     </div>
                     <button onclick="openDbModalForCategory('achievements')" class="w-full py-1.5 bg-amber-950/80 hover:bg-amber-900/90 text-amber-300 border border-amber-500/60 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 z-10">
-                        <i class="fa-solid fa-book-bookmark"></i> Choisir une quête
+                        <i class="fa-solid fa-book-bookmark"></i> Choisir un haut fait
                     </button>
                     <!-- CONTENEUR GRILLE EN 2 COLONNES POUR FORMAT CARRÉ -->
                     <div id="list-achievements" class="grid grid-cols-2 gap-2.5 min-h-[150px] z-10"></div>
@@ -408,7 +408,7 @@
                         <option value="medium" selected>Moyenne (60 XP)</option>
                         <option value="hard">Difficile (120 XP)</option>
                         <option value="epic">Épique (300 XP)</option>
-                        <option value="honor">Honorifique (0 XP - Hauts Faits)</option>
+                        <option value="honor">Honorifique - Hauts Faits</option>
                     </select>
                 </div>
                 <div>
@@ -460,10 +460,10 @@
             <button onclick="closeModal('edit-hero-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 class="font-medieval text-xl font-bold text-amber-200 mb-4">Modifier le Chevalier</h3>
+            <h3 class="font-medieval text-xl font-bold text-amber-200 mb-4">Modifier le Héros</h3>
             <form id="form-hero" onsubmit="saveHeroProfile(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-stone-300 mb-1">Nom du Chevalier</label>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Nom</label>
                     <input type="text" id="hero-name-input" required class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
                 </div>
                 <div>
@@ -506,17 +506,19 @@
         // BANQUE DE DONNÉES
         const QUEST_DATABASE = [
             // Quotidiennes
-            { id: 'db_d1', title: 'Méditation 15 minutes', category: 'daily', xp: 15, target: 1, minLevel: 1, desc: 'Esprit clair et apaisé.' },
+            { id: 'db_d1', title: 'Méditation 15 minutes', category: 'daily', xp: 15, target: 1, minLevel: 1, maxLevel: 3, desc: 'Esprit clair et apaisé.' },
             { id: 'db_d2', title: 'Méditation 30 minutes', category: 'daily', xp: 30, target: 1, minLevel: 2, desc: 'Annule et remplace la méditation 15 minutes.' },
             { id: 'db_d3', title: '10 000 pas', category: 'daily', xp: 60, target: 1, minLevel: 1, desc: 'Marche quotidienne du chevalier.' },
 
             // Hebdomadaires
             { id: 'db_w1', title: 'Méditation (messe)', category: 'weekly', xp: 60, target: 1, minLevel: 1, desc: 'Recueillement spirituel hebdomadaire.' },
-            { id: 'db_w2', title: 'Activité sportive', category: 'weekly', xp: 120, target: 3, minLevel: 1, desc: 'Entraînement physique (3 séances).' },
+            { id: 'db_w2', title: 'Activité sportive de plus de 30min', category: 'weekly', xp: 120, target: 3, minLevel: 1, desc: 'Entraînement physique (3 séances de plus de 30min).' },
 
             // Mensuelles
             { id: 'db_m1', title: 'Jour sans Insta', category: 'monthly', xp: 500, target: 10, minLevel: 1, desc: '10 jours sans réseaux sociaux.' },
             { id: 'db_m2', title: 'Lieu découvert', category: 'monthly', xp: 200, target: 3, minLevel: 1, desc: 'Exploration de 3 nouveaux lieux.' },
+            { id: 'db_m3', title: 'Jour sans achat', category: 'monthly', xp: 200, target: 10, minLevel: 1, desc: 'Réduit un peu tes dépenses chef' },
+            { id: 'db_m4', title: 'Rendez vous galant ', category: 'monthly', xp: 500, target: 1, minLevel: 1, desc: 'Emmène la personne de ton choix en tête à tête' },
 
             // Hauts Faits
             { id: 'db_a1', title: 'Randonnée - Club des 3 000m d’altitude', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Ascension d’un sommet >3 000m.' },
@@ -796,8 +798,12 @@
             const select = document.getElementById('quest-database-select');
             select.innerHTML = '';
 
-            const available = QUEST_DATABASE.filter(dq => dq.category === currentActiveCategoryForModal && dq.minLevel <= gameState.hero.level);
-
+            const available = QUEST_DATABASE.filter(dq => {
+                        if (dq.category !== currentActiveCategoryForModal) return false;
+                        if (gameState.hero.level < dq.minLevel) return false;
+                        if (dq.maxLevel && gameState.hero.level > dq.maxLevel) return false;
+                        return true;
+                    });
             if (available.length === 0) {
                 const opt = document.createElement('option');
                 opt.innerText = "Aucune quête disponible à votre niveau actuel";
