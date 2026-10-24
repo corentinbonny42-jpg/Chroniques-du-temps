@@ -204,7 +204,7 @@
                     </div>
                     <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Jacquouille</h2>
                     <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4">Templier</p>
-                    <button onclick="openModal('edit-hero-modal')" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition">
+                    <button onclick="openEditHeroModal()" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition">
                         <i class="fa-solid fa-pen-to-square"></i> Modifier le Héros
                     </button>
                 </div>
@@ -687,6 +687,21 @@
             if (document.getElementById('stat-wis')) document.getElementById('stat-wis').innerText = h.stats.wis;
             if (document.getElementById('stat-end')) document.getElementById('stat-end').innerText = h.stats.end;
 
+            const editBtn = document.getElementById('btn-edit-hero');
+            if (editBtn) {
+                if (gameState.hero.level < 6) {
+                    // Style grisé / verrouillé
+                    editBtn.disabled = true;
+                    editBtn.className = "px-4 py-1.5 bg-stone-900 text-stone-600 border border-stone-800 text-xs font-bold rounded-lg cursor-not-allowed opacity-60 transition";
+                    editBtn.title = "Débloqué au Niveau 6";
+                } else {
+                    // Style actif (débloqué)
+                    editBtn.disabled = false;
+                    editBtn.className = "px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition cursor-pointer";
+                    editBtn.title = "Modifier le Héros";
+                }
+            }
+            
             renderQuests();
             renderShop();
             renderWorldShop();
@@ -918,6 +933,14 @@
             if (level >= 6) return "Ecuyer Novice";
             return "Troubadour";
         }
+
+        function openEditHeroModal() {
+        if (gameState.hero.level < 6) {
+            alert("🔒 Cette fonction est verrouillée ! Vous devez atteindre le Niveau 6 (Écuyer Novice) pour personnaliser votre nom et votre ordre.");
+            return;
+        }
+        openModal('edit-hero-modal');
+    }
         // BOUTIQUE ET DOMAINE ISOMÉTRIQUE
         function renderShop() {
             const grid = document.getElementById('shop-items-grid');
