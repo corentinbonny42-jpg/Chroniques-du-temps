@@ -402,14 +402,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-stone-300 mb-1">Difficulté / Récompense XP</label>
-                    <select id="custom-quest-difficulty" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
-                        <option value="easy">Facile (15 XP)</option>
-                        <option value="medium" selected>Moyenne (60 XP)</option>
-                        <option value="hard">Difficile (120 XP)</option>
-                        <option value="epic">Épique (300 XP)</option>
-                        <option value="honor">Honorifique - Hauts Faits</option>
-                    </select>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Récompense en XP</label>
+                    <input type="number" id="custom-quest-xp" value="30" min="0" max="10000" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500" placeholder="Ex: 50">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-stone-300 mb-1">Nombre d'étapes requises</label>
@@ -808,27 +802,27 @@
         }
 
         // CRÉER UNE QUÊTE PERSONNALISÉE LIBREMENT
-        function saveCustomQuest(e) {
-            e.preventDefault();
-            const title = document.getElementById('custom-quest-title').value;
-            const category = document.getElementById('custom-quest-category').value;
-            const difficulty = document.getElementById('custom-quest-difficulty').value;
-            const target = parseInt(document.getElementById('custom-quest-target').value) || 1;
-
-            let xp = difficulty === 'easy' ? 15 : difficulty === 'medium' ? 60 : difficulty === 'hard' ? 120 : difficulty === 'epic' ? 300 : 0;
-
-            gameState.quests.push({
-                id: Date.now().toString(),
-                title, category, xp,
-                current: 0, target,
-                completed: false
-            });
-
-            closeModal('create-custom-quest-modal');
-            document.getElementById('form-custom-quest').reset();
-            renderAll();
-        }
-
+            function saveCustomQuest(e) {
+                e.preventDefault();
+                const title = document.getElementById('custom-quest-title').value;
+                const category = document.getElementById('custom-quest-category').value;
+            
+                // On récupère directement la valeur numérique d'XP saisie (avec 0 par défaut si vide)
+                const xp = parseInt(document.getElementById('custom-quest-xp').value) || 0;
+            
+                const target = parseInt(document.getElementById('custom-quest-target').value) || 1;
+            
+                gameState.quests.push({
+                    id: Date.now().toString(),
+                    title, category, xp,
+                    current: 0, target,
+                    completed: false
+                });
+            
+                closeModal('create-custom-quest-modal');
+                document.getElementById('form-custom-quest').reset();
+                renderAll();
+            }
         // BANQUE DE QUÊTES PAR ONGLET
         function openDbModalForCategory(cat) {
             currentActiveCategoryForModal = cat;
