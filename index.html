@@ -661,6 +661,10 @@
             const h = gameState.hero;
                 // Met à jour automatiquement le titre en fonction du niveau actuel
                 h.title = getHeroTitle(h.level);
+            const titleBadge = document.getElementById('hero-title-badge');
+            if (titleBadge) {
+                titleBadge.innerText = h.title;
+            }    
             
             const headerStats = document.getElementById('header-stats');
             if (headerStats) {
