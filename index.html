@@ -156,7 +156,7 @@
                             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-900/60 text-red-300 border border-red-700 uppercase tracking-widest">Menace du Royaume</span>
                         </div>
                         <h2 id="boss-name" class="font-medieval text-xl sm:text-2xl font-bold text-amber-200">Dragon Rouge</h2>
-                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Chaque point d'XP gagné inflige des dégâts équivalents au Boss !</p>
+                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Chaque point d'XP gagné inflige des dégâts au Boss\, mais un coup est un coup donc tu ne peux pas tuer plusieurs boss à la fois !</p>
                     </div>
                 </div>
 
@@ -659,6 +659,9 @@
 
         function renderAll() {
             const h = gameState.hero;
+                // Met à jour automatiquement le titre en fonction du niveau actuel
+                h.title = getHeroTitle(h.level);
+            
             const headerStats = document.getElementById('header-stats');
             if (headerStats) {
                 headerStats.innerHTML = `
@@ -899,7 +902,18 @@
             closeModal('add-quest-modal');
             renderAll();
         }
-
+        
+        // TITRE DU HEROS
+        function getHeroTitle(level) {
+            if (level >= 100) return "Légende Vivante";
+            if (level >= 80) return "Seigneur de Guerre";
+            if (level >= 75) return "Paladin du Royaume";
+            if (level >= 50) return "Capitaine de la Garde";
+            if (level >= 36) return "Chevalier Errant";
+            if (level >= 16) return "Garde de la Tour";
+            if (level >= 6) return "Ecuyer Novice";
+            return "Troubadour";
+        }
         // BOUTIQUE ET DOMAINE ISOMÉTRIQUE
         function renderShop() {
             const grid = document.getElementById('shop-items-grid');
