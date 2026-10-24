@@ -690,18 +690,20 @@
             const editBtn = document.getElementById('btn-edit-hero');
             if (editBtn) {
                 if (gameState.hero.level < 6) {
-                    // Style grisé / verrouillé
+                    // Bouton verrouillé (< Niveau 6)
                     editBtn.disabled = true;
-                    editBtn.className = "px-4 py-1.5 bg-stone-900 text-stone-500 border border-stone-800 text-xs font-bold rounded-lg cursor-not-allowed opacity-60 transition";
+                    editBtn.className = "px-4 py-1.5 bg-stone-900 text-stone-500 border border-stone-800 text-xs font-bold rounded-lg cursor-not-allowed opacity-60 transition flex items-center gap-1.5 mx-auto";
+                    editBtn.innerHTML = `<i class="fa-solid fa-lock text-stone-600"></i> Débloqué niv. 6`;
                     editBtn.title = "Débloqué au Niveau 6";
                 } else {
-                    // Style actif (débloqué)
+                    // Bouton débloqué (Niveau 6 et plus)
                     editBtn.disabled = false;
-                    editBtn.className = "px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition cursor-pointer";
+                    editBtn.className = "px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition cursor-pointer flex items-center gap-1.5 mx-auto";
+                    editBtn.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Modifier le Héros`;
                     editBtn.title = "Modifier le Héros";
                 }
             }
-            
+                        
             renderQuests();
             renderShop();
             renderWorldShop();
