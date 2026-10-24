@@ -782,19 +782,26 @@
 
                 gameState.stats.completedQuests = (gameState.stats.completedQuests || 0) + 1;
 
-                // Montée de Niveau multiple (Nouveau code)
-                let leveledUp = false;
-                let oldLevel = gameState.hero.level;
-                
+                // Montée de Niveau 
+                let startLevel = gameState.hero.level;
+
+                // Boucle pour gérer les montées de niveaux multiples
                 while (gameState.hero.xp >= gameState.hero.xpMax) {
                     gameState.hero.xp -= gameState.hero.xpMax;
                     gameState.hero.level++;
-                    gameState.hero.xpMax += 50; // (Optionnel: tu peux moduler l'augmentation du palier ici si besoin)
-                    leveledUp = true;
+                    
+                    // Échelle progressive type Pokémon (augmente le palier requis à chaque niveau)
+                    gameState.hero.xpMax = Math.round(gameState.hero.xpMax * 1.35); 
                 }
                 
-                if (leveledUp) {
-                    alert(`⭐ Montée de Niveau Phénoménale ! Vous êtes passé du Niveau ${oldLevel} au Niveau ${gameState.hero.level} ! De nouvelles quêtes sont débloquées !`);
+                // Affichage conditionnel des messages
+                if (gameState.hero.level > startLevel) {
+                    let levelsGained = gameState.hero.level - startLevel;
+                    if (levelsGained > 1) {
+                        alert(`🔥 Montée fulgurante ! Vous avez gagné ${levelsGained} niveaux d'un coup ! Vous êtes désormais Niveau ${gameState.hero.level} !`);
+                    } else {
+                        alert(`⭐ Niveau Supérieur ! Vous êtes maintenant Niveau ${gameState.hero.level} !`);
+                    }
                 }
             }
             renderAll();
