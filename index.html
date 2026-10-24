@@ -506,23 +506,57 @@
         // BANQUE DE DONNÉES
         const QUEST_DATABASE = [
             // Quotidiennes
-            { id: 'db_d1', title: 'Méditation 15 minutes', category: 'daily', xp: 15, target: 1, minLevel: 1, maxLevel: 3, desc: 'Esprit clair et apaisé.' },
-            { id: 'db_d2', title: 'Méditation 30 minutes', category: 'daily', xp: 30, target: 1, minLevel: 2, desc: 'Annule et remplace la méditation 15 minutes.' },
-            { id: 'db_d3', title: '10 000 pas', category: 'daily', xp: 60, target: 1, minLevel: 1, desc: 'Marche quotidienne du chevalier.' },
+            { id: 'db_d1', title: 'Méditation 5 minutes', category: 'daily', xp: 5, target: 1, minLevel: 1, maxLevel: 5, desc: 'Esprit clair et apaisé.' },
+            { id: 'db_d2', title: 'Méditation 15 minutes', category: 'daily', xp: 15, target: 1, minLevel: 6, maxLevel: 20, desc: 'Esprit très clair et apaisé.' },
+            { id: 'db_d3', title: 'Méditation 30 minutes', category: 'daily', xp: 30, target: 1, minLevel: 21, desc: 'Esprit très clair et très apaisé.' },
+            { id: 'db_d4', title: '10 000 pas', category: 'daily', xp: 60, target: 1, minLevel: 1, desc: 'Le raptor 5.1 "J\'ai inventé la marche"' },
+            { id: 'db_d5', title: '5 pages lues', category: 'daily', xp: 5, target: 1, minLevel: 1, maxLevel: 3, desc: 'Lecture quotidienne' },
+            { id: 'db_d6', title: '15 pages lues', category: 'daily', xp: 15, target: 1, minLevel: 4, maxLevel: 10, desc: 'Lecture quotidienne' },
+            { id: 'db_d7', title: '30 pages lues', category: 'daily', xp: 30, target: 1, minLevel: 11, desc: 'Lecture quotidienne' },
+            { id: 'db_d8', title: 'Repas journalier cuisiné', category: 'daily', xp: 10, target: 1, minLevel: 1, desc: 'Festin du chevalier.' },
+            { id: 'db_d9', title: '2 Repas journaliers cuisinés', category: 'daily', xp: 45, target: 2, minLevel: 1, desc: 'Festin du chevalier.' },
+            { id: 'db_d10', title: '3 Repas journaliers cuisinés', category: 'daily', xp: 60, target: 3, minLevel: 1, desc: 'Festin du chevalier.' },
+            { id: 'db_d11', title: '2L d\'eau', category: 'daily', xp: 15, target: 1, minLevel: 1, desc: 'Quand zébu zé plus soif' },
+            { id: 'db_d12', title: '8h30 de sommeil', category: 'daily', xp: 60, target: 1, minLevel: 1, desc: 'Repos du guerrier' },
+            { id: 'db_d13', title: 'Temps d\'écran inférieur à 2h', category: 'daily', xp: 30, target: 1, minLevel: 1, desc: 'C\'est la base de l\'entrainement du guerrier' },
+            { id: 'db_d14', title: 'Routine de mobilité', category: 'daily', xp: 30, target: 1, minLevel: 1, desc: 'Be like water my friend' },
 
             // Hebdomadaires
-            { id: 'db_w1', title: 'Méditation (messe)', category: 'weekly', xp: 60, target: 1, minLevel: 1, desc: 'Recueillement spirituel hebdomadaire.' },
+            { id: 'db_w1', title: 'Méditation (messe)', category: 'weekly', xp: 120, target: 1, minLevel: 1, desc: 'Recueillement spirituel hebdomadaire.' },
             { id: 'db_w2', title: 'Activité sportive de plus de 30min', category: 'weekly', xp: 120, target: 3, minLevel: 1, desc: 'Entraînement physique (3 séances de plus de 30min).' },
 
             // Mensuelles
-            { id: 'db_m1', title: 'Jour sans Insta', category: 'monthly', xp: 500, target: 10, minLevel: 1, desc: '10 jours sans réseaux sociaux.' },
+            { id: 'db_m1', title: 'Jour sans Insta', category: 'monthly', xp: 200, target: 10, minLevel: 1, desc: '10 jours sans réseaux sociaux.' },
             { id: 'db_m2', title: 'Lieu découvert', category: 'monthly', xp: 200, target: 3, minLevel: 1, desc: 'Exploration de 3 nouveaux lieux.' },
             { id: 'db_m3', title: 'Jour sans achat', category: 'monthly', xp: 200, target: 10, minLevel: 1, desc: 'Réduit un peu tes dépenses chef' },
             { id: 'db_m4', title: 'Rendez vous galant ', category: 'monthly', xp: 500, target: 1, minLevel: 1, desc: 'Emmène la personne de ton choix en tête à tête' },
+            { id: 'db_m5', title: 'Lancer un projet perso', category: 'monthly', xp: 500, target: 1, minLevel: 1, desc: 'Grinding boyz' },
+            { id: 'db_m6', title: 'DJ set enregistré', category: 'monthly', xp: 200, target: 1, minLevel: 1, desc: 'Histoire de faire kiffer les gens' },
+            { id: 'db_m7', title: 'Repas unique testé pour la première fois', category: 'monthly', xp: 100, target: 1, minLevel: 1, desc: 'Gusto tout le monde peut cuisiner' },
+            { id: 'db_m8', title: 'Nouvelle activité de testée', category: 'monthly', xp: 200, target: 1, minLevel: 1, desc: 'Hobbymaxing' },
+            { id: 'db_m9', title: 'Apprendre un nouveau skill', category: 'monthly', xp: 200, target: 1, minLevel: 1, desc: 'Skillset +1, could be anything' },
 
             // Hauts Faits
             { id: 'db_a1', title: 'Randonnée - Club des 3 000m d’altitude', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Ascension d’un sommet >3 000m.' },
             { id: 'db_a2', title: 'Randonnée - Club des 4 000m d’altitude', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Ascension d’un sommet >4 000m.' }
+            { id: 'db_a3', title: 'Randonnée - Gravir l\'Everest', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Ascension du plus mythique des sommets' },
+            { id: 'db_a4', title: 'Randonnée - Dénivelé à pied journalier > 3km', category: 'achievements', xp: 0, target: 1, minLevel: 1 },
+            { id: 'db_a5', title: 'Randonnée - km à pied journalier > 40km', category: 'achievements', xp: 0, target: 1, minLevel: 1 desc: 'Petit poucet' },
+            { id: 'db_a6', title: 'Natation - 2 km en 40 min', category: 'achievements', xp: 0, target: 1, minLevel: 1 },
+            { id: 'db_a7', title: 'Natation - 100m en 1min30', category: 'achievements', xp: 0, target: 1, minLevel: 1 },
+            { id: 'db_a8', title: 'Course à pied - Finisher 100km', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Zinzin fou deluxe' },
+            { id: 'db_a9', title: 'Course à pied - Marathonien en moins de 3h20', category: 'achievements', xp: 0, target: 1, minLevel: 1 },
+            { id: 'db_a10', title: 'Course à pied - Semi-Marathonien en moins de 1h30', category: 'achievements', xp: 0, target: 1, minLevel: 1 },
+            { id: 'db_a11', title: 'Course à pied - 10km en moins de 40 min', category: 'achievements', xp: 0, target: 1, minLevel: 1 },
+            { id: 'db_a12', title: 'Personnel - Température min vécue -20°C', category: 'achievements', xp: 0, target: 1, minLevel: 1 },
+            { id: 'db_a13', title: 'Personnel - Température max vécue 45°C', category: 'achievements', xp: 0, target: 1, minLevel: 1 },
+            { id: 'db_a14', title: 'Personnel - Jeun de 5 jours', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Grand prêtre' },
+            { id: 'db_a15', title: 'Voyage - Nombre de pays visités > 10', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Routard' },
+            { id: 'db_a16', title: 'Voyage - Nombre de continents visités > 3', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Globe trotter' },
+            { id: 'db_a17', title: 'Culture - Plus de 12 livres lus (annuel)', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Grand lecteur dis donc' },
+            { id: 'db_a18', title: 'Culture - Plus de 100 livres lus', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Erudit' },
+            { id: 'db_a19', title: 'Culture - Plus de 106 films vus (annuel)', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Regelegorilla prime' },
+
         ];
 
         // QUÊTES INITIALES
