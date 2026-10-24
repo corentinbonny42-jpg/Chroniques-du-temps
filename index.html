@@ -560,14 +560,12 @@
 
         // QUÊTES INITIALES
         const DEFAULT_QUESTS = [
-            { id: 'q_d1', title: 'Méditation 15 minutes', category: 'daily', xp: 15, current: 0, target: 1, completed: false },
+            { id: 'q_d1', title: 'Méditation 5 minutes', category: 'daily', xp: 5, current: 0, target: 1, completed: false },
             { id: 'q_d3', title: '10 000 pas', category: 'daily', xp: 60, current: 0, target: 1, completed: false },
             { id: 'q_w1', title: 'Méditation (messe)', category: 'weekly', xp: 60, current: 0, target: 1, completed: false },
             { id: 'q_w2', title: 'Activité sportive', category: 'weekly', xp: 120, current: 0, target: 3, completed: false },
-            { id: 'q_m1', title: 'Jour sans Insta', category: 'monthly', xp: 500, current: 0, target: 10, completed: false },
-            { id: 'q_m2', title: 'Lieu découvert', category: 'monthly', xp: 200, current: 0, target: 3, completed: false },
-            { id: 'q_a1', title: 'Randonnée - Club des 3 000m d’altitude', category: 'achievements', xp: 0, current: 0, target: 1, completed: false },
-            { id: 'q_a2', title: 'Randonnée - Club des 4 000m d’altitude', category: 'achievements', xp: 0, current: 0, target: 1, completed: false }
+            { id: 'q_m1', title: 'Jour sans Insta', category: 'monthly', xp: 200, current: 0, target: 10, completed: false },
+            { id: 'q_m2', title: 'Rendez vous galant ', category: 'monthly', xp: 500, current: 0, target: 1, completed: false },
         ];
 
         let currentActiveCategoryForModal = 'daily';
@@ -784,11 +782,19 @@
 
                 gameState.stats.completedQuests = (gameState.stats.completedQuests || 0) + 1;
 
-                if (gameState.hero.xp >= gameState.hero.xpMax) {
-                    gameState.hero.level++;
+                // Montée de Niveau multiple (Nouveau code)
+                let leveledUp = false;
+                let oldLevel = gameState.hero.level;
+                
+                while (gameState.hero.xp >= gameState.hero.xpMax) {
                     gameState.hero.xp -= gameState.hero.xpMax;
-                    gameState.hero.xpMax += 50;
-                    alert(`⭐ Niveau Supérieur ! Vous êtes maintenant Niveau ${gameState.hero.level} !`);
+                    gameState.hero.level++;
+                    gameState.hero.xpMax += 50; // (Optionnel: tu peux moduler l'augmentation du palier ici si besoin)
+                    leveledUp = true;
+                }
+                
+                if (leveledUp) {
+                    alert(`⭐ Montée de Niveau Phénoménale ! Vous êtes passé du Niveau ${oldLevel} au Niveau ${gameState.hero.level} ! De nouvelles quêtes sont débloquées !`);
                 }
             }
             renderAll();
