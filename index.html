@@ -408,7 +408,7 @@
             <!-- ENCART SUCCÈS DÉBLOCABLES -->
             <div class="bg-medieval-card p-6 rounded-2xl border border-medieval-border flex flex-col gap-4 md:col-span-3">
                 <h3 class="font-medieval text-lg font-bold text-amber-200 border-b border-medieval-border pb-2">Succès</h3>
-                <div id="achievements-list" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div id="achievements-list" class="grid grid-cols-1 sm:grid-cols-5 gap-4">
                     <!-- Généré dynamiquement en JS -->
                 </div>
             </div>
@@ -1114,6 +1114,13 @@
             // Définition de tes 3 succès
             const achievements = [
                 {
+                    id: 'fighter',
+                    title: 'Combattant',
+                    desc: 'Réaliser 10 quêtes validées.',
+                    icon: 'fa-shield-sword',
+                    unlocked: ((gameState.stats.completedQuests || 0) >= 10)
+                },
+                {
                     id: 'monster_slayer',
                     title: 'Tueur de monstres',
                     desc: 'Vaincre 10 monstres au total.',
@@ -1123,14 +1130,21 @@
                 {
                     id: 'scholar',
                     title: 'Érudit',
-                    desc: 'Lire 10 livres (compteur culturel).',
+                    desc: 'Lire 10 livres.',
                     icon: 'fa-book-open',
                     unlocked: ((gameState.stats.booksRead || 0) >= 10)
                 },
                 {
+                    id: 'cinema_fan',
+                    title: 'Fan de cinéma',
+                    desc: 'Voir 10 films.',
+                    icon: 'fa-film',
+                    unlocked: ((gameState.stats.moviesWatched || 0) >= 10)
+                },
+                {
                     id: 'iron_streak',
                     title: 'Flammes éternelles',
-                    desc: 'Maintenir une série de 10 jours de suite.',
+                    desc: 'Maintenir 10 jours de suite.',
                     icon: 'fa-fire',
                     unlocked: ((gameState.stats.streak || 0) >= 10)
                 }
