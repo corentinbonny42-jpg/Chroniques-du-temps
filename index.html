@@ -788,7 +788,11 @@
                     editBtn.title = "Modifier le Héros";
                 }
             }
-                        
+            
+            // Mise à jour des vertus / statistiques
+            if (document.getElementById('stat-completed-quests')) {
+                document.getElementById('stat-completed-quests').innerText = gameState.stats.completedQuests || 0;
+            }            
             renderQuests();
             renderShop();
             renderWorldShop();
