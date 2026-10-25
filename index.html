@@ -385,6 +385,25 @@
                         </div>
                     </div>
                 </div>
+                <div class="bg-medieval-card p-6 rounded-2xl border border-medieval-border flex flex-col gap-4">
+                    <h3 class="font-medieval text-lg font-bold text-amber-200 border-b border-medieval-border pb-2">Compteur Culturel</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between items-center border-b border-stone-800 pb-1">
+                            <span class="text-stone-400">Livres lus</span>
+                            <div class="flex items-center gap-3">
+                                <span id="stat-books" class="font-bold text-amber-400 font-mono">0</span>
+                                <button onclick="incrementBooks()" class="px-2 py-0.5 bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs rounded transition">+</button>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-stone-800 pb-1">
+                            <span class="text-stone-400">Films vus</span>
+                            <div class="flex items-center gap-3">
+                                <span id="stat-movies" class="font-bold text-amber-400 font-mono">0</span>
+                                <button onclick="incrementMovies()" class="px-2 py-0.5 bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs rounded transition">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -634,7 +653,9 @@
             stats: { 
                     completedQuests: 0,
                     streak: 0,              
-                    lastActiveDate: ""      
+                    lastActiveDate: "",
+                    booksRead: 0,    
+                    moviesWatched: 0
                 }
         };
 
@@ -797,20 +818,22 @@
                 }
             }
             
-            // Mise à jour des vertus / statistiques
             if (document.getElementById('stat-completed-quests')) {
                 document.getElementById('stat-completed-quests').innerText = gameState.stats.completedQuests || 0;
             } 
-            
-            // Mise à jour du nombre de boss vaincus
             if (document.getElementById('stat-bosses-slain')) {
                 document.getElementById('stat-bosses-slain').innerText = gameState.boss.defeated || 0;
             }
-            // Streak affichage
             if (document.getElementById('stat-streak')) {
                 document.getElementById('stat-streak').innerText = `${gameState.stats.streak || 0} jours`;
             }
-            
+            if (document.getElementById('stat-books')) {
+                document.getElementById('stat-books').innerText = gameState.stats.booksRead || 0;
+            }
+            if (document.getElementById('stat-movies')) {
+                document.getElementById('stat-movies').innerText = gameState.stats.moviesWatched || 0;
+            }
+                        
             renderQuests();
             renderShop();
             renderWorldShop();
@@ -928,7 +951,7 @@
                         const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
                         
                         if (diffDays === 1) {
-                            // C'est le jour suivant, on incrémente la série !
+                            // C'est un nouveau jour, on incrémente la série !
                             gameState.stats.streak++;
                         } else if (diffDays > 1) {
                             // Plus d'un jour manqué, la série retombe à 1
@@ -1062,6 +1085,16 @@
             });
 
             closeModal('add-quest-modal');
+            renderAll();
+        }
+
+        function incrementBooks() {
+            gameState.stats.booksRead = (gameState.stats.booksRead || 0) + 1;
+            renderAll();
+        }
+        
+        function incrementMovies() {
+            gameState.stats.moviesWatched = (gameState.stats.moviesWatched || 0) + 1;
             renderAll();
         }
         
