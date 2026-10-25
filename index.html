@@ -235,6 +235,12 @@
                             <div class="text-xs text-stone-400 font-semibold uppercase">Endurance</div>
                         </div>
                     </div>
+                      <div id="hero-order-desc-box" class="bg-black/40 p-4 rounded-xl border border-stone-800 hidden flex-col gap-2">
+                        <h4 id="hero-order-title" class="font-medieval text-sm font-bold text-amber-300 flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-amber-400"></i> --
+                        </h4>
+                        <p id="hero-order-text" class="text-xs text-stone-300 leading-relaxed">--</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -561,7 +567,22 @@
             { id: 'q_m1', title: 'Jour sans Insta', category: 'monthly', xp: 200, current: 0, target: 10, completed: false },
             { id: 'q_m2', title: 'Rendez vous galant ', category: 'monthly', xp: 500, current: 0, target: 1, completed: false },
         ];
-
+        
+        const ORDER_DESCRIPTIONS = {
+            "Templier": {
+                title: "Ordre du Temple",
+                desc: "Moines-soldats d'élite voués à la protection des pèlerins et des routes saintes. Leur ferveur martiale et leur discipline de fer font d'eux le rempart ultime du Royaume."
+            },
+            "Teuton": {
+                title: "Ordre Teutonique",
+                desc: "Chevaliers armés de la croix noire, voués à la protection des fidèles et à l'expansion de la foi dans les marches de l'Est. Stratèges redoutables, ils unissent force brute et rigueur monastique."
+            },
+            "Hospitalier": {
+                title: "Ordre de Saint-Jean",
+                desc: "Gardiens de la charité et du soin, ces chevaliers unissent la guérison des affligés à une défense implacable des faibles et des opprimés à travers le monde."
+            }
+        };
+        
         let currentActiveCategoryForModal = 'daily';
 
         let gameState = {
@@ -658,6 +679,20 @@
         }
 
         function renderAll() {
+                const orderDescBox = document.getElementById('hero-order-desc-box');
+                const orderTitle = document.getElementById('hero-order-title');
+                const orderText = document.getElementById('hero-order-text');
+                
+                if (h.level >= 6 && h.class && ORDER_DESCRIPTIONS[h.class]) {
+                    orderDescBox.classList.remove('hidden');
+                    orderDescBox.classList.add('flex');
+                    orderTitle.innerHTML = `<i class="fa-solid fa-shield-halved text-amber-400"></i> ${ORDER_DESCRIPTIONS[h.class].title}`;
+                    orderText.innerText = ORDER_DESCRIPTIONS[h.class].desc;
+                } else {
+                    orderDescBox.classList.add('hidden');
+                    orderDescBox.classList.remove('flex');
+                }
+            
             const h = gameState.hero;
                 // Met à jour automatiquement le titre en fonction du niveau actuel
                 h.title = getHeroTitle(h.level);
