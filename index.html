@@ -156,7 +156,7 @@
                             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-900/60 text-red-300 border border-red-700 uppercase tracking-widest">Menace du Royaume</span>
                         </div>
                         <h2 id="boss-name" class="font-medieval text-xl sm:text-2xl font-bold text-amber-200">Dragon Rouge</h2>
-                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Chaque point d'XP gagné inflige des dégâts au Boss\, mais un coup est un coup donc tu ne peux pas tuer plusieurs boss à la fois !</p>
+                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Chaque point d'XP gagné inflige des dégâts au Boss, mais un coup est un coup donc tu ne peux pas tuer plusieurs boss à la fois !</p>
                     </div>
                 </div>
 
@@ -203,7 +203,7 @@
                         </div>
                     </div>
                     <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Jacquouille</h2>
-                    <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4">Templier</p>
+                    <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4"></p>
                     <button id="btn-edit-hero" onclick="openEditHeroModal()" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition">>
                         <i class="fa-solid fa-pen-to-square"></i> Modifier le Héros
                     </button>
@@ -566,7 +566,7 @@
 
         let gameState = {
             lastReset: { day: new Date().toDateString(), timestamp: Date.now() },
-            hero: { name: "Jacquouille", title: "Troubadour", class: "Templier", level: 1, xp: 0, xpMax: 100, hp: 50, hpMax: 50, gold: 50, stats: { str: 10, def: 10, wis: 10, end: 10 } },
+            hero: { name: "Jacquouille", title: "Troubadour", class: "", level: 1, xp: 0, xpMax: 100, hp: 50, hpMax: 50, gold: 50, stats: { str: 10, def: 10, wis: 10, end: 10 } },
             boss: { name: "Dragon Rouge", hp: 100, hpMax: 100, defeated: 0 },
             quests: JSON.parse(JSON.stringify(DEFAULT_QUESTS)),
             inventory: [],
