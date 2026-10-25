@@ -236,11 +236,19 @@
                         </div>
                     </div>
                  </div>
-                      <div id="hero-order-desc-box" class="bg-black/40 p-4 rounded-xl border border-stone-800 hidden flex-col gap-2">
-                        <h4 id="hero-order-title" class="font-medieval text-sm font-bold text-amber-300 flex items-center gap-2">
-                            <i class="fa-solid fa-shield-halved text-amber-400"></i> --
+                    <div id="hero-order-desc-box" class="bg-black/40 p-4 rounded-xl border border-stone-800 flex flex-col gap-2 relative overflow-hidden min-h-[90px] justify-center">
+                        <!-- Icône en filigrane en arrière-plan -->
+                        <div class="absolute -right-3 -bottom-4 opacity-10 text-stone-400 text-7xl pointer-events-none select-none">
+                            <i class="fa-brands fa-jedi-order"></i>
+                        </div>
+                    
+                        <!-- Contenu dynamique JS -->
+                        <h4 id="hero-order-title" class="font-medieval text-sm font-bold text-amber-300 flex items-center gap-2 relative z-10">
+                            <i class="fa-solid fa-shield-halved text-amber-400"></i> Ordre de Chevalerie
                         </h4>
-                        <p id="hero-order-text" class="text-xs text-stone-300 leading-relaxed">--</p>
+                        <p id="hero-order-text" class="text-xs text-stone-400 leading-relaxed relative z-10">
+                            --
+                        </p>
                     </div>
             </div>
         </section>
@@ -687,19 +695,25 @@
             h.title = getHeroTitle(h.level);
         
             // 3. Encart de description de l'Ordre (Niveau 6+)
-            const orderDescBox = document.getElementById('hero-order-desc-box');
             const orderTitle = document.getElementById('hero-order-title');
             const orderText = document.getElementById('hero-order-text');
-        
-            if (orderDescBox && orderTitle && orderText) {
-                if (h.level >= 6 && h.class && ORDER_DESCRIPTIONS[h.class]) {
-                    orderDescBox.classList.remove('hidden');
-                    orderDescBox.classList.add('flex');
+            
+            if (orderTitle && orderText) {
+                if (h.level < 6) {
+                    // Avant le Niveau 6 : Message d'attente/verrouillage
+                    orderTitle.innerHTML = `<i class="fa-solid fa-lock text-stone-500"></i> Ordre de Chevalerie`;
+                    orderText.className = "text-xs text-stone-500 italic leading-relaxed relative z-10";
+                    orderText.innerText = "Rejoignez un Ordre d'élite dès le Niveau 6 pour débloquer les enseignements et la doctrine de votre faction.";
+                } else if (h.class && ORDER_DESCRIPTIONS[h.class]) {
+                    // Niveau 6+ et classe choisie
                     orderTitle.innerHTML = `<i class="fa-solid fa-shield-halved text-amber-400"></i> ${ORDER_DESCRIPTIONS[h.class].title}`;
+                    orderText.className = "text-xs text-stone-300 leading-relaxed relative z-10";
                     orderText.innerText = ORDER_DESCRIPTIONS[h.class].desc;
                 } else {
-                    orderDescBox.classList.add('hidden');
-                    orderDescBox.classList.remove('flex');
+                    // Niveau 6+ mais aucune classe sélectionnée pour l'instant
+                    orderTitle.innerHTML = `<i class="fa-solid fa-shield-halved text-amber-400"></i> Ordre de Chevalerie`;
+                    orderText.className = "text-xs text-amber-400/80 italic leading-relaxed relative z-10";
+                    orderText.innerText = "Vous avez atteint le Niveau 6 ! Personnalisez votre héros pour choisir votre Ordre.";
                 }
             }
         
