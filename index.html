@@ -710,8 +710,20 @@
             saveGame();
         }
 
+        function removeQuestFromDisplay(questId) {
+        // On retire la quête uniquement du tableau des quêtes actives du joueur
+        gameState.quests = gameState.quests.filter(q => q.id !== questId);
+        
+        // On sauvegarde et on met à jour l'affichage
+        saveGame();
+        renderAll();
+    }
         // RENDU DES QUÊTES AVEC FORMAT CARRÉ EN 2 COLONNES POUR HAUTS FAITS
         function renderQuests() {
+            <button onclick="removeQuestFromDisplay('${quest.id}')" class="px-2.5 py-1 bg-stone-800 hover:bg-red-950/60 text-stone-400 hover:text-red-400 border border-stone-700 hover:border-red-800 rounded-lg text-xs font-bold transition" title="Retirer de l'affichage">
+                -
+            </button>
+            
             const categories = ['daily', 'weekly', 'monthly', 'achievements'];
 
             categories.forEach(cat => {
