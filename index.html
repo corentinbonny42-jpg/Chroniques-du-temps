@@ -720,10 +720,7 @@
     }
         // RENDU DES QUÊTES AVEC FORMAT CARRÉ EN 2 COLONNES POUR HAUTS FAITS
         function renderQuests() {
-            <button onclick="removeQuestFromDisplay('${quest.id}')" class="px-2.5 py-1 bg-stone-800 hover:bg-red-950/60 text-stone-400 hover:text-red-400 border border-stone-700 hover:border-red-800 rounded-lg text-xs font-bold transition">
-            </button>
-            
-            const categories = ['daily', 'weekly', 'monthly', 'achievements'];
+           const categories = ['daily', 'weekly', 'monthly', 'achievements'];
 
             categories.forEach(cat => {
                 const container = document.getElementById(`list-${cat}`);
@@ -742,6 +739,7 @@
                         // FORMAT CARRÉ POUR LES HAUTS FAITS
                         card.className = "bg-black/70 border border-amber-500/50 p-3 rounded-xl flex flex-col justify-between aspect-square shadow-lg text-center relative";
                         card.innerHTML = `
+                            <button onclick="removeQuestFromDisplay('${q.id}')" class="absolute top-2 right-2 w-5 h-5 bg-stone-800 hover:bg-red-950/60 text-stone-400 hover:text-red-400 border border-stone-700 rounded text-[10px] font-bold flex items-center justify-center transition" title="Retirer de l'affichage">-</button>
                             <div class="text-amber-400 text-lg mb-1"><i class="fa-solid fa-trophy"></i></div>
                             <span class="text-[11px] font-bold text-amber-100 leading-tight">${q.title}</span>
                             <div class="pt-2">
@@ -762,7 +760,7 @@
                                 <span class="text-xs font-semibold ${q.completed ? 'line-through text-stone-500' : 'text-slate-100'}">${q.title}</span>
                                 <span class="text-[10px] font-mono font-bold text-amber-400">+${q.xp} XP</span>
                             </div>
-
+                            
                             ${isMultiStep ? `
                                 <div class="w-full bg-stone-950 h-2 rounded-full overflow-hidden border border-stone-800">
                                     <div class="bg-amber-500 h-full transition-all" style="width: ${percent}%"></div>
@@ -773,7 +771,8 @@
                                 </div>
                             ` : ''}
 
-                            <div class="flex justify-end pt-1">
+                            <div class="flex justify-end items-center gap-2 pt-1">
+                                <button onclick="removeQuestFromDisplay('${q.id}')" class="px-2 py-1 bg-stone-800 hover:bg-red-950/60 text-stone-400 hover:text-red-400 border border-stone-700 hover:border-red-800 rounded-lg text-xs font-bold transition" title="Retirer de l'affichage">-</button>
                                 ${q.completed ? 
                                     `<span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800"><i class="fa-solid fa-check"></i> Validé</span>` :
                                     `<button onclick="incrementQuest('${q.id}')" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs rounded-lg transition flex items-center gap-1">
