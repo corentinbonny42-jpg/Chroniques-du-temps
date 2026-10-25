@@ -236,20 +236,51 @@
                         </div>
                     </div>
                  </div>
-                    <div id="hero-order-desc-box" class="bg-black/40 p-4 rounded-xl border border-stone-800 flex flex-col gap-2 relative overflow-hidden min-h-[90px] justify-center">
-                        <!-- Icône en filigrane en arrière-plan -->
+                <!-- GRILLE 2 COLONNES : DESCRIPTION DE L'ORDRE & MOT DU CRÉATEUR -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                
+                    <!-- 1. ENCART DESCRIPTION DE L'ORDRE -->
+                    <div id="hero-order-desc-box" class="bg-black/40 p-4 rounded-xl border border-stone-800 flex flex-col gap-2 relative overflow-hidden min-h-[140px] justify-between">
+                        <!-- Icône en filigrane -->
                         <div class="absolute -right-3 -bottom-4 opacity-10 text-stone-400 text-7xl pointer-events-none select-none">
                             <i class="fa-brands fa-jedi-order"></i>
                         </div>
-                    
-                        <!-- Contenu dynamique JS -->
-                        <h4 id="hero-order-title" class="font-medieval text-sm font-bold text-amber-300 flex items-center gap-2 relative z-10">
-                            <i class="fa-solid fa-shield-halved text-amber-400"></i> Ordre de Chevalerie
-                        </h4>
-                        <p id="hero-order-text" class="text-xs text-stone-400 leading-relaxed relative z-10">
-                            --
-                        </p>
+                
+                        <div>
+                            <h4 id="hero-order-title" class="font-medieval text-sm font-bold text-amber-300 flex items-center gap-2 relative z-10 mb-1">
+                                <i class="fa-solid fa-shield-halved text-amber-400"></i> Ordre de Chevalerie
+                            </h4>
+                            <p id="hero-order-text" class="text-xs text-stone-400 leading-relaxed relative z-10">
+                                --
+                            </p>
+                        </div>
                     </div>
+                
+                    <!-- 2. ENCART MOT DU CRÉATEUR -->
+                    <div class="bg-black/40 p-4 rounded-xl border border-stone-800 flex flex-col justify-between gap-3 relative overflow-hidden min-h-[140px]">
+                        <!-- Icône en filigrane -->
+                        <div class="absolute -right-2 -bottom-4 opacity-10 text-amber-500 text-7xl pointer-events-none select-none">
+                            <i class="fa-solid fa-scroll"></i>
+                        </div>
+                
+                        <div class="relative z-10">
+                            <h4 class="font-medieval text-sm font-bold text-amber-300 flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-feather-pointed text-amber-400"></i> Mot du Créateur
+                            </h4>
+                            <p class="text-xs text-stone-300 leading-relaxed">
+                                Les <strong class="text-amber-200">Chroniques du Temps</strong> visent à transformer la discipline quotidienne en une quête épique. En liant le suivi de vos habitudes au développement de votre chevalier, chaque petite victoire façonne votre rigueur et forge votre légende.
+                            </p>
+                        </div>
+                
+                        <div class="relative z-10 border-t border-stone-800/80 pt-2">
+                            <p class="text-[11px] text-amber-400/90 italic font-serif leading-tight">
+                                « La victoire sur soi-même est la plus grande des victoires. »
+                            </p>
+                            <span class="text-[10px] text-stone-500 font-sans block mt-0.5">— Saint Bernard de Clairvaux (Règle du Temple)</span>
+                        </div>
+                    </div>
+                
+                </div>
             </div>
         </section>
         
