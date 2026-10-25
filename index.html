@@ -405,6 +405,13 @@
                     </div>
                 </div>
             </div>
+            <!-- ENCART SUCCÈS DÉBLOCABLES -->
+            <div class="bg-medieval-card p-6 rounded-2xl border border-medieval-border flex flex-col gap-4 md:col-span-3">
+                <h3 class="font-medieval text-lg font-bold text-amber-200 border-b border-medieval-border pb-2">Succès</h3>
+                <div id="achievements-list" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- Généré dynamiquement en JS -->
+                </div>
+            </div>
         </section>
 
         <!-- ROYAUME ISOMÉTRIQUE -->
@@ -837,6 +844,7 @@
             renderQuests();
             renderShop();
             renderWorldShop();
+            renderUnlockableAchievements();
             saveGame();
         }
 
@@ -1096,6 +1104,66 @@
         function incrementMovies() {
             gameState.stats.moviesWatched = (gameState.stats.moviesWatched || 0) + 1;
             renderAll();
+        }
+
+        function renderUnlockableAchievements() {
+            const container = document.getElementById('achievements-list');
+            if (!container) return;
+            container.innerHTML = '';
+        
+            // Définition de tes 3 succès
+            const achievements = [
+                {
+                    id: 'monster_slayer',
+                    title: 'Tueur de monstres',
+                    desc: 'Vaincre 10 monstres au total.',
+                    icon: 'fa-dragon',
+                    unlocked: (gameState.boss.defeated >= 10)
+                },
+                {
+                    id: 'scholar',
+                    title: 'Érudit',
+                    desc: 'Lire 10 livres (compteur culturel).',
+                    icon: 'fa-book-open',
+                    unlocked: ((gameState.stats.booksRead || 0) >= 10)
+                },
+                {
+                    id: 'iron_streak',
+                    title: 'Flammes éternelles',
+                    desc: 'Maintenir une série de 10 jours de suite.',
+                    icon: 'fa-fire',
+                    unlocked: ((gameState.stats.streak || 0) >= 10)
+                }
+            ];
+        
+            achievements.forEach(ach => {
+                const card = document.createElement('div');
+                
+                if (ach.unlocked) {
+                    // Style si DÉBLOQUÉ (doré, lumineux)
+                    card.className = "bg-amber-950/40 border-2 border-amber-500/80 p-4 rounded-xl flex flex-col items-center text-center gap-2 shadow-[0_0_15px_rgba(212,175,55,0.2)] transition";
+                    card.innerHTML = `
+                        <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-stone-950 text-xl font-bold shadow-md">
+                            <i class="fa-solid ${ach.icon}"></i>
+                        </div>
+                        <h4 class="font-medieval text-sm font-bold text-amber-200">${ach.title}</h4>
+                        <p class="text-xs text-stone-300">${ach.desc}</p>
+                        <span class="mt-auto text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-800"><i class="fa-solid fa-check"></i> Débloqué</span>
+                    `;
+                } else {
+                    // Style si VERROUILLÉ (grisé)
+                    card.className = "bg-stone-900/60 border border-stone-800/80 p-4 rounded-xl flex flex-col items-center text-center gap-2 opacity-50 transition";
+                    card.innerHTML = `
+                        <div class="w-12 h-12 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-stone-500 text-xl">
+                            <i class="fa-solid ${ach.icon}"></i>
+                        </div>
+                        <h4 class="font-medieval text-sm font-bold text-stone-400">${ach.title}</h4>
+                        <p class="text-xs text-stone-500">${ach.desc}</p>
+                        <span class="mt-auto text-[10px] font-bold text-stone-500 bg-stone-950 px-2.5 py-0.5 rounded-full border border-stone-800"><i class="fa-solid fa-lock"></i> Verrouillé</span>
+                    `;
+                }
+                container.appendChild(card);
+            });
         }
         
         // TITRE DU HEROS
