@@ -379,6 +379,10 @@
                             <span class="text-stone-400">Boss Vaincus</span>
                             <span id="stat-bosses-slain" class="font-bold text-red-400 font-mono">0</span>
                         </div>
+                        <div class="flex justify-between border-b border-stone-800 pb-1">
+                            <span class="text-stone-400">Série Consécutive</span>
+                            <span id="stat-streak" class="font-bold text-amber-400 font-mono">0 jours</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -627,7 +631,11 @@
             inventory: [],
             buildingsPurchased: ['cabane'],
             world: { gridSize: 5, expansionCost: 100, knightPos: { x: 2, y: 2 }, placedBuildings: {} },
-            stats: { completedQuests: 0 }
+            stats: { 
+                    completedQuests: 0,
+                    streak: 0,              
+                    lastActiveDate: ""      
+                }
         };
 
         const SHOP_ITEMS = [
@@ -798,6 +806,10 @@
             if (document.getElementById('stat-bosses-slain')) {
                 document.getElementById('stat-bosses-slain').innerText = gameState.boss.defeated || 0;
             }
+            // Streak affichage
+            if (document.getElementById('stat-streak')) {
+                document.getElementById('stat-streak').innerText = `${gameState.stats.streak || 0} jours`;
+            }
             
             renderQuests();
             renderShop();
@@ -902,7 +914,31 @@
                         alert(`💥 Boss Vaincu ! Un monstre de ${gameState.boss.hpMax} PV apparaît !`);
                     }
                 }
-
+                // --- CALCUL DU STREAK (SÉRIE DE JOURS) ---
+                const todayStr = new Date().toDateString();
+                if (gameState.stats.lastActiveDate !== todayStr) {
+                    const lastDate = gameState.stats.lastActiveDate ? new Date(gameState.stats.lastActiveDate) : null;
+                    const currentDate = new Date(todayStr);
+                    
+                    if (!lastDate) {
+                        // Premier jour de jeu
+                        gameState.stats.streak = 1;
+                    } else {
+                        const diffTime = currentDate - lastDate;
+                        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays === 1) {
+                            // C'est le jour suivant, on incrémente la série !
+                            gameState.stats.streak++;
+                        } else if (diffDays > 1) {
+                            // Plus d'un jour manqué, la série retombe à 1
+                            gameState.stats.streak = 1;
+                        }
+                        // Si diffDays === 0, c'est le même jour, on ne touche pas au streak
+                    }
+                    gameState.stats.lastActiveDate = todayStr;
+                }
+                
                 gameState.stats.completedQuests = (gameState.stats.completedQuests || 0) + 1;
 
                 // Montée de Niveau 
