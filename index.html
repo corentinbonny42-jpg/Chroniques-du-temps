@@ -792,7 +792,13 @@
             // Mise à jour des vertus / statistiques
             if (document.getElementById('stat-completed-quests')) {
                 document.getElementById('stat-completed-quests').innerText = gameState.stats.completedQuests || 0;
-            }            
+            } 
+            
+            // Mise à jour du nombre de boss vaincus
+            if (document.getElementById('stat-bosses-slain')) {
+                document.getElementById('stat-bosses-slain').innerText = gameState.boss.defeated || 0;
+            }
+            
             renderQuests();
             renderShop();
             renderWorldShop();
