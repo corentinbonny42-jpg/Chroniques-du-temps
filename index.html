@@ -679,10 +679,19 @@
         }
 
         function renderAll() {
-                const orderDescBox = document.getElementById('hero-order-desc-box');
-                const orderTitle = document.getElementById('hero-order-title');
-                const orderText = document.getElementById('hero-order-text');
-                
+            // 1. DÉCLARATION DE LA VARIABLE 'h' EN PREMIER
+            const h = gameState.hero;
+            if (!h) return; // Sécurité au cas où gameState n'est pas encore prêt
+        
+            // 2. Calcul du titre
+            h.title = getHeroTitle(h.level);
+        
+            // 3. Encart de description de l'Ordre (Niveau 6+)
+            const orderDescBox = document.getElementById('hero-order-desc-box');
+            const orderTitle = document.getElementById('hero-order-title');
+            const orderText = document.getElementById('hero-order-text');
+        
+            if (orderDescBox && orderTitle && orderText) {
                 if (h.level >= 6 && h.class && ORDER_DESCRIPTIONS[h.class]) {
                     orderDescBox.classList.remove('hidden');
                     orderDescBox.classList.add('flex');
@@ -692,15 +701,15 @@
                     orderDescBox.classList.add('hidden');
                     orderDescBox.classList.remove('flex');
                 }
-            
-            const h = gameState.hero;
-                // Met à jour automatiquement le titre en fonction du niveau actuel
-                h.title = getHeroTitle(h.level);
+            }
+        
+            // 4. Badge du titre
             const titleBadge = document.getElementById('hero-title-badge');
             if (titleBadge) {
                 titleBadge.innerText = h.title;
             }    
-            
+        
+            // 5. Statistiques du Header
             const headerStats = document.getElementById('header-stats');
             if (headerStats) {
                 headerStats.innerHTML = `
@@ -709,29 +718,30 @@
                     <span class="text-amber-400 font-bold font-mono"><i class="fa-solid fa-coins"></i> ${h.gold}</span>
                 `;
             }
-
+        
+            // 6. Boss
             const b = gameState.boss;
             if (document.getElementById('boss-name')) document.getElementById('boss-name').innerText = b.name;
             if (document.getElementById('boss-hp-text')) document.getElementById('boss-hp-text').innerText = `${b.hp} / ${b.hpMax}`;
             if (document.getElementById('boss-hp-bar')) document.getElementById('boss-hp-bar').style.width = `${Math.max(0, (b.hp / b.hpMax) * 100)}%`;
-
+        
+            // 7. Affichage des stats du héros
             if (document.getElementById('hero-name-display')) document.getElementById('hero-name-display').innerText = h.name;
             if (document.getElementById('hero-class-display')) document.getElementById('hero-class-display').innerText = h.class;
             if (document.getElementById('stat-str')) document.getElementById('stat-str').innerText = h.stats.str;
             if (document.getElementById('stat-def')) document.getElementById('stat-def').innerText = h.stats.def;
             if (document.getElementById('stat-wis')) document.getElementById('stat-wis').innerText = h.stats.wis;
             if (document.getElementById('stat-end')) document.getElementById('stat-end').innerText = h.stats.end;
-
+        
+            // 8. Bouton d'édition du profil
             const editBtn = document.getElementById('btn-edit-hero');
             if (editBtn) {
-                if (gameState.hero.level < 6) {
-                    // Bouton verrouillé (< Niveau 6)
+                if (h.level < 6) {
                     editBtn.disabled = true;
                     editBtn.className = "px-4 py-1.5 bg-stone-900 text-stone-500 border border-stone-800 text-xs font-bold rounded-lg cursor-not-allowed opacity-60 transition flex items-center gap-1.5 mx-auto";
                     editBtn.innerHTML = `<i class="fa-solid fa-lock text-stone-600"></i> Débloqué niv. 6`;
                     editBtn.title = "Débloqué au Niveau 6";
                 } else {
-                    // Bouton débloqué (Niveau 6 et plus)
                     editBtn.disabled = false;
                     editBtn.className = "px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition cursor-pointer flex items-center gap-1.5 mx-auto";
                     editBtn.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Modifier le Héros`;
