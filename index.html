@@ -1157,12 +1157,13 @@
             const container = document.getElementById('type-ranks-list');
             if (!container) return;
         
-            // Configuration des 4 voies et de leurs 4 paliers respectifs
             const tracks = [
                 {
                     name: "Voie Spirituelle",
                     count: gameState.stats.spirituelCount || 0,
                     color: "text-purple-400",
+                    bgFill: "bg-purple-500",
+                    maxReq: 365,
                     levels: [
                         { req: 30,  title: "Diacre" },
                         { req: 90,  title: "Prêtre" },
@@ -1174,6 +1175,8 @@
                     name: "Voie du Combat",
                     count: gameState.stats.sportifCount || 0,
                     color: "text-red-400",
+                    bgFill: "bg-red-500",
+                    maxReq: 365,
                     levels: [
                         { req: 30,  title: "Armure de fer" },
                         { req: 90,  title: "Armure de bronze" },
@@ -1185,6 +1188,8 @@
                     name: "Voie Culinaire",
                     count: gameState.stats.cuisineCount || 0,
                     color: "text-amber-400",
+                    bgFill: "bg-amber-500",
+                    maxReq: 365,
                     levels: [
                         { req: 30,  title: "Plongeur" },
                         { req: 90,  title: "Commis de cuisine" },
@@ -1196,6 +1201,8 @@
                     name: "Voie de l'Expédition",
                     count: gameState.stats.expeditionCount || 0,
                     color: "text-emerald-400",
+                    bgFill: "bg-emerald-500",
+                    maxReq: 180,
                     levels: [
                         { req: 10,  title: "Aventurier" },
                         { req: 50,  title: "Explorateur" },
@@ -1210,23 +1217,20 @@
                 const currentRank = track.levels.slice().reverse().find(lvl => track.count >= lvl.req);
                 const rankText = currentRank ? currentRank.title : "Aucun titre";
         
+                // Calcul du pourcentage de remplissage progressif de la jauge
+                const percent = Math.min(100, Math.round((track.count / track.maxReq) * 100));
+        
                 return `
                     <div class="border-b border-stone-800 pb-2 flex flex-col gap-1">
                         <div class="flex justify-between items-center">
                             <span class="text-stone-300 font-semibold text-xs">${track.name}</span>
                             <span class="text-[11px] font-bold ${currentRank ? track.color : 'text-stone-500'} font-mono">
-                                ${rankText} (${track.count})
+                                ${rankText}
                             </span>
                         </div>
-                        <!-- 4 sections (barres) grisées ou colorées selon la progression -->
-                        <div class="grid grid-cols-4 gap-1.5 mt-1">
-                            ${track.levels.map(lvl => {
-                                const isUnlocked = track.count >= lvl.req;
-                                const bgClass = isUnlocked ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'bg-stone-800/80';
-                                return `
-                                    <div class="h-1.5 rounded-full ${bgClass} transition-all" title="${lvl.title} (${lvl.req} quêtes)"></div>
-                                `;
-                            }).join('')}
+                        <!-- Jauge de progression continue -->
+                        <div class="w-full bg-stone-900 border border-stone-800 h-2 rounded-full overflow-hidden mt-1">
+                            <div class="${track.bgFill} h-full transition-all duration-300" style="width: ${percent}%"></div>
                         </div>
                     </div>
                 `;
