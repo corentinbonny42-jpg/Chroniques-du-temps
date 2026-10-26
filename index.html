@@ -479,6 +479,16 @@
                     <label class="block text-xs font-semibold text-stone-300 mb-1">Nombre d'étapes requises</label>
                     <input type="number" id="custom-quest-target" value="1" min="1" max="100" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
                 </div>
+                <div>
+                    <label class="block text-xs font-semibold text-stone-300 mb-1">Type de Quête</label>
+                    <select id="custom-quest-type" class="w-full bg-stone-900 border border-medieval-border rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                        <option value="neutre">Neutre</option>
+                        <option value="spirituel">Spirituel</option>
+                        <option value="sportif">Sportif</option>
+                        <option value="cuisine">Cuisine</option>
+                        <option value="expedition">Expédition</option>
+                    </select>
+                </div>
                 <div class="flex justify-end gap-3 pt-2">
                     <button type="button" onclick="closeModal('create-custom-quest-modal')" class="px-4 py-2 bg-stone-800 text-stone-300 text-xs font-bold rounded-xl hover:bg-stone-700">Annuler</button>
                     <button type="submit" class="px-5 py-2 gold-gradient text-stone-900 font-bold text-xs rounded-xl shadow-lg">Ajouter la Quête</button>
@@ -570,35 +580,35 @@
         // BANQUE DE DONNÉES
         const QUEST_DATABASE = [
             // Quotidiennes
-            { id: 'db_d1', title: 'Méditation 5 minutes', category: 'daily', xp: 5, target: 1, minLevel: 1, maxLevel: 5, desc: 'Esprit clair et apaisé.' },
-            { id: 'db_d2', title: 'Méditation 15 minutes', category: 'daily', xp: 15, target: 1, minLevel: 6, maxLevel: 20, desc: 'Esprit très clair et apaisé.' },
-            { id: 'db_d3', title: 'Méditation 30 minutes', category: 'daily', xp: 30, target: 1, minLevel: 21, desc: 'Esprit très clair et très apaisé.' },
-            { id: 'db_d4', title: '10 000 pas', category: 'daily', xp: 60, target: 1, minLevel: 1, desc: 'Le raptor 5.1 "J\'ai inventé la marche"' },
-            { id: 'db_d5', title: '5 pages lues', category: 'daily', xp: 5, target: 1, minLevel: 1, maxLevel: 3, desc: 'Lecture quotidienne' },
-            { id: 'db_d6', title: '15 pages lues', category: 'daily', xp: 15, target: 1, minLevel: 4, maxLevel: 10, desc: 'Lecture quotidienne' },
-            { id: 'db_d7', title: '30 pages lues', category: 'daily', xp: 30, target: 1, minLevel: 11, desc: 'Lecture quotidienne' },
-            { id: 'db_d8', title: 'Repas journalier cuisiné', category: 'daily', xp: 10, target: 1, minLevel: 1, desc: 'Festin du chevalier.' },
-            { id: 'db_d9', title: '2 Repas journaliers cuisinés', category: 'daily', xp: 45, target: 2, minLevel: 1, desc: 'Festin du chevalier.' },
-            { id: 'db_d10', title: '3 Repas journaliers cuisinés', category: 'daily', xp: 60, target: 3, minLevel: 1, desc: 'Festin du chevalier.' },
-            { id: 'db_d11', title: '2L d\'eau', category: 'daily', xp: 15, target: 1, minLevel: 1, desc: 'Quand zébu zé plus soif' },
-            { id: 'db_d12', title: '8h30 de sommeil', category: 'daily', xp: 60, target: 1, minLevel: 1, desc: 'Repos du guerrier' },
-            { id: 'db_d13', title: 'Temps d\'écran inférieur à 2h', category: 'daily', xp: 30, target: 1, minLevel: 1, desc: 'C\'est la base de l\'entrainement du guerrier' },
-            { id: 'db_d14', title: 'Routine de mobilité', category: 'daily', xp: 30, target: 1, minLevel: 1, desc: 'Be like water my friend' },
+            { id: 'db_d1', title: 'Méditation 5 minutes', category: 'daily', type: 'spirituel', xp: 5, target: 1, minLevel: 1, maxLevel: 5, desc: 'Esprit clair et apaisé.' },
+            { id: 'db_d2', title: 'Méditation 15 minutes', category: 'daily', type: 'spirituel', xp: 15, target: 1, minLevel: 6, maxLevel: 20, desc: 'Esprit très clair et apaisé.' },
+            { id: 'db_d3', title: 'Méditation 30 minutes', category: 'daily', type: 'spirituel', xp: 30, target: 1, minLevel: 21, desc: 'Esprit très clair et très apaisé.' },
+            { id: 'db_d4', title: '10 000 pas', category: 'daily', type: 'sportif', xp: 60, target: 1, minLevel: 1, desc: 'Le raptor 5.1 "J\'ai inventé la marche"' },
+            { id: 'db_d5', title: '5 pages lues', category: 'daily', type: 'spirituel', xp: 5, target: 1, minLevel: 1, maxLevel: 3, desc: 'Lecture quotidienne' },
+            { id: 'db_d6', title: '15 pages lues', category: 'daily', type: 'spirituel', xp: 15, target: 1, minLevel: 4, maxLevel: 10, desc: 'Lecture quotidienne' },
+            { id: 'db_d7', title: '30 pages lues', category: 'daily', type: 'spirituel', xp: 30, target: 1, minLevel: 11, desc: 'Lecture quotidienne' },
+            { id: 'db_d8', title: 'Repas journalier cuisiné', type: 'cuisine', category: 'daily', xp: 10, target: 1, minLevel: 1, desc: 'Festin du chevalier.' },
+            { id: 'db_d9', title: '2 Repas journaliers cuisinés', category: 'daily', type: 'cuisine', xp: 45, target: 2, minLevel: 1, desc: 'Festin du chevalier.' },
+            { id: 'db_d10', title: '3 Repas journaliers cuisinés', category: 'daily', type: 'cuisine', xp: 60, target: 3, minLevel: 1, desc: 'Festin du chevalier.' },
+            { id: 'db_d11', title: '2L d\'eau', category: 'daily', type: 'neutre', xp: 15, target: 1, minLevel: 1, desc: 'Quand zébu zé plus soif' },
+            { id: 'db_d12', title: '8h30 de sommeil', category: 'daily', type: 'neutre', xp: 60, target: 1, minLevel: 1, desc: 'Repos du guerrier' },
+            { id: 'db_d13', title: 'Temps d\'écran inférieur à 2h', type: 'neutre', category: 'daily', xp: 30, target: 1, minLevel: 1, desc: 'C\'est la base de l\'entrainement du guerrier' },
+            { id: 'db_d14', title: 'Routine de mobilité', category: 'daily', type: 'sportif', xp: 30, target: 1, minLevel: 1, desc: 'Be like water my friend' },
 
             // Hebdomadaires
-            { id: 'db_w1', title: 'Méditation (messe)', category: 'weekly', xp: 120, target: 1, minLevel: 1, desc: 'Recueillement spirituel hebdomadaire.' },
-            { id: 'db_w2', title: 'Activité sportive de plus de 30min', category: 'weekly', xp: 120, target: 3, minLevel: 1, desc: 'Entraînement physique (3 séances de plus de 30min).' },
+            { id: 'db_w1', title: 'Méditation (messe)', category: 'weekly', type: 'spirituel', xp: 120, target: 1, minLevel: 1, desc: 'Recueillement spirituel hebdomadaire.' },
+            { id: 'db_w2', title: 'Activité sportive de plus de 30min', type: 'sportif', category: 'weekly', xp: 120, target: 3, minLevel: 1, desc: 'Entraînement physique (3 séances de plus de 30min).' },
 
             // Mensuelles
-            { id: 'db_m1', title: 'Jour sans Insta', category: 'monthly', xp: 200, target: 10, minLevel: 1, desc: '10 jours sans réseaux sociaux.' },
-            { id: 'db_m2', title: 'Lieu découvert', category: 'monthly', xp: 200, target: 3, minLevel: 1, desc: 'Exploration de 3 nouveaux lieux.' },
-            { id: 'db_m3', title: 'Jour sans achat', category: 'monthly', xp: 200, target: 10, minLevel: 1, desc: 'Réduit un peu tes dépenses chef' },
-            { id: 'db_m4', title: 'Rendez vous galant ', category: 'monthly', xp: 500, target: 1, minLevel: 1, desc: 'Emmène la personne de ton choix en tête à tête' },
-            { id: 'db_m5', title: 'Lancer un projet perso', category: 'monthly', xp: 500, target: 1, minLevel: 1, desc: 'Grinding boyz' },
-            { id: 'db_m6', title: 'DJ set enregistré', category: 'monthly', xp: 200, target: 1, minLevel: 1, desc: 'Histoire de faire kiffer les gens' },
-            { id: 'db_m7', title: 'Repas unique testé pour la première fois', category: 'monthly', xp: 100, target: 1, minLevel: 1, desc: 'Gusto tout le monde peut cuisiner' },
-            { id: 'db_m8', title: 'Nouvelle activité de testée', category: 'monthly', xp: 200, target: 1, minLevel: 1, desc: 'Hobbymaxing' },
-            { id: 'db_m9', title: 'Apprendre un nouveau skill', category: 'monthly', xp: 200, target: 1, minLevel: 1, desc: 'Skillset +1, could be anything' },
+            { id: 'db_m1', title: 'Jour sans Insta', category: 'monthly', type: 'neutre', xp: 200, target: 10, minLevel: 1, desc: '10 jours sans réseaux sociaux.' },
+            { id: 'db_m2', title: 'Lieu découvert', category: 'monthly', type: 'expedition', xp: 200, target: 3, minLevel: 1, desc: 'Exploration de 3 nouveaux lieux.' },
+            { id: 'db_m3', title: 'Jour sans achat', category: 'monthly', type: 'neutre', xp: 200, target: 10, minLevel: 1, desc: 'Réduit un peu tes dépenses chef' },
+            { id: 'db_m4', title: 'Rendez vous galant ', category: 'monthly', type: 'neutre', xp: 500, target: 1, minLevel: 1, desc: 'Emmène la personne de ton choix en tête à tête' },
+            { id: 'db_m5', title: 'Lancer un projet perso', category: 'monthly', type: 'neutre', xp: 500, target: 1, minLevel: 1, desc: 'Grinding boyz' },
+            { id: 'db_m6', title: 'DJ set enregistré', category: 'monthly', type: 'neutre', xp: 200, target: 1, minLevel: 1, desc: 'Histoire de faire kiffer les gens' },
+            { id: 'db_m7', title: 'Repas unique testé pour la première fois', category: 'monthly', type: 'cuisine', xp: 100, target: 1, minLevel: 1, desc: 'Gusto tout le monde peut cuisiner' },
+            { id: 'db_m8', title: 'Nouvelle activité de testée', category: 'monthly', type: 'expedition', xp: 200, target: 1, minLevel: 1, desc: 'Hobbymaxing' },
+            { id: 'db_m9', title: 'Apprendre un nouveau skill', category: 'monthly', type: 'expedition', xp: 200, target: 1, minLevel: 1, desc: 'Skillset +1, could be anything' },
 
             // Hauts Faits
             { id: 'db_a1', title: 'Randonnée - Club des 3 000m d’altitude', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Ascension d’un sommet >3 000m.' },
@@ -645,6 +655,14 @@
                 title: "Ordre de Saint-Jean",
                 desc: "Gardiens de la charité et du soin, ces chevaliers unissent la guérison des affligés à une défense implacable des faibles et des opprimés à travers le monde."
             }
+        };
+
+        const QUEST_TYPES = {
+            spirituel: { label: 'Spirituel', icon: 'fa-pray', class: 'bg-purple-950/80 text-purple-300 border-purple-800' },
+            sportif: { label: 'Sportif', icon: 'fa-dumbbell', class: 'bg-red-950/80 text-red-300 border-red-800' },
+            cuisine: { label: 'Cuisine', icon: 'fa-utensils', class: 'bg-amber-950/80 text-amber-300 border-amber-800' },
+            expedition: { label: 'Expédition', icon: 'fa-compass', class: 'bg-emerald-950/80 text-emerald-300 border-emerald-800' },
+            neutre: { label: 'Neutre', icon: 'fa-scroll', class: 'bg-stone-800 text-stone-300 border-stone-700' }
         };
         
         let currentActiveCategoryForModal = 'daily';
@@ -892,8 +910,20 @@
                         card.className = "bg-stone-900/90 border border-stone-800 p-3 rounded-xl flex flex-col gap-2 shadow-sm";
                         const isMultiStep = q.target > 1;
                         const percent = Math.min(100, Math.round((q.current / q.target) * 100));
+                        const qType = q.type || 'neutre';
+                        const typeInfo = QUEST_TYPES[qType] || QUEST_TYPES.neutre;
 
                         card.innerHTML = `
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${typeInfo.class}">
+                                        <i class="fa-solid ${typeInfo.icon}"></i> ${typeInfo.label}
+                                    </span>
+                                    <span class="text-xs font-semibold ${q.completed ? 'line-through text-stone-500' : 'text-slate-100'}">${q.title}</span>
+                                </div>
+                                <span class="text-[10px] font-mono font-bold text-amber-400">+${q.xp} XP</span>
+                            </div>
+                            
                             <div class="flex items-center justify-between gap-2">
                                 <span class="text-xs font-semibold ${q.completed ? 'line-through text-stone-500' : 'text-slate-100'}">${q.title}</span>
                                 <span class="text-[10px] font-mono font-bold text-amber-400">+${q.xp} XP</span>
@@ -1002,6 +1032,7 @@
                 e.preventDefault();
                 const title = document.getElementById('custom-quest-title').value;
                 const category = document.getElementById('custom-quest-category').value;
+                const type = document.getElementById('custom-quest-type').value;
             
                 // On récupère directement la valeur numérique d'XP saisie (avec 0 par défaut si vide)
                 const xp = parseInt(document.getElementById('custom-quest-xp').value) || 0;
@@ -1010,7 +1041,7 @@
             
                 gameState.quests.push({
                     id: Date.now().toString(),
-                    title, category, xp,
+                    title, category, xp, type,
                     current: 0, target,
                     completed: false
                 });
@@ -1086,6 +1117,7 @@
                 id: Date.now().toString(),
                 title: item.title,
                 category: item.category,
+                type: item.type || 'neutre', // <-- Récupère le type de la base de données (ou 'neutre' par défaut)
                 xp: item.xp,
                 current: 0,
                 target: item.target,
