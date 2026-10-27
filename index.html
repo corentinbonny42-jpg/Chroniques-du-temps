@@ -197,7 +197,7 @@
                 <div class="bg-medieval-card rounded-2xl border-2 border-medieval-border p-6 flex flex-col items-center text-center relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-full h-2 gold-gradient"></div>
                     <span id="hero-title-badge" class="px-3 py-1 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">Troubadour</span>
-                    <span id="apostle-secret-badge" class="hidden relative group cursor-pointer text-amber-400 text-lg hover:text-amber-300 transition" title="Apôtre">
+                    <span id="apostle-secret-badge" class="hidden absolute top-4 left-4 group cursor-pointer text-amber-400 text-lg hover:text-amber-300 transition" title="Apôtre">
                         <i class="fa-solid fa-cross"></i>
                         <!-- Tooltip au survol -->
                         <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block bg-stone-950 text-amber-300 text-[10px] px-2 py-0.5 rounded border border-amber-800 whitespace-nowrap font-sans shadow-md z-20">
@@ -697,7 +697,8 @@
                     spirituelCount: 0,
                     sportifCount: 0,
                     cuisineCount: 0,
-                    expeditionCount: 0
+                    expeditionCount: 0,
+                    unlockedApostle: false
                 }
         };
 
@@ -1155,19 +1156,19 @@
             const badge = document.getElementById('apostle-secret-badge');
             if (!badge) return;
         
-            // Liste des noms autorisés
             const apostleNames = ["Pierre", "André", "Jacques", "Jean", "Philippe", "Barthélémy", "Thomas", "Matthieu", "Jude", "Judas", "Simon"];
-            
-            // Récupération sécurisée du nom du joueur depuis ton gameState
             const playerName = gameState.hero && gameState.hero.name ? gameState.hero.name.trim() : "";
         
-            // Vérifie si le nom correspond (insensible à la casse si besoin, ou correspondance exacte)
-            const isApostle = apostleNames.some(name => name.toLowerCase() === playerName.toLowerCase());
+            // Si le joueur a déjà débloqué le succès ou s'il entre un nom valide maintenant
+            if (apostleNames.some(name => name.toLowerCase() === playerName.toLowerCase())) {
+                gameState.stats.unlockedApostle = true;
+            }
         
-            if (isApostle) {
-                badge.classList.remove('hidden'); // Affiche l'icône
+            // Affichage basé sur la persistance définitive
+            if (gameState.stats.unlockedApostle) {
+                badge.classList.remove('hidden');
             } else {
-                badge.classList.add('hidden');    // Masque l'icône
+                badge.classList.add('hidden');
             }
         }
                 
