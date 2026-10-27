@@ -205,9 +205,8 @@
                         </span>
                     </span>
                     <div class="relative mb-4 group">
-                        <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-300 shadow-[0_0_30px_rgba(212,175,55,0.25)]">
-                            document.getElementById('hero-avatar-display').innerHTML = `<i class="fa-solid ${gameState.hero.icon || 'fa-circle-user'}"></i>`;
-                        </div>
+                        const iconClass = gameState.hero.icon || "fa-solid fa-circle-user";
+                        document.getElementById('hero-avatar-display').innerHTML = `<i class="${iconClass}"></i>`;
                     </div>
                     <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Jacquouille</h2>
                     <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4"></p>
@@ -677,13 +676,13 @@
         };
         
         const TITLE_ICONS = {
-            "Écuyer novice": "fa-circle-user",
+            "Écuyer novice": "fa-solid fa-circle-user",
             "Garde de la Tour": "fa-solid fa-gopuram",
-            "Chevalier Errant": "fa-shield-halved",
-            "Capitaine de la Garde": "fa-shield-heart",
+            "Chevalier Errant": "fa-solid fa-shield-halved",
+            "Capitaine de la Garde": "fa-solid fa-shield-heart",
             "Paladin du Royaume": "fa-brands fa-empire",
             "Seigneur de Guerre": "fa-brands fa-rebel",
-            "Légende Vivante": "fa-crown"
+            "Légende Vivante": "fa-solid fa-crown"
         };
         
         const QUEST_TYPES = {
