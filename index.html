@@ -197,6 +197,13 @@
                 <div class="bg-medieval-card rounded-2xl border-2 border-medieval-border p-6 flex flex-col items-center text-center relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-full h-2 gold-gradient"></div>
                     <span id="hero-title-badge" class="px-3 py-1 bg-amber-950/80 text-amber-300 border border-amber-600/50 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">Troubadour</span>
+                    <span id="apostle-secret-badge" class="hidden relative group cursor-pointer text-amber-400 text-lg hover:text-amber-300 transition" title="Apôtre">
+                        <i class="fa-solid fa-cross"></i>
+                        <!-- Tooltip au survol -->
+                        <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block bg-stone-950 text-amber-300 text-[10px] px-2 py-0.5 rounded border border-amber-800 whitespace-nowrap font-sans shadow-md z-20">
+                            Apôtre
+                        </span>
+                    </span>
                     <div class="relative mb-4 group">
                         <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-300 shadow-[0_0_30px_rgba(212,175,55,0.25)]">
                             <i class="fa-solid fa-circle-user"></i>
@@ -637,7 +644,7 @@
             { id: 'db_a18', title: 'Culture - Plus de 100 livres lus', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Erudit' },
             { id: 'db_a19', title: 'Culture - Plus de 106 films vus (annuel)', category: 'achievements', xp: 0, target: 1, minLevel: 1, desc: 'Regelegorilla prime' },
         ];
-
+ 
         // QUÊTES INITIALES
         const DEFAULT_QUESTS = [
             { id: 'q_d1', title: 'Méditation 5 minutes', category: 'daily', xp: 5, current: 0, target: 1, completed: false },
@@ -868,7 +875,8 @@
             if (document.getElementById('stat-movies')) {
                 document.getElementById('stat-movies').innerText = gameState.stats.moviesWatched || 0;
             }
-                        
+
+            renderApostleSecretBadge();
             renderQuests();
             renderShop();
             renderWorldShop();
@@ -1143,6 +1151,26 @@
             renderAll();
         }
 
+        function renderApostleSecretBadge() {
+            const badge = document.getElementById('apostle-secret-badge');
+            if (!badge) return;
+        
+            // Liste des noms autorisés
+            const apostleNames = ["Pierre", "André", "Jacques", "Jean", "Philippe", "Barthélémy", "Thomas", "Matthieu", "Jude", "Judas", "Simon"];
+            
+            // Récupération sécurisée du nom du joueur depuis ton gameState
+            const playerName = gameState.hero && gameState.hero.name ? gameState.hero.name.trim() : "";
+        
+            // Vérifie si le nom correspond (insensible à la casse si besoin, ou correspondance exacte)
+            const isApostle = apostleNames.some(name => name.toLowerCase() === playerName.toLowerCase());
+        
+            if (isApostle) {
+                badge.classList.remove('hidden'); // Affiche l'icône
+            } else {
+                badge.classList.add('hidden');    // Masque l'icône
+            }
+        }
+                
         function incrementBooks() {
             gameState.stats.booksRead = (gameState.stats.booksRead || 0) + 1;
             renderAll();
