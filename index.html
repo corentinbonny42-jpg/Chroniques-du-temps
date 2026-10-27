@@ -204,13 +204,12 @@
                             Apôtre
                         </span>
                     </span>
-                    <div class="relative mb-4 group">
-                        const iconClass = gameState.hero.icon || "fa-solid fa-circle-user";
-                        document.getElementById('hero-avatar-display').innerHTML = `<i class="${iconClass}"></i>`;
+                    <div id="hero-avatar-display" class="w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-300 shadow-[0_0_30px_rgba(212,175,55,0.25)]">
+                        <i class="fa-solid fa-circle-user"></i>
                     </div>
                     <h2 id="hero-name-display" class="font-medieval text-2xl font-bold text-slate-100">Jacquouille</h2>
                     <p id="hero-class-display" class="text-sm text-amber-500 font-serif italic mb-4"></p>
-                    <button id="btn-edit-hero" onclick="openEditHeroModal()" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition">>
+                    <button id="btn-edit-hero" onclick="openEditHeroModal()" class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-900/50 transition">
                         <i class="fa-solid fa-pen-to-square"></i> Modifier le Héros
                     </button>
                 </div>
@@ -803,10 +802,23 @@
             // 1. DÉCLARATION DE LA VARIABLE 'h' EN PREMIER
             const h = gameState.hero;
             if (!h) return; // Sécurité au cas où gameState n'est pas encore prêt
-        
+
+            const iconClass = gameState.hero.icon || "fa-solid fa-circle-user";
+            const avatarDisplay = document.getElementById('hero-avatar-display');
+            if (avatarDisplay) {
+                avatarDisplay.innerHTML = `<i class="fa-solid ${iconClass}"></i>`;
+            }
+            
             // 2. Calcul du titre
             h.title = getHeroTitle(h.level);
-        
+
+            const currentTitle = h.title;
+            const associatedIcon = TITLE_ICONS[currentTitle] || "fa-solid fa-circle-user";
+            if (!h.unlockedIcons) h.unlockedIcons = ["fa-solid fa-circle-user"];
+            if (!h.unlockedIcons.includes(associatedIcon)) {
+                h.unlockedIcons.push(associatedIcon);
+            }
+                    
             // 3. Encart de description de l'Ordre (Niveau 6+)
             const orderTitle = document.getElementById('hero-order-title');
             const orderText = document.getElementById('hero-order-text');
@@ -1356,8 +1368,6 @@
         
         // TITRE DU HEROS
         function getHeroTitle(level) {
-            let currentTitle = "Troubadour";
-
             if (level >= 100) return "Légende Vivante";
             if (level >= 80) return "Seigneur de Guerre";
             if (level >= 75) return "Paladin du Royaume";
@@ -1366,18 +1376,8 @@
             if (level >= 16) return "Garde de la Tour";
             if (level >= 6) return "Ecuyer Novice";
             return "Troubadour";
-
-            gameState.hero.title = currentTitle
-            const newUnlockedIcon = TITLE_ICONS[currentTitle] || "fa-circle-user";
-            if (!gameState.hero.unlockedIcons) {
-                gameState.hero.unlockedIcons = ["fa-circle-user"];
             }
-            if (!gameState.hero.unlockedIcons.includes(newUnlockedIcon)) {
-                gameState.hero.unlockedIcons.push(newUnlockedIcon);
-    
-                gameState.hero.icon = newUnlockedIcon;
-            }
-        }
+        
 
         function openEditHeroModal() {
             const iconSelect = document.getElementById('edit-hero-icon');
