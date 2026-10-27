@@ -696,7 +696,7 @@
 
         let gameState = {
             lastReset: { day: new Date().toDateString(), timestamp: Date.now() },
-            hero: { name: "Jacquouille", title: "Troubadour", class: "", icon: "fa-circle-user",unlockedIcons: ["fa-circle-user"],level: 1, xp: 0, xpMax: 100, hp: 50, hpMax: 50, gold: 50, stats: { str: 10, def: 10, wis: 10, end: 10 } },
+            hero: { name: "Jacquouille", title: "Troubadour", class: "", icon: "fa-circle-user",unlockedIcons: ["fa-circle-user"],level: 1, xp: 0, xpMax: 100, hp: 50, hpMax: 50, gold: 50, lastHeroNameChangeLevel: 1, stats: { str: 10, def: 10, wis: 10, end: 10 } },
             boss: { name: "Dragon Rouge", hp: 100, hpMax: 100, defeated: 0 },
             quests: JSON.parse(JSON.stringify(DEFAULT_QUESTS)),
             inventory: [],
@@ -1062,7 +1062,7 @@
                     gameState.hero.level++;
                     
                     // Échelle progressive type Pokémon (augmente le palier requis à chaque niveau)
-                    gameState.hero.xpMax = Math.round(gameState.hero.xpMax * 1.35); 
+                    gameState.hero.xpMax = Math.round(gameState.hero.xpMax * 1.2); 
                 }
                 
                 // Affichage conditionnel des messages
@@ -1384,6 +1384,26 @@
             alert("🔒 Cette fonction est verrouillée ! Vous devez atteindre le Niveau 6");
             return;
         }
+            const nameInput = document.getElementById('hero-name-input');
+            const lastChangeLevel = gameState.hero.lastHeroNameChangeLevel || 1;
+            const currentLevel = gameState.hero.level;
+            
+            // Le joueur peut changer de nom s'il est au niveau 6 (premier déblocage) 
+            // ou si 5 niveaux se sont écoulés depuis le dernier changement
+            const canChangeName = (currentLevel === 6 && lastChangeLevel === 1) || (currentLevel - lastChangeLevel >= 5);
+        
+            if (nameInput) {
+                if (canChangeName) {
+                    nameInput.disabled = false;
+                    nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
+                    nameInput.title = "";
+                } else {
+                    nameInput.disabled = true;
+                    nameInput.classList.add('opacity-50', 'cursor-not-allowed');
+                    nameInput.title = `Vous pourrez modifier votre nom au niveau ${lastChangeLevel + 5}`;
+                }
+            }
+            
             const iconSelect = document.getElementById('edit-hero-icon');
             
             // Dictionnaire pour associer chaque classe/icône à un nom joli dans la liste
@@ -1571,9 +1591,17 @@
 
         function saveHeroProfile(e) {
             e.preventDefault();
-            gameState.hero.name = document.getElementById('hero-name-input').value;
+            const newName = document.getElementById('hero-name-input').value;
+            
+            // Si le nom a changé, on met à jour le niveau du dernier changement
+            if (gameState.hero.name !== newName) {
+                gameState.hero.lastHeroNameChangeLevel = gameState.hero.level;
+                gameState.hero.name = newName;
+            }
+        
             gameState.hero.class = document.getElementById('hero-class-input').value;
             gameState.hero.icon = document.getElementById('edit-hero-icon').value;
+            
             closeModal('edit-hero-modal');
             renderAll();
         }
