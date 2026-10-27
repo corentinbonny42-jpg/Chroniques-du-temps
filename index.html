@@ -1380,14 +1380,28 @@
         
 
         function openEditHeroModal() {
-            const iconSelect = document.getElementById('edit-hero-icon');
-            iconSelect.innerHTML = gameState.hero.unlockedIcons.map(icon => 
-                `<option value="${icon}" ${gameState.hero.icon === icon ? 'selected' : ''}>${icon}</option>`
-            ).join('');
         if (gameState.hero.level < 6) {
             alert("🔒 Cette fonction est verrouillée ! Vous devez atteindre le Niveau 6");
             return;
         }
+            const iconSelect = document.getElementById('edit-hero-icon');
+            
+            // Dictionnaire pour associer chaque classe/icône à un nom joli dans la liste
+            const iconLabels = {
+                "fa-solid fa-circle-user": "Visage de voyageur",
+                "fa-solid fa-gopuram": "Tour de guet du Garde",
+                "fa-solid fa-shield-halved": "Bouclier du Chevalier",
+                "fa-solid fa-shield-heart": "Blason du Capitaine",
+                "fa-brands fa-empire": "Empire mené par le Paladin",
+                "fa-brands fa-rebel": "Rébellion du Seigneur de Guerre",
+                "fa-solid fa-crown": "Couronne de la Légende Vivante"
+            };
+        
+            // On peuple le select avec un texte lisible au lieu du code brut
+            iconSelect.innerHTML = gameState.hero.unlockedIcons.map(icon => {
+                const readableName = iconLabels[icon] || "Icône de chevalier";
+                return `<option value="${icon}" ${gameState.hero.icon === icon ? 'selected' : ''}>${readableName}</option>`;
+            }).join('');
         openModal('edit-hero-modal');
     }
         // BOUTIQUE ET DOMAINE ISOMÉTRIQUE
