@@ -1163,7 +1163,7 @@
         }
 
         // CRÉER UNE QUÊTE PERSONNALISÉE LIBREMENT
-            function saveCustomQuest(e) {
+          function saveCustomQuest(e) {
             if (e) e.preventDefault(); // Empêche le rechargement de la page par défaut
             
             try {
@@ -1173,7 +1173,6 @@
                 const xpInput = document.getElementById('custom-quest-xp');
                 const targetInput = document.getElementById('custom-quest-target');
         
-                // Sécurité si les éléments du DOM ne sont pas trouvés
                 if (!titleInput || !categoryInput) {
                     console.error("Formulaire introuvable dans le DOM.");
                     return;
@@ -1185,11 +1184,11 @@
                 const xp = xpInput ? (parseInt(xpInput.value) || 0) : 0;
                 const target = targetInput ? (parseInt(targetInput.value) || 1) : 1;
         
-                // Calcul de la deadline (1 jour pour daily, 7 pour weekly, 30 pour monthly, 365 pour achievements)
+                // Calcul de la deadline selon la catégorie choisie
                 const days = category === 'daily' ? 1 : (category === 'weekly' ? 7 : (category === 'monthly' ? 30 : 365));
                 const expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
         
-                // Ajout dans le tableau des quêtes
+                // Ajout de la quête dans le tableau global
                 gameState.quests.push({
                     id: Date.now().toString(),
                     title: title, 
@@ -1202,16 +1201,15 @@
                     expiresAt: expiresAt
                 });
         
-                // Fermeture de la modale et reset
+                // Fermeture de la modale et réinitialisation du formulaire
                 closeModal('create-custom-quest-modal');
                 
                 const form = document.getElementById('form-custom-quest');
                 if (form) form.reset();
         
-                // Actualisation globale
+                // Actualisation globale de l'interface
                 renderAll();
                 
-                console.log("Quête personnalisée ajoutée avec succès !");
             } catch (err) {
                 console.error("Erreur lors de l'enregistrement de la quête personnalisée :", err);
             }
