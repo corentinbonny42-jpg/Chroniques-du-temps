@@ -141,6 +141,7 @@
     <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-1 flex flex-col gap-6">
 
         <!-- BOSS -->
+        <!-- BOSS BANNER -->
         <section id="boss-banner" class="relative overflow-hidden rounded-2xl border-2 border-red-900/60 bg-gradient-to-r from-red-950/80 via-stone-900/90 to-amber-950/80 p-5 shadow-2xl">
             <div class="absolute -right-10 -bottom-10 opacity-10 text-red-500 text-9xl pointer-events-none">
                 <i class="fa-solid fa-dragon"></i>
@@ -148,18 +149,22 @@
             
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="flex items-center gap-4 text-center md:text-left w-full md:w-auto">
-                    <div id="boss-avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-red-900/40 border-2 border-red-500/50 flex items-center justify-center text-3xl sm:text-4xl text-red-400 shadow-lg animate-float">
-                        <i class="fa-brands fa-d-and-d"></i>
+                    <!-- Avatar du Boss dynamique -->
+                    <div id="boss-avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 bg-red-900/40 border-red-500/50 text-red-400 flex items-center justify-center text-3xl sm:text-4xl shadow-lg animate-float">
+                        <i class="fa-solid fa-dragon"></i>
                     </div>
                     <div class="flex-1">
                         <div class="flex items-center justify-center md:justify-start gap-2">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-900/60 text-red-300 border border-red-700 uppercase tracking-widest">Menace du Royaume</span>
+                            <!-- Badge du Boss dynamique -->
+                            <span id="boss-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-900/60 text-red-300 border border-red-700 uppercase tracking-widest">
+                                Menace du Royaume
+                            </span>
                         </div>
                         <h2 id="boss-name" class="font-medieval text-xl sm:text-2xl font-bold text-amber-200">Dragon Rouge</h2>
-                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Chaque point d'XP gagné inflige des dégâts au Boss, mais un coup est un coup donc tu ne peux pas tuer plusieurs boss à la fois !</p>
+                        <p id="boss-desc" class="text-xs text-stone-400 mt-1 max-w-md">Une menace cracheuse de feu venue des sommets. Chaque point d'XP gagné lui inflige des dégâts !</p>
                     </div>
                 </div>
-
+        
                 <div class="w-full md:w-80 bg-black/60 p-3 rounded-xl border border-red-900/40 flex flex-col gap-2">
                     <div class="flex justify-between text-xs font-bold">
                         <span class="text-red-400 flex items-center gap-1"><i class="fa-solid fa-heart-pulse"></i> Santé du Boss</span>
@@ -595,6 +600,26 @@
     <!-- JAVASCRIPT DU JEU -->
     <script>
         // BANQUE DE DONNÉES
+    const BOSS_DATABASE = [
+        {   id: 'red_dragon', name: "Dragon Rouge", hpMax: 100, icon: "fa-dragon", 
+            avatarBg: "bg-red-900/40 border-red-500/50 text-red-400", badgeBg: "bg-red-900/60 text-red-300 border-red-700",  desc: "Une menace cracheuse de feu venue des sommets. Chaque point d'XP gagné lui inflige des dégâts !"
+        },
+        { 
+            id: 'green_dragon', name: "Dragon Vert", hpMax: 150, icon: "fa-dragon", 
+            avatarBg: "bg-emerald-900/40 border-emerald-500/50 text-emerald-400", badgeBg: "bg-emerald-900/60 text-emerald-300 border-emerald-700", desc: "Un dragon venimeux tapi dans les forêts sombres du Royaume."
+        },
+        { 
+            id: 'black_dragon', name: "Dragon Noir", hpMax: 200, icon: "fa-dragon", 
+            avatarBg: "bg-purple-900/40 border-purple-500/50 text-purple-400", badgeBg: "bg-purple-900/60 text-purple-300 border-purple-700", desc: "Une créature d'ombre maîtresse de la magie noire."
+        }
+    ];
+    
+    // Tirer un boss au hasard dans la banque
+    function getRandomBoss() {
+        const randomIndex = Math.floor(Math.random() * BOSS_DATABASE.length);
+        return BOSS_DATABASE[randomIndex];
+    }
+        
         const QUEST_DATABASE = [
             // Quotidiennes
             { id: 'db_d1', title: 'Méditation 5 minutes', category: 'daily', type: 'spirituel', xp: 5, target: 1, minLevel: 1, maxLevel: 5, desc: 'Esprit clair et apaisé.' },
@@ -697,7 +722,7 @@
         let gameState = {
             lastReset: { day: new Date().toDateString(), timestamp: Date.now() },
             hero: { name: "Jacquouille", title: "Troubadour", class: "", icon: "fa-circle-user",unlockedIcons: ["fa-circle-user"],level: 1, xp: 0, xpMax: 100, hp: 50, hpMax: 50, gold: 50, lastHeroNameChangeLevel: 1, stats: { str: 10, def: 10, wis: 10, end: 10 } },
-            boss: { name: "Dragon Rouge", hp: 100, hpMax: 100, defeated: 0 },
+            boss: { id: "red_dragon", name: "Dragon Rouge", hp: 100, hpMax: 100, defeated: 0, icon: "fa-dragon" },
             quests: JSON.parse(JSON.stringify(DEFAULT_QUESTS)),
             inventory: [],
             buildingsPurchased: ['cabane'],
@@ -871,11 +896,20 @@
                 `;
             }
         
-            // 6. Boss
+            // 6. Rendu dynamique du Boss
             const b = gameState.boss;
             if (document.getElementById('boss-name')) document.getElementById('boss-name').innerText = b.name;
+            if (document.getElementById('boss-desc') && b.desc) document.getElementById('boss-desc').innerText = b.desc;
             if (document.getElementById('boss-hp-text')) document.getElementById('boss-hp-text').innerText = `${b.hp} / ${b.hpMax}`;
             if (document.getElementById('boss-hp-bar')) document.getElementById('boss-hp-bar').style.width = `${Math.max(0, (b.hp / b.hpMax) * 100)}%`;
+            
+            // Mise à jour visuelle du conteneur de l'avatar du boss
+            const bossAvatar = document.getElementById('boss-avatar');
+            if (bossAvatar) {
+                // Applique le style visuel propre à la couleur du boss (Rouge, Vert ou Noir/Violet)
+                bossAvatar.className = `w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 flex items-center justify-center text-3xl sm:text-4xl shadow-lg animate-float ${b.avatarBg || 'bg-red-900/40 border-red-500/50 text-red-400'}`;
+                bossAvatar.innerHTML = `<i class="fa-solid ${b.icon || 'fa-dragon'}"></i>`;
+            }
         
             // 7. Affichage des stats du héros
             if (document.getElementById('hero-name-display')) document.getElementById('hero-name-display').innerText = h.name;
@@ -1033,10 +1067,25 @@
                     gameState.boss.hp = Math.max(0, gameState.boss.hp - q.xp);
                     
                     if (gameState.boss.hp <= 0) {
-                        gameState.boss.defeated++;
-                        gameState.boss.hpMax += 100;
-                        gameState.boss.hp = gameState.boss.hpMax;
-                        alert(`💥 Boss Vaincu ! Un monstre de ${gameState.boss.hpMax} PV apparaît !`);
+                        gameState.boss.defeated = (gameState.boss.defeated || 0) + 1;
+                        
+                        const newHpMax = (gameState.boss.hpMax || 100) + 100;
+                        
+                        const newBossTemplate = getRandomBoss();
+                        
+                        gameState.boss = {
+                            id: newBossTemplate.id,
+                            name: newBossTemplate.name,
+                            hp: newHpMax,
+                            hpMax: newHpMax,
+                            defeated: gameState.boss.defeated,
+                            icon: newBossTemplate.icon,
+                            avatarBg: newBossTemplate.avatarBg,
+                            badgeBg: newBossTemplate.badgeBg,
+                            desc: newBossTemplate.desc
+                        };
+                    
+                        alert(`💥 ${newBossTemplate.name} s'avance ! Il possède ${newHpMax} PV !`);
                     }
                 }
                 // --- CALCUL DU STREAK (SÉRIE DE JOURS) ---
