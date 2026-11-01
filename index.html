@@ -619,6 +619,27 @@
         const randomIndex = Math.floor(Math.random() * BOSS_DATABASE.length);
         return BOSS_DATABASE[randomIndex];
     }
+
+        function renderBoss() {
+            const b = gameState.boss;
+            if (!b) return;
+        
+            if (document.getElementById('boss-name')) document.getElementById('boss-name').innerText = b.name;
+            if (document.getElementById('boss-desc') && b.desc) document.getElementById('boss-desc').innerText = b.desc;
+            if (document.getElementById('boss-hp-text')) document.getElementById('boss-hp-text').innerText = `${b.hp} / ${b.hpMax}`;
+            if (document.getElementById('boss-hp-bar')) document.getElementById('boss-hp-bar').style.width = `${Math.max(0, (b.hp / b.hpMax) * 100)}%`;
+        
+            const bossAvatar = document.getElementById('boss-avatar');
+            if (bossAvatar) {
+                bossAvatar.className = `w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 flex items-center justify-center text-3xl sm:text-4xl shadow-lg animate-float ${b.avatarBg || 'bg-red-900/40 border-red-500/50 text-red-400'}`;
+                bossAvatar.innerHTML = `<i class="fa-solid ${b.icon || 'fa-dragon'}"></i>`;
+            }
+        
+            const bossBadge = document.getElementById('boss-badge');
+            if (bossBadge && b.badgeBg) {
+                bossBadge.className = `px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest ${b.badgeBg}`;
+            }
+        }
         
         const QUEST_DATABASE = [
             // Quotidiennes
@@ -952,6 +973,7 @@
             }
 
             renderApostleSecretBadge();
+            renderBoss()
             renderQuests();
             renderShop();
             renderWorldShop();
