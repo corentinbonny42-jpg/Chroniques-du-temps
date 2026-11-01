@@ -1173,15 +1173,18 @@
                 const xp = parseInt(document.getElementById('custom-quest-xp').value) || 0;
             
                 const target = parseInt(document.getElementById('custom-quest-target').value) || 1;
-            
+                
+                const days = q.category === 'daily' ? 1 : (q.category === 'weekly' ? 7 : 30);
+                q.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
+                
                 gameState.quests.push({
                     id: Date.now().toString(),
                     title, category, xp, type,
                     current: 0, target,
-                    completed: false
+                    completed: false,
+                    expiresAt: expiresAt
                 });
-                const days = q.category === 'daily' ? 1 : (q.category === 'weekly' ? 7 : 30);
-                q.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
+
             
                 closeModal('create-custom-quest-modal');
                 document.getElementById('form-custom-quest').reset();
@@ -1249,7 +1252,9 @@
                 alert("Cette quête est déjà présente dans votre journal !");
                 return;
             }
-
+        const days = item.category === 'daily' ? 1 : (item.category === 'weekly' ? 7 : 30);
+        const expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
+            
             gameState.quests.push({
                 id: Date.now().toString(),
                 title: item.title,
@@ -1258,11 +1263,9 @@
                 xp: item.xp,
                 current: 0,
                 target: item.target,
-                completed: false
+                completed: false,
+                expiresAt: expiresAt
             });
-
-            const days = q.category === 'daily' ? 1 : (q.category === 'weekly' ? 7 : 30);
-            q.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
 
             closeModal('add-quest-modal');
             renderAll();
