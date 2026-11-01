@@ -1164,32 +1164,58 @@
 
         // CRÉER UNE QUÊTE PERSONNALISÉE LIBREMENT
             function saveCustomQuest(e) {
-                e.preventDefault();
-                const title = document.getElementById('custom-quest-title').value;
-                const category = document.getElementById('custom-quest-category').value;
-                const type = document.getElementById('custom-quest-type').value;
+            if (e) e.preventDefault(); // Empêche le rechargement de la page par défaut
             
-                // On récupère directement la valeur numérique d'XP saisie (avec 0 par défaut si vide)
-                const xp = parseInt(document.getElementById('custom-quest-xp').value) || 0;
-            
-                const target = parseInt(document.getElementById('custom-quest-target').value) || 1;
-                
-                const days = q.category === 'daily' ? 1 : (q.category === 'weekly' ? 7 : 30);
-                q.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
-                
+            try {
+                const titleInput = document.getElementById('custom-quest-title');
+                const categoryInput = document.getElementById('custom-quest-category');
+                const typeInput = document.getElementById('custom-quest-type');
+                const xpInput = document.getElementById('custom-quest-xp');
+                const targetInput = document.getElementById('custom-quest-target');
+        
+                // Sécurité si les éléments du DOM ne sont pas trouvés
+                if (!titleInput || !categoryInput) {
+                    console.error("Formulaire introuvable dans le DOM.");
+                    return;
+                }
+        
+                const title = titleInput.value;
+                const category = categoryInput.value;
+                const type = typeInput ? typeInput.value : 'neutre';
+                const xp = xpInput ? (parseInt(xpInput.value) || 0) : 0;
+                const target = targetInput ? (parseInt(targetInput.value) || 1) : 1;
+        
+                // Calcul de la deadline (1 jour pour daily, 7 pour weekly, 30 pour monthly, 365 pour achievements)
+                const days = category === 'daily' ? 1 : (category === 'weekly' ? 7 : (category === 'monthly' ? 30 : 365));
+                const expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
+        
+                // Ajout dans le tableau des quêtes
                 gameState.quests.push({
                     id: Date.now().toString(),
-                    title, category, xp, type,
-                    current: 0, target,
+                    title: title, 
+                    category: category, 
+                    xp: xp, 
+                    type: type,
+                    current: 0, 
+                    target: target,
                     completed: false,
                     expiresAt: expiresAt
                 });
-
-            
+        
+                // Fermeture de la modale et reset
                 closeModal('create-custom-quest-modal');
-                document.getElementById('form-custom-quest').reset();
+                
+                const form = document.getElementById('form-custom-quest');
+                if (form) form.reset();
+        
+                // Actualisation globale
                 renderAll();
+                
+                console.log("Quête personnalisée ajoutée avec succès !");
+            } catch (err) {
+                console.error("Erreur lors de l'enregistrement de la quête personnalisée :", err);
             }
+        }
         // BANQUE DE QUÊTES PAR ONGLET
         function openDbModalForCategory(cat) {
             currentActiveCategoryForModal = cat;
