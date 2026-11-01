@@ -747,6 +747,19 @@
                 gameState.lastReset = { day: now.toDateString(), timestamp: now.getTime() };
                 saveGame();
             }
+            gameState.quests.forEach(q => {
+                if (!q.completed && q.expiresAt && Date.now() > q.expiresAt) {
+                    // Échec de la quête : l'XP du niveau actuel retombe à 0 (pas de perte de niveau)
+                    gameState.hero.xp = 0;
+            
+                    console.warn(`Quête expirée : "${q.title}". L'expérience est retombée à 0.`);
+            
+                    // On réinitialise la quête pour la période suivante
+                    q.current = 0;
+                    const days = q.category === 'daily' ? 1 : (q.category === 'weekly' ? 7 : 30);
+                    q.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
+                }
+            });
         }
 
         function loadGame() {
@@ -1096,6 +1109,8 @@
                     current: 0, target,
                     completed: false
                 });
+                const days = q.category === 'daily' ? 1 : (q.category === 'weekly' ? 7 : 30);
+                q.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
             
                 closeModal('create-custom-quest-modal');
                 document.getElementById('form-custom-quest').reset();
@@ -1174,6 +1189,9 @@
                 target: item.target,
                 completed: false
             });
+
+            const days = q.category === 'daily' ? 1 : (q.category === 'weekly' ? 7 : 30);
+            q.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
 
             closeModal('add-quest-modal');
             renderAll();
