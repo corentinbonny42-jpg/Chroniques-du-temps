@@ -626,6 +626,7 @@
                 { id: 'dragon_noir', name: "Dragon Noir", hpMax: 320, icon: "fa-dragon", avatarBg: "bg-purple-900/40 border-purple-500/50 text-purple-400", badgeBg: "bg-purple-900/60 text-purple-300 border-purple-700", desc: "Terreur absolue des abysses." }
             ]
         ];
+        
     function getMonsterForCurrentLevel() {
     const level = gameState.hero.level;
     let pool = [];
@@ -663,8 +664,8 @@
         
             const bossAvatar = document.getElementById('boss-avatar');
             if (bossAvatar) {
-                bossAvatar.className = `w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 flex items-center justify-center text-3xl sm:text-4xl shadow-lg animate-float ${b.avatarBg || 'bg-red-900/40 border-red-500/50 text-red-400'}`;
-                bossAvatar.innerHTML = `<i class="fa-solid ${b.icon || 'fa-dragon'}"></i>`;
+                bossAvatar.className = `w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 flex items-center justify-center text-3xl sm:text-4xl shadow-lg animate-float ${b.avatarBg || 'bg-stone-900/40 border-stone-600/50 text-stone-400'}`;
+                bossAvatar.innerHTML = `<i class="fa-solid ${b.icon || 'fa-worm'}"></i>`;
             }
         
             const bossBadge = document.getElementById('boss-badge');
