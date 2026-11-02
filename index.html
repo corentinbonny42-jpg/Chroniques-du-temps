@@ -104,6 +104,16 @@
         .animate-float {
             animation: float 4s ease-in-out infinite;
         }
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(-6px, 3px); }
+            40% { transform: translate(6px, -3px); }
+            60% { transform: translate(-4px, -2px); }
+            80% { transform: translate(4px, 2px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between text-slate-200 antialiased selection:bg-amber-500 selection:text-black">
@@ -696,14 +706,24 @@
             if (document.getElementById('boss-hp-text')) document.getElementById('boss-hp-text').innerText = `${b.hp} / ${b.hpMax}`;
             if (document.getElementById('boss-hp-bar')) document.getElementById('boss-hp-bar').style.width = `${Math.max(0, (b.hp / b.hpMax) * 100)}%`;
         
-            // Avatar unique avec effet brillant / pierre précieuse selon la rareté
+            // Adaptation visuelle de la bannière globale selon la rareté
+            const banner = document.getElementById('boss-banner');
+            if (banner) {
+                if (b.badgeText === "Calamité du Royaume") {
+                    banner.className = "relative overflow-hidden rounded-2xl border-2 border-amber-400 bg-gradient-to-r from-red-950 via-stone-900 to-amber-950 p-5 shadow-[0_0_35px_rgba(255,215,0,0.4)] transition-all duration-500";
+                } else if (b.badgeText === "Fléau du Royaume") {
+                    banner.className = "relative overflow-hidden rounded-2xl border-2 border-purple-500 bg-gradient-to-r from-purple-950/90 via-stone-900 to-stone-950 p-5 shadow-[0_0_25px_rgba(168,85,247,0.3)] transition-all duration-500";
+                } else {
+                    banner.className = "relative overflow-hidden rounded-2xl border-2 border-red-900/60 bg-gradient-to-r from-red-950/80 via-stone-900/90 to-amber-950/80 p-5 shadow-2xl transition-all duration-500";
+                }
+            }
+        
             const bossAvatar = document.getElementById('boss-avatar');
             if (bossAvatar) {
                 bossAvatar.className = `w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 flex items-center justify-center text-3xl sm:text-4xl shadow-lg animate-float ${b.avatarBg || 'bg-red-900/40 border-red-500/50 text-red-400'}`;
                 bossAvatar.innerHTML = `<i class="fa-solid ${b.icon || 'fa-dragon'}"></i>`;
             }
         
-            // Badge dynamique : Menace, Fléau ou Calamité du Royaume
             const bossBadge = document.getElementById('boss-badge');
             if (bossBadge) {
                 bossBadge.innerText = b.badgeText || "Menace du Royaume";
@@ -1160,6 +1180,37 @@
                     gameState.hero.xp += q.xp;
                     gameState.hero.gold += Math.round(q.xp / 2);
                     gameState.boss.hp = Math.max(0, gameState.boss.hp - q.xp);
+                    // --- LOGIQUE DES MINI-PALIERS DE PV & BRAVOURE ---
+                        const b = gameState.boss;
+                        if (b.badgeText === "Fléau du Royaume" || b.badgeText === "Calamité du Royaume") {
+                            const previousHpRatio = ((b.hp + q.xp) / b.hpMax);
+                            const currentHpRatio = (b.hp / b.hpMax);
+                            
+                            // Seuils franchis (75%, 50%, 25%)
+                            const thresholds = [0.75, 0.50, 0.25];
+                            for (let t of thresholds) {
+                                if (previousHpRatio > t && currentHpRatio <= t) {
+                                    // Déclencher l'effet de secousse visuelle sur la bannière
+                                    const banner = document.getElementById('boss-banner');
+                                    if (banner) {
+                                        banner.classList.add('animate-shake');
+                                        setTimeout(() => banner.classList.remove('animate-shake'), 400);
+                                    }
+                                    
+                                    // Messages de bravoure contextuels selon le palier
+                                    let braveryMsg = "";
+                                    if (t === 0.75) braveryMsg = "⚔️ Le colosse vacille sous vos coups ! Sa carapace se fissure.";
+                                    else if (t === 0.50) braveryMsg = "⚡ À mi-parcours ! Le monstre entre en rage, redoublez d'efforts !";
+                                    else if (t === 0.25) braveryMsg = "🔥 Plus qu'un dernier sursaut ! La bête est au plus bas, achevez-la !";
+                                    
+                                    // Affichage temporaire du message dans la description du boss
+                                    if (document.getElementById('boss-desc')) {
+                                        document.getElementById('boss-desc').innerText = braveryMsg;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
                     
                     if (gameState.boss.hp <= 0) {
                         gameState.boss.defeated = (gameState.boss.defeated || 0) + 1;
