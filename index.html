@@ -106,14 +106,14 @@
         }
         @keyframes shake {
             0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            20% { transform: translate(-5px, 3px) rotate(-1deg); }
-            40% { transform: translate(5px, -3px) rotate(1deg); }
-            60% { transform: translate(-3px, -2px) rotate(0deg); }
-            80% { transform: translate(3px, 2px) rotate(0.5deg); }
+            15% { transform: translate(-10px, 5px) rotate(-2deg); }
+            30% { transform: translate(10px, -5px) rotate(2deg); }
+            45% { transform: translate(-7px, 3px) rotate(-1deg); }
+            60% { transform: translate(7px, -3px) rotate(1deg); }
+            75% { transform: translate(-4px, 2px) rotate(-0.5deg); }
         }
-        
         .animate-shake {
-            animation: shake 2s cubic-bezier(.36,.07,.19,.97) both;
+            animation: shake 2s ease-in-out both !important;
         }
     </style>
 </head>
@@ -1196,10 +1196,8 @@
                     const isSpecialBoss = (b.badgeText && (b.badgeText.includes("Fléau") || b.badgeText.includes("Calamité"))) 
                                        || (b.name && (b.name.includes("Fléau") || b.name.includes("Calamité")));
                     
-                    if (isSpecialBoss) {
-                        // PV avant le coup
+                    if (isSpecialBoss && !q.completed) {
                         const hpBefore = b.hp;
-                        // PV après le coup (ce qui a été retiré par la quête)
                         const hpAfter = Math.max(0, b.hp - q.xp);
                         
                         const previousRatio = hpBefore / b.hpMax;
@@ -1207,26 +1205,23 @@
                         
                         const thresholds = [0.75, 0.50, 0.25];
                         for (let t of thresholds) {
-                            // Détection si on franchit le seuil (ex: passer de 80% à 70% franchit le seuil 75%)
                             if (previousRatio > t && currentRatio <= t) {
                                 
-                                // 1. Déclencher la secousse sur la bannière du boss
-                                const banner = document.getElementById('boss-banner');
-                                if (banner) {
-                                    banner.classList.remove('animate-shake'); // Reset pour re-déclencher si besoin
-                                    void banner.offsetWidth; // Force le reflow du navigateur
-                                    banner.classList.add('animate-shake');
-                                    setTimeout(() => banner.classList.remove('animate-shake'), 450);
-                                }
+                                // 1. Message de bravoure persisté dans le State du Boss
+                                if (t === 0.75) b.desc = "⚔️ Le colosse vacille sous vos coups ! Sa carapace se fissure.";
+                                else if (t === 0.50) b.desc = "⚡ À mi-parcours ! Le monstre entre en rage, redoublez d'efforts !";
+                                else if (t === 0.25) b.desc = "🔥 Plus qu'un dernier sursaut ! La bête est au plus bas, achevez-la !";
                                 
-                                // 2. Définir le message de bravoure
-                                let braveryMsg = "";
-                                if (t === 0.75) braveryMsg = "⚔️ Le colosse vacille sous vos coups ! Sa carapace se fissure.";
-                                else if (t === 0.50) braveryMsg = "⚡ À mi-parcours ! Le monstre entre en rage, redoublez d'efforts !";
-                                else if (t === 0.25) braveryMsg = "🔥 Plus qu'un dernier sursaut ! La bête est au plus bas, achevez-la !";
-                                
-                                // 3. Stocker le message dans l'objet boss pour le conserver après renderAll()
-                                b.desc = braveryMsg;
+                                // 2. Déclenchement garanti de la secousse après renderAll()
+                                setTimeout(() => {
+                                    const banner = document.getElementById('boss-banner');
+                                    if (banner) {
+                                        // On retire la classe, on force le navigateur à "oublier" l'état (reflow), puis on la remet
+                                        banner.classList.remove('animate-shake');
+                                        void banner.offsetWidth; 
+                                        banner.classList.add('animate-shake');
+                                    }
+                                }, 100);
                                 break;
                             }
                         }
