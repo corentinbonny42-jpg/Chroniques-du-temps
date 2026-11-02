@@ -1250,7 +1250,13 @@
                             desc: newMonsterTemplate.desc
                         };
                     
-                        alert(`⚔️ Un nouvel ennemi apparaît : ${newMonsterTemplate.name} (${finalHpMax} PV) !`);
+                        setTimeout(() => {
+                                const banner = document.getElementById('boss-banner');
+                                if (banner) {
+                                    banner.classList.add('animate-shake');
+                                    setTimeout(() => banner.classList.remove('animate-shake'), 750);
+                                }
+                            }, 100);
                     }
                 }
                 // --- CALCUL DU STREAK (SÉRIE DE JOURS) ---
