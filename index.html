@@ -776,7 +776,7 @@
         let gameState = {
             lastReset: { day: new Date().toDateString(), timestamp: Date.now() },
             hero: { name: "Jacquouille", title: "Troubadour", class: "", icon: "fa-circle-user",unlockedIcons: ["fa-circle-user"],level: 1, xp: 0, xpMax: 100, hp: 50, hpMax: 50, gold: 50, lastHeroNameChangeLevel: 1, stats: { str: 10, def: 10, wis: 10, end: 10 } },
-            boss: { id: "red_dragon", name: "Dragon Rouge", hp: 100, hpMax: 100, defeated: 0, icon: "fa-dragon" },
+            boss: { id: "ver", name: "Ver de Terre", hp: 30, hpMax: 30, defeated: 0, icon: "fa-worm", avatarBg: "bg-stone-900/40 border-stone-600/50 text-stone-400", badgeBg: "bg-stone-800 text-stone-300 border-stone-600", desc: "Un simple ver un peu trop grand." },
             quests: JSON.parse(JSON.stringify(DEFAULT_QUESTS)),
             inventory: [],
             buildingsPurchased: ['cabane'],
@@ -813,7 +813,15 @@
         function checkAndApplyResets() {
             const now = new Date();
             const lastResetDate = gameState.lastReset ? new Date(gameState.lastReset.timestamp) : new Date(0);
-
+            
+            // S'assurer que toutes les quêtes ont un expiresAt (rétrocompatibilité)
+            gameState.quests.forEach(q => {
+                if (!q.expiresAt) {
+                    const days = q.category === 'daily' ? 1 : (q.category === 'weekly' ? 7 : (q.category === 'monthly' ? 30 : 365));
+                    q.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
+                }
+            });
+            
             if (now.toDateString() !== lastResetDate.toDateString()) {
                 gameState.quests.filter(q => q.category === 'daily').forEach(q => { q.current = 0; q.completed = false; });
                 const diffDays = Math.floor((now - lastResetDate) / (1000 * 60 * 60 * 24));
@@ -1063,12 +1071,7 @@
                         const typeInfo = QUEST_TYPES[qType] || QUEST_TYPES.neutre;
                         
                         card.className = `${typeInfo.bgClass} border p-3 rounded-xl flex flex-col gap-2 shadow-sm relative overflow-hidden`;
-                        card.innerHTML = `
-                            <!-- Icône centrée en filigrane en arrière-plan -->
-                            <div class="absolute inset-0 flex items-center justify-center opacity-10 text-stone-300 text-5xl pointer-events-none select-none">
-                                <i class="fa-solid ${typeInfo.icon}"></i>
-                            </div>
-                        
+                        card.innerHTML = `                      
                             <!-- Contenu de la quête (au-dessus du filigrane grâce à relative z-10) -->
                             <div class="relative z-10 flex items-center justify-between gap-2">
                                 <span class="text-xs font-semibold ${q.completed ? 'line-through text-stone-500' : 'text-slate-100'}">${q.title}</span>
