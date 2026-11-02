@@ -105,14 +105,15 @@
             animation: float 4s ease-in-out infinite;
         }
         @keyframes shake {
-            0%, 100% { transform: translate(0, 0); }
-            20% { transform: translate(-6px, 3px); }
-            40% { transform: translate(6px, -3px); }
-            60% { transform: translate(-4px, -2px); }
-            80% { transform: translate(4px, 2px); }
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-5px, 3px) rotate(-1deg); }
+            40% { transform: translate(5px, -3px) rotate(1deg); }
+            60% { transform: translate(-3px, -2px) rotate(0deg); }
+            80% { transform: translate(3px, 2px) rotate(0.5deg); }
         }
+        
         .animate-shake {
-            animation: shake 0.4s ease-in-out;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
         }
     </style>
 </head>
@@ -695,8 +696,18 @@
             }
         
             const randomIndex = Math.floor(Math.random() * selectedList.length);
-            return selectedList[randomIndex];
+            const monster = selectedList[randomIndex];
+            
+            // S'assurer que badgeText est défini
+            if (!monster.badgeText) {
+                if (selectedList === tierData.calamite) monster.badgeText = "Calamité du Royaume";
+                else if (selectedList === tierData.fleau) monster.badgeText = "Fléau du Royaume";
+                else monster.badgeText = "Menace du Royaume";
+            }
+            
+            return monster; 
         }
+        
         function renderBoss() {
             const b = gameState.boss;
             if (!b) return;
@@ -1181,36 +1192,45 @@
                     gameState.hero.gold += Math.round(q.xp / 2);
                     gameState.boss.hp = Math.max(0, gameState.boss.hp - q.xp);
                     // --- LOGIQUE DES MINI-PALIERS DE PV & BRAVOURE ---
-                        const b = gameState.boss;
-                        if (b.badgeText === "Fléau du Royaume" || b.badgeText === "Calamité du Royaume") {
-                            const previousHpRatio = ((b.hp + q.xp) / b.hpMax);
-                            const currentHpRatio = (b.hp / b.hpMax);
-                            
-                            // Seuils franchis (75%, 50%, 25%)
-                            const thresholds = [0.75, 0.50, 0.25];
-                            for (let t of thresholds) {
-                                if (previousHpRatio > t && currentHpRatio <= t) {
-                                    // Déclencher l'effet de secousse visuelle sur la bannière
-                                    const banner = document.getElementById('boss-banner');
-                                    if (banner) {
-                                        banner.classList.add('animate-shake');
-                                        setTimeout(() => banner.classList.remove('animate-shake'), 400);
-                                    }
-                                    
-                                    // Messages de bravoure contextuels selon le palier
-                                    let braveryMsg = "";
-                                    if (t === 0.75) braveryMsg = "⚔️ Le colosse vacille sous vos coups ! Sa carapace se fissure.";
-                                    else if (t === 0.50) braveryMsg = "⚡ À mi-parcours ! Le monstre entre en rage, redoublez d'efforts !";
-                                    else if (t === 0.25) braveryMsg = "🔥 Plus qu'un dernier sursaut ! La bête est au plus bas, achevez-la !";
-                                    
-                                    // Affichage temporaire du message dans la description du boss
-                                    if (document.getElementById('boss-desc')) {
-                                        document.getElementById('boss-desc').innerText = braveryMsg;
-                                    }
-                                    break;
+                    const b = gameState.boss;
+                    const isSpecialBoss = (b.badgeText && (b.badgeText.includes("Fléau") || b.badgeText.includes("Calamité"))) 
+                                       || (b.name && (b.name.includes("Fléau") || b.name.includes("Calamité")));
+                    
+                    if (isSpecialBoss) {
+                        // PV avant le coup
+                        const hpBefore = b.hp;
+                        // PV après le coup (ce qui a été retiré par la quête)
+                        const hpAfter = Math.max(0, b.hp - q.xp);
+                        
+                        const previousRatio = hpBefore / b.hpMax;
+                        const currentRatio = hpAfter / b.hpMax;
+                        
+                        const thresholds = [0.75, 0.50, 0.25];
+                        for (let t of thresholds) {
+                            // Détection si on franchit le seuil (ex: passer de 80% à 70% franchit le seuil 75%)
+                            if (previousRatio > t && currentRatio <= t) {
+                                
+                                // 1. Déclencher la secousse sur la bannière du boss
+                                const banner = document.getElementById('boss-banner');
+                                if (banner) {
+                                    banner.classList.remove('animate-shake'); // Reset pour re-déclencher si besoin
+                                    void banner.offsetWidth; // Force le reflow du navigateur
+                                    banner.classList.add('animate-shake');
+                                    setTimeout(() => banner.classList.remove('animate-shake'), 450);
                                 }
+                                
+                                // 2. Définir le message de bravoure
+                                let braveryMsg = "";
+                                if (t === 0.75) braveryMsg = "⚔️ Le colosse vacille sous vos coups ! Sa carapace se fissure.";
+                                else if (t === 0.50) braveryMsg = "⚡ À mi-parcours ! Le monstre entre en rage, redoublez d'efforts !";
+                                else if (t === 0.25) braveryMsg = "🔥 Plus qu'un dernier sursaut ! La bête est au plus bas, achevez-la !";
+                                
+                                // 3. Stocker le message dans l'objet boss pour le conserver après renderAll()
+                                b.desc = braveryMsg;
+                                break;
                             }
                         }
+                    }
                     
                     if (gameState.boss.hp <= 0) {
                         gameState.boss.defeated = (gameState.boss.defeated || 0) + 1;
