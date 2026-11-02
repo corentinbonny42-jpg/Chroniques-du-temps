@@ -600,26 +600,58 @@
     <!-- JAVASCRIPT DU JEU -->
     <script>
         // BANQUE DE DONNÉES
-    const BOSS_DATABASE = [
-        {   id: 'red_dragon', name: "Dragon Rouge", hpMax: 100, icon: "fa-dragon", 
-            avatarBg: "bg-red-900/40 border-red-500/50 text-red-400", badgeBg: "bg-red-900/60 text-red-300 border-red-700",  desc: "Une menace cracheuse de feu venue des sommets. Chaque point d'XP gagné lui inflige des dégâts !"
-        },
-        { 
-            id: 'green_dragon', name: "Dragon Vert", hpMax: 150, icon: "fa-dragon", 
-            avatarBg: "bg-emerald-900/40 border-emerald-500/50 text-emerald-400", badgeBg: "bg-emerald-900/60 text-emerald-300 border-emerald-700", desc: "Un dragon venimeux tapi dans les forêts sombres du Royaume."
-        },
-        { 
-            id: 'black_dragon', name: "Dragon Noir", hpMax: 200, icon: "fa-dragon", 
-            avatarBg: "bg-purple-900/40 border-purple-500/50 text-purple-400", badgeBg: "bg-purple-900/60 text-purple-300 border-purple-700", desc: "Une créature d'ombre maîtresse de la magie noire."
-        }
-    ];
-    
-    // Tirer un boss au hasard dans la banque
-    function getRandomBoss() {
-        const randomIndex = Math.floor(Math.random() * BOSS_DATABASE.length);
-        return BOSS_DATABASE[randomIndex];
+        const BOSS_DATABASE = {
+            base: [ // Jusqu'au niveau 5
+                { id: 'ver', name: "Ver de terre", hpMax: 30, icon: "fa-worm", avatarBg: "bg-stone-900/40 border-stone-600/50 text-stone-400", badgeBg: "bg-stone-800 text-stone-300 border-stone-600", desc: "Un simple ver un peu trop grand." },
+                { id: 'fourmi', name: "Fourmi rouge", hpMax: 40, icon: "fa-bug", avatarBg: "bg-amber-950/40 border-amber-700/50 text-amber-500", badgeBg: "bg-amber-900/60 text-amber-300 border-amber-700", desc: "Une colonie agressive sur votre chemin." },
+                { id: 'zazou', name: "Zazou", hpMax: 45, icon: "fa-feather", avatarBg: "bg-sky-950/40 border-sky-700/50 text-sky-400", badgeBg: "bg-sky-900/60 text-sky-300 border-sky-700", desc: "Un oiseau territorial et moqueur." },
+                { id: 'crabe', name: "Crabe", hpMax: 50, icon: "fa-shield-cat", avatarBg: "bg-orange-950/40 border-orange-700/50 text-orange-400", badgeBg: "bg-orange-900/60 text-orange-300 border-orange-700", desc: "Pince fort, parle peu." }
+            ],
+            facile: [ // Entre le niveau 5 et 10
+                { id: 'gob_vert', name: "Gobelin vert", hpMax: 70, icon: "fa-gopuram", avatarBg: "bg-emerald-950/40 border-emerald-600/50 text-emerald-400", badgeBg: "bg-emerald-900/60 text-emerald-300 border-emerald-700", desc: "Un pillard agile et rusé." },
+                { id: 'humain', name: "Bandit humain", hpMax: 80, icon: "fa-user-secret", avatarBg: "bg-stone-900/40 border-stone-500/50 text-stone-300", badgeBg: "bg-stone-800 text-stone-300 border-stone-600", desc: "Un hors-la-loi en quête d'écus." },
+                { id: 'cheval', name: "Cheval corrompu", hpMax: 90, icon: "fa-horse", avatarBg: "bg-amber-900/30 border-amber-600/50 text-amber-400", badgeBg: "bg-amber-900/60 text-amber-300 border-amber-700", desc: "Une monture sauvage échappée des combats." },
+                { id: 'gob_noir', name: "Gobelin noir", hpMax: 100, icon: "fa-ghost", avatarBg: "bg-purple-950/40 border-purple-800/50 text-purple-400", badgeBg: "bg-purple-900/60 text-purple-300 border-purple-700", desc: "Un assassin des cavernes sombres." }
+            ],
+            moyen: [ // Entre le niveau 10 et 20
+                { id: 'chevalier_noir', name: "Chevalier noir", hpMax: 150, icon: "fa-chess-knight", avatarBg: "bg-slate-900/60 border-slate-600 text-slate-300", badgeBg: "bg-slate-800 text-slate-200 border-slate-600", desc: "Un ancien membre déchu de l'Ordre." },
+                { id: 'sorcier', name: "Sorcier renégat", hpMax: 140, icon: "fa-hat-wizard", avatarBg: "bg-indigo-950/40 border-indigo-700/50 text-indigo-400", badgeBg: "bg-indigo-900/60 text-indigo-300 border-indigo-700", desc: "Maître des arcanes interdites." },
+                { id: 'archer', name: "Archer d'élite", hpMax: 130, icon: "fa-bullseye", avatarBg: "bg-teal-950/40 border-teal-700/50 text-teal-400", badgeBg: "bg-teal-900/60 text-teal-300 border-teal-700", desc: "Ne rate jamais sa cible." },
+                { id: 'paladin', name: "Paladin corrompu", hpMax: 170, icon: "fa-shield-halved", avatarBg: "bg-blue-950/40 border-blue-700/50 text-blue-400", badgeBg: "bg-blue-900/60 text-blue-300 border-blue-700", desc: "La foi muée en une force destructrice." }
+            ],
+            difficile: [ // Entre le niveau 20 et 50
+                { id: 'dragon_rouge', name: "Dragon Rouge", hpMax: 250, icon: "fa-dragon", avatarBg: "bg-red-900/40 border-red-500/50 text-red-400", badgeBg: "bg-red-900/60 text-red-300 border-red-700", desc: "Une fournaise vivante." },
+                { id: 'dragon_vert', name: "Dragon Vert", hpMax: 270, icon: "fa-dragon", avatarBg: "bg-emerald-900/40 border-emerald-500/50 text-emerald-400", badgeBg: "bg-emerald-900/60 text-emerald-300 border-emerald-700", desc: "Seigneur des épaisses canopées toxiques." },
+                { id: 'dragon_bleu', name: "Dragon Bleu", hpMax: 290, icon: "fa-dragon", avatarBg: "bg-blue-900/40 border-blue-500/50 text-blue-400", badgeBg: "bg-blue-900/60 text-blue-300 border-blue-700", desc: "Foudroyant et imprévisible." },
+                { id: 'dragon_noir', name: "Dragon Noir", hpMax: 320, icon: "fa-dragon", avatarBg: "bg-purple-900/40 border-purple-500/50 text-purple-400", badgeBg: "bg-purple-900/60 text-purple-300 border-purple-700", desc: "Terreur absolue des abysses." }
+            ]
+        ];
+    function getMonsterForCurrentLevel() {
+    const level = gameState.hero.level;
+    let pool = [];
+
+    if (level < 5) {
+        pool = BOSS_DATABASE.base;
+    } else if (level >= 5 && level < 10) {
+        pool = BOSS_DATABASE.facile;
+    } else if (level >= 10 && level < 20) {
+        pool = BOSS_DATABASE.moyen;
+    } else if (level >= 20 && level < 50) {
+        pool = BOSS_DATABASE.difficile;
+    } else {
+        // Niveau 50 et plus : Aléatoire parmi TOUS les monstres de toutes les catégories
+        pool = [
+            ...BOSS_DATABASE.base,
+            ...BOSS_DATABASE.facile,
+            ...BOSS_DATABASE.moyen,
+            ...BOSS_DATABASE.difficile
+        ];
     }
 
+    // Sélection aléatoire dans le pool ciblé
+    const randomIndex = Math.floor(Math.random() * pool.length);
+    return pool[randomIndex];
+}
         function renderBoss() {
             const b = gameState.boss;
             if (!b) return;
@@ -1092,22 +1124,25 @@
                         gameState.boss.defeated = (gameState.boss.defeated || 0) + 1;
                         
                         const newHpMax = (gameState.boss.hpMax || 100) + 100;
+                        const newMonsterTemplate = getMonsterForCurrentLevel();
                         
-                        const newBossTemplate = getRandomBoss();
+                        const baseHp = newMonsterTemplate.hpMax || 100;
+                            const scalingBonus = gameState.boss.defeated * 20; 
+                            const finalHpMax = baseHp + scalingBonus;
                         
-                        gameState.boss = {
-                            id: newBossTemplate.id,
-                            name: newBossTemplate.name,
-                            hp: newHpMax,
-                            hpMax: newHpMax,
-                            defeated: gameState.boss.defeated,
-                            icon: newBossTemplate.icon,
-                            avatarBg: newBossTemplate.avatarBg,
-                            badgeBg: newBossTemplate.badgeBg,
-                            desc: newBossTemplate.desc
-                        };
+                            gameState.boss = {
+                                id: newMonsterTemplate.id,
+                                name: newMonsterTemplate.name,
+                                hp: finalHpMax,
+                                hpMax: finalHpMax,
+                                defeated: gameState.boss.defeated,
+                                icon: newMonsterTemplate.icon,
+                                avatarBg: newMonsterTemplate.avatarBg,
+                                badgeBg: newMonsterTemplate.badgeBg,
+                                desc: newMonsterTemplate.desc
+                            };
                     
-                        alert(`💥 ${newBossTemplate.name} s'avance ! Il possède ${newHpMax} PV !`);
+                        alert(`💥 ${newMonsterTemplate.name} s'avance ! Il possède ${finalHpMax} PV !`);
                     }
                 }
                 // --- CALCUL DU STREAK (SÉRIE DE JOURS) ---
