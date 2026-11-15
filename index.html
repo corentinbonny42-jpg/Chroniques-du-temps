@@ -401,6 +401,14 @@
                             <span id="stat-bosses-slain" class="font-bold text-red-400 font-mono">0</span>
                         </div>
                         <div class="flex justify-between border-b border-stone-800 pb-1">
+                            <span class="text-stone-400">Fléaux Vaincus</span>
+                            <span id="stat-fleaux-slain" class="font-bold text-purple-400 font-mono">0</span>
+                        </div>
+                        <div class="flex justify-between border-b border-stone-800 pb-1">
+                            <span class="text-stone-400">Calamités Vaincues</span>
+                            <span id="stat-calamites-slain" class="font-bold text-amber-300 font-mono">0</span>
+                        </div>
+                        <div class="flex justify-between border-b border-stone-800 pb-1">
                             <span class="text-stone-400">Série Consécutive</span>
                             <span id="stat-streak" class="font-bold text-amber-400 font-mono">0 jours</span>
                         </div>
@@ -859,7 +867,9 @@
                     sportifCount: 0,
                     cuisineCount: 0,
                     expeditionCount: 0,
-                    unlockedApostle: false
+                    unlockedApostle: false,
+                    fleauxDefeated: 0,
+                    calamitesDefeated: 0
                 }
         };
 
@@ -1111,6 +1121,12 @@
             if (document.getElementById('stat-bosses-slain')) {
                 document.getElementById('stat-bosses-slain').innerText = gameState.boss.defeated || 0;
             }
+            if (document.getElementById('stat-fleaux-slain')) {
+                document.getElementById('stat-fleaux-slain').innerText = gameState.stats.fleauxDefeated || 0;
+            }
+            if (document.getElementById('stat-calamites-slain')) {
+                document.getElementById('stat-calamites-slain').innerText = gameState.stats.calamitesDefeated || 0;
+            }
             if (document.getElementById('stat-streak')) {
                 document.getElementById('stat-streak').innerText = `${gameState.stats.streak || 0} jours`;
             }
@@ -1269,6 +1285,13 @@
                     
                     if (gameState.boss.hp <= 0) {
                         gameState.boss.defeated = (gameState.boss.defeated || 0) + 1;
+
+                        const defeatedBossText = gameState.boss.badgeText || "";
+                            if (defeatedBossText.includes("Fléau")) {
+                                gameState.stats.fleauxDefeated = (gameState.stats.fleauxDefeated || 0) + 1;
+                            } else if (defeatedBossText.includes("Calamité")) {
+                                gameState.stats.calamitesDefeated = (gameState.stats.calamitesDefeated || 0) + 1;
+                            }
                         
                         // Tirage du nouveau monstre avec sa rareté propre
                         const newMonsterTemplate = getMonsterForCurrentLevel();
