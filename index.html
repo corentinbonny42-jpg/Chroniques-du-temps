@@ -1062,7 +1062,7 @@
         const HUNTING_CLASSES = {
             gobelins: {
                 name: "Gobelins",
-                icon: "fa-gopuram",
+                icon: "images/gobelin_icon.png",
                 desc: "Hordes pillardes des cavernes et sous-bois.",
                 trophies: [
                     { name: "Bronze", target: 10, icon: "fa-award", color: "text-amber-700 border-amber-800 bg-amber-950/30" },
@@ -1073,7 +1073,7 @@
             },
             fantassins: {
                 name: "Fantassins & Soldats",
-                icon: "fa-chess-knight",
+                icon: "images/fantassin_icon.png",
                 desc: "Combattants armés et déchus du royaume.",
                 trophies: [
                     { name: "Bronze", target: 10, icon: "fa-award", color: "text-amber-700 border-amber-800 bg-amber-950/30" },
@@ -1084,7 +1084,7 @@
             },
             dragons: {
                 name: "Dragons & Wyrms",
-                icon: "fa-dragon",
+                icon: "images/dragon_icon.png",
                 desc: "Bêtes écailleuses des sommets et des abysses.",
                 trophies: [
                     { name: "Bronze", target: 10, icon: "fa-award", color: "text-amber-700 border-amber-800 bg-amber-950/30" },
@@ -1115,8 +1115,7 @@
                 card.innerHTML = `
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 rounded-xl bg-black/50 border border-stone-700 group-hover:border-amber-500/50 flex items-center justify-center text-amber-400 text-xl transition">
-                            <i class="fa-solid ${cls.icon}"></i>
-                        </div>
+                            <img src="${cls.iconPath}" alt="${cls.name}" class="w-full h-full object-cover">                        </div>
                         <div>
                             <h4 class="font-medieval text-sm font-bold text-slate-200 group-hover:text-amber-200 transition">${cls.name}</h4>
                             <p class="text-xs text-stone-400 font-mono">${count} éliminations</p>
@@ -1135,7 +1134,7 @@
             const kills = gameState.stats.monsterKills || { gobelins: 0, fantassins: 0, dragons: 0 };
             const currentKills = kills[classKey] || 0;
         
-            document.getElementById('modal-hunting-icon').innerHTML = `<i class="fa-solid ${cls.icon}"></i>`;
+            document.getElementById('modal-hunting-icon').innerHTML = `<img src="${cls.iconPath}" alt="${cls.name}" class="w-full h-full object-cover rounded-lg">`;
             document.getElementById('modal-hunting-title').innerText = cls.name;
             document.getElementById('modal-hunting-counter').innerText = `Progression totale : ${currentKills} points d'élimination`;
         
