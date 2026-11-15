@@ -447,6 +447,16 @@
                     <!-- Généré dynamiquement en JS -->
                 </div>
             </div>
+            <!-- ENCART TABLEAU DE CHASSE -->
+            <div class="bg-medieval-card p-6 rounded-2xl border border-medieval-border flex flex-col gap-4 md:col-span-3 mt-4">
+                <h3 class="font-medieval text-lg font-bold text-amber-200 border-b border-medieval-border pb-2 flex items-center justify-between">
+                    <span>Tableau de Chasse</span>
+                    <span class="text-xs text-stone-400 font-sans font-normal">Cliquez sur une classe pour inspecter les trophées</span>
+                </h3>
+                <div id="hunting-classes-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- Généré dynamiquement en JS -->
+                </div>
+            </div>
         </section>
 
         <!-- ROYAUME ISOMÉTRIQUE -->
@@ -597,6 +607,33 @@
         </div>
     </div>
 
+        <!-- Modale Tableau de Chasse (Trophées) -->
+        <div id="hunting-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+            <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+                <button onclick="closeModal('hunting-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <div class="flex items-center gap-3 mb-4">
+                    <div id="modal-hunting-icon" class="w-12 h-12 rounded-xl bg-amber-950/60 border border-amber-600/40 flex items-center justify-center text-amber-400 text-2xl"></div>
+                    <div>
+                        <h3 id="modal-hunting-title" class="font-medieval text-xl font-bold text-amber-200">--</h3>
+                        <p id="modal-hunting-counter" class="text-xs text-stone-400 font-mono">Progression : 0 éliminations</p>
+                    </div>
+                </div>
+                
+                <div class="border-t border-medieval-border pt-4 mb-2">
+                    <h4 class="text-xs font-bold text-amber-300 uppercase tracking-wider mb-3">Paliers de Trophées</h4>
+                    <div id="modal-trophies-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <!-- Les 4 trophées (Bronze, Argent, Or, Diamant) injectés ici -->
+                    </div>
+                </div>
+        
+                <div class="flex justify-end pt-2">
+                    <button type="button" onclick="closeModal('hunting-modal')" class="px-4 py-2 bg-stone-800 text-stone-300 text-xs font-bold rounded-xl hover:bg-stone-700">Fermer</button>
+                </div>
+            </div>
+        </div>
+    
     <!-- Modale Sauvegarde -->
     <div id="backup-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-medieval-card border-2 border-medieval-border rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
@@ -869,7 +906,12 @@
                     expeditionCount: 0,
                     unlockedApostle: false,
                     fleauxDefeated: 0,
-                    calamitesDefeated: 0
+                    calamitesDefeated: 0,
+                    monsterKills: {
+                            gobelins: 0,
+                            fantassins: 0,
+                            dragons: 0
+                        }
                 }
         };
 
@@ -1016,6 +1058,117 @@
             }
         }
 
+        // Données de configuration des 3 classes du tableau de chasse
+        const HUNTING_CLASSES = {
+            gobelins: {
+                name: "Gobelins",
+                icon: "fa-gopuram",
+                desc: "Hordes pillardes des cavernes et sous-bois.",
+                trophies: [
+                    { name: "Bronze", target: 10, icon: "fa-award", color: "text-amber-700 border-amber-800 bg-amber-950/30" },
+                    { name: "Argent", target: 20, icon: "fa-medal", color: "text-slate-300 border-slate-600 bg-slate-900/40" },
+                    { name: "Or", target: 50, icon: "fa-trophy", color: "text-amber-400 border-amber-500 bg-amber-950/50" },
+                    { name: "Diamant", target: 100, icon: "fa-gem", color: "text-cyan-400 border-cyan-500 bg-cyan-950/50" }
+                ]
+            },
+            fantassins: {
+                name: "Fantassins & Soldats",
+                icon: "fa-chess-knight",
+                desc: "Combattants armés et déchus du royaume.",
+                trophies: [
+                    { name: "Bronze", target: 10, icon: "fa-award", color: "text-amber-700 border-amber-800 bg-amber-950/30" },
+                    { name: "Argent", target: 20, icon: "fa-medal", color: "text-slate-300 border-slate-600 bg-slate-900/40" },
+                    { name: "Or", target: 50, icon: "fa-trophy", color: "text-amber-400 border-amber-500 bg-amber-950/50" },
+                    { name: "Diamant", target: 100, icon: "fa-gem", color: "text-cyan-400 border-cyan-500 bg-cyan-950/50" }
+                ]
+            },
+            dragons: {
+                name: "Dragons & Wyrms",
+                icon: "fa-dragon",
+                desc: "Bêtes écailleuses des sommets et des abysses.",
+                trophies: [
+                    { name: "Bronze", target: 10, icon: "fa-award", color: "text-amber-700 border-amber-800 bg-amber-950/30" },
+                    { name: "Argent", target: 20, icon: "fa-medal", color: "text-slate-300 border-slate-600 bg-slate-900/40" },
+                    { name: "Or", target: 50, icon: "fa-trophy", color: "text-amber-400 border-amber-500 bg-amber-950/50" },
+                    { name: "Diamant", target: 100, icon: "fa-gem", color: "text-cyan-400 border-cyan-500 bg-cyan-950/50" }
+                ]
+            }
+        };
+        
+        function renderHuntingTable() {
+            const container = document.getElementById('hunting-classes-grid');
+            if (!container) return;
+            container.innerHTML = '';
+        
+            const kills = gameState.stats.monsterKills || { gobelins: 0, fantassins: 0, dragons: 0 };
+        
+            for (let key in HUNTING_CLASSES) {
+                const cls = HUNTING_CLASSES[key];
+                const count = kills[key] || 0;
+                
+                // Calcul du nombre de trophées débloqués pour cette classe
+                const unlockedCount = cls.trophies.filter(t => count >= t.target).length;
+        
+                const card = document.createElement('div');
+                card.className = "bg-stone-900/80 hover:bg-stone-900 border border-stone-800 hover:border-amber-500/50 p-4 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition shadow-md group";
+                card.onclick = () => openHuntingModal(key);
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-black/50 border border-stone-700 group-hover:border-amber-500/50 flex items-center justify-center text-amber-400 text-xl transition">
+                            <i class="fa-solid ${cls.icon}"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medieval text-sm font-bold text-slate-200 group-hover:text-amber-200 transition">${cls.name}</h4>
+                            <p class="text-xs text-stone-400 font-mono">${count} éliminations</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-950/60 px-2 py-1 rounded-lg border border-amber-900/50 font-mono">${unlockedCount} / 4 🏆</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+        }
+        
+        function openHuntingModal(classKey) {
+            const cls = HUNTING_CLASSES[classKey];
+            const kills = gameState.stats.monsterKills || { gobelins: 0, fantassins: 0, dragons: 0 };
+            const currentKills = kills[classKey] || 0;
+        
+            document.getElementById('modal-hunting-icon').innerHTML = `<i class="fa-solid ${cls.icon}"></i>`;
+            document.getElementById('modal-hunting-title').innerText = cls.name;
+            document.getElementById('modal-hunting-counter').innerText = `Progression totale : ${currentKills} points d'élimination`;
+        
+            const grid = document.getElementById('modal-trophies-grid');
+            grid.innerHTML = '';
+        
+            cls.trophies.forEach(t => {
+                const isUnlocked = currentKills >= t.target;
+                const trophyCard = document.createElement('div');
+        
+                if (isUnlocked) {
+                    // Trophée débloqué (coloré)
+                    trophyCard.className = `p-3 rounded-xl border ${t.color} flex flex-col items-center text-center gap-1.5 shadow-lg`;
+                    trophyCard.innerHTML = `
+                        <div class="text-2xl"><i class="fa-solid ${t.icon}"></i></div>
+                        <span class="text-xs font-bold font-medieval">${t.name}</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-black/40 text-emerald-400 border border-emerald-800/60 font-bold">Débloqué (${t.target})</span>
+                    `;
+                } else {
+                    // Trophée verrouillé (grisé)
+                    trophyCard.className = "bg-stone-900/60 border border-stone-800 p-3 rounded-xl flex flex-col items-center text-center gap-1.5 opacity-40";
+                    trophyCard.innerHTML = `
+                        <div class="text-2xl text-stone-500"><i class="fa-solid ${t.icon}"></i></div>
+                        <span class="text-xs font-bold font-medieval text-stone-400">${t.name}</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-stone-950 text-stone-500 border border-stone-800">Objectif: ${t.target}</span>
+                    `;
+                }
+                grid.appendChild(trophyCard);
+            });
+        
+            openModal('hunting-modal');
+        }
+        
         function renderAll() {
             // 1. DÉCLARATION DE LA VARIABLE 'h' EN PREMIER
             const h = gameState.hero;
@@ -1138,7 +1291,8 @@
             }
 
             renderApostleSecretBadge();
-            renderBoss()
+            renderHuntingTable();
+            renderBoss();
             renderQuests();
             renderShop();
             renderWorldShop();
@@ -1286,6 +1440,30 @@
                     if (gameState.boss.hp <= 0) {
                         gameState.boss.defeated = (gameState.boss.defeated || 0) + 1;
 
+                        // --- COMPARAISON ET INCRÉMENTATION DU TABLEAU DE CHASSE ---
+                            const bId = gameState.boss.id;
+                            const bBadge = gameState.boss.badgeText || "";
+                            
+                            // Détermination de la valeur de kill selon la rareté
+                            let killWeight = 1;
+                            if (bBadge.includes("Fléau")) killWeight = 2;
+                            if (bBadge.includes("Calamité")) killWeight = 3;
+                        
+                            // Association par ID de monstre exact selon ta base de données
+                            const gobList = ['gob_vert', 'gob_noir', 'chef_gobelin'];
+                            const fantassinList = ['chevalier_noir', 'paladin', 'seigneur_maudit'];
+                            const dragonList = ['dragon_rouge', 'dragon_vert', 'dragon_bleu', 'dragon_noir', 'wyrm_ancien', 'behemoth_abyssal'];
+                        
+                            if (!gameState.stats.monsterKills) gameState.stats.monsterKills = { gobelins: 0, fantassins: 0, dragons: 0 };
+                        
+                            if (gobList.includes(bId)) {
+                                gameState.stats.monsterKills.gobelins += killWeight;
+                            } else if (fantassinList.includes(bId)) {
+                                gameState.stats.monsterKills.fantassins += killWeight;
+                            } else if (dragonList.includes(bId)) {
+                                gameState.stats.monsterKills.dragons += killWeight;
+                            }
+                        
                         const defeatedBossText = gameState.boss.badgeText || "";
                             if (defeatedBossText.includes("Fléau")) {
                                 gameState.stats.fleauxDefeated = (gameState.stats.fleauxDefeated || 0) + 1;
