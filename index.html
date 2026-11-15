@@ -798,12 +798,12 @@
  
         // QUÊTES INITIALES
         const DEFAULT_QUESTS = [
-            { id: 'q_d1', title: 'Méditation 5 minutes', category: 'daily', xp: 5, current: 0, target: 1, completed: false },
-            { id: 'q_d3', title: '10 000 pas', category: 'daily', xp: 60, current: 0, target: 1, completed: false },
-            { id: 'q_w1', title: 'Méditation (messe)', category: 'weekly', xp: 60, current: 0, target: 1, completed: false },
-            { id: 'q_w2', title: 'Activité sportive', category: 'weekly', xp: 120, current: 0, target: 3, completed: false },
-            { id: 'q_m1', title: 'Jour sans Insta', category: 'monthly', xp: 200, current: 0, target: 10, completed: false },
-            { id: 'q_m2', title: 'Rendez vous galant ', category: 'monthly', xp: 500, current: 0, target: 1, completed: false },
+            { id: 'q_d1', title: 'Méditation 5 minutes', category: 'daily', xp: 5, current: 0, target: 1, completed: false, civilRef: new Date().toISOString().split('T')[0] },
+            { id: 'q_d3', title: '10 000 pas', category: 'daily', xp: 60, current: 0, target: 1, completed: false, civilRef: new Date().toISOString().split('T')[0]  },
+            { id: 'q_w1', title: 'Méditation (messe)', category: 'weekly', xp: 60, current: 0, target: 1, completed: false,civilWeek: getCurrentWeekNumber(new Date()) },
+            { id: 'q_w2', title: 'Activité sportive', category: 'weekly', xp: 120, current: 0, target: 3, completed: false,civilWeek: getCurrentWeekNumber(new Date()) },
+            { id: 'q_m1', title: 'Jour sans Insta', category: 'monthly', xp: 200, current: 0, target: 10, completed: false,civilMonthKey: getCurrentMonthKey(new Date()) },
+            { id: 'q_m2', title: 'Rendez vous galant ', category: 'monthly', xp: 500, current: 0, target: 1, completed: false,civilMonthKey: getCurrentMonthKey(new Date()) },
         ];
         
         const ORDER_DESCRIPTIONS = {
@@ -880,43 +880,83 @@
         // CHECK RESET HORLOGE
         function checkAndApplyResets() {
             const now = new Date();
-            const lastResetDate = gameState.lastReset ? new Date(gameState.lastReset.timestamp) : new Date(0);
-            
-            // S'assurer que toutes les quêtes ont un expiresAt (rétrocompatibilité)
-            gameState.quests.forEach(q => {
-                if (!q.expiresAt) {
-                    const days = q.category === 'daily' ? 1 : (q.category === 'weekly' ? 7 : (q.category === 'monthly' ? 30 : 365));
-                    q.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
-                }
-            });
-            
-            if (now.toDateString() !== lastResetDate.toDateString()) {
-                gameState.quests.filter(q => q.category === 'daily').forEach(q => { q.current = 0; q.completed = false; });
-                const diffDays = Math.floor((now - lastResetDate) / (1000 * 60 * 60 * 24));
-                if (diffDays >= 7) {
-                    gameState.quests.filter(q => q.category === 'weekly').forEach(q => { q.current = 0; q.completed = false; });
-                }
-                if (now.getMonth() !== lastResetDate.getMonth() || diffDays >= 30) {
-                    gameState.quests.filter(q => q.category === 'monthly').forEach(q => { q.current = 0; q.completed = false; });
-                }
-                gameState.lastReset = { day: now.toDateString(), timestamp: now.getTime() };
-                saveGame();
+            const currentDayStr = now.toISOString().split('T')[0]; // "YYYY-MM-DD"
+            const currentWeek = getCurrentWeekNumber(now);
+            const currentMonthKey = getCurrentMonthKey(now);
+            const currentYear = now.getFullYear();
+        
+            // 1. Initialisation de la structure lastReset si absente
+            if (!gameState.lastReset) {
+                gameState.lastReset = { day: currentDayStr, timestamp: now.getTime() };
             }
+        
             gameState.quests.forEach(q => {
-                if (!q.completed && q.expiresAt && Date.now() > q.expiresAt) {
-                    // Échec de la quête : l'XP du niveau actuel retombe à 0 (pas de perte de niveau)
-                    gameState.hero.xp = 0;
-            
-                    console.warn(`Quête expirée : "${q.title}". L'expérience est retombée à 0.`);
-            
-                    // On réinitialise la quête pour la période suivante
+                let isExpired = false;
+        
+                // --- GESTION DU CALENDRIER CIVIL PAR CATÉGORIE ---
+                if (q.category === 'daily') {
+                    if (!q.civilRef) q.civilRef = currentDayStr;
+                    if (q.civilRef !== currentDayStr) {
+                        isExpired = true;
+                        q.civilRef = currentDayStr;
+                    }
+                } 
+                else if (q.category === 'weekly') {
+                    if (q.civilWeek === undefined) q.civilWeek = currentWeek;
+                    if (q.civilWeek !== currentWeek) {
+                        isExpired = true;
+                        q.civilWeek = currentWeek;
+                    }
+                } 
+                else if (q.category === 'monthly') {
+                    if (!q.civilMonthKey) q.civilMonthKey = currentMonthKey;
+                    if (q.civilMonthKey !== currentMonthKey) {
+                        isExpired = true;
+                        q.civilMonthKey = currentMonthKey;
+                    }
+                }
+                else if (q.category === 'achievements') {
+                    // Les hauts faits annuels / permanents s'appuient sur l'année civile si besoin
+                    if (!q.civilYear) q.civilYear = currentYear;
+                    if (q.civilYear !== currentYear) {
+                        // Optionnel : réinitialisation annuelle pour certains hauts faits
+                        q.civilYear = currentYear;
+                    }
+                }
+        
+                // --- GESTION DE L'EXPIRATION ET DES PÉNALITÉS ---
+                if (isExpired) {
+                    if (!q.completed) {
+                        // Échec de la quête : l'XP du niveau actuel retombe à 0 (pas de perte de niveau)
+                        gameState.hero.xp = 0;
+                        console.warn(`Quête expirée : "${q.title}". L'expérience est retombée à 0.`);
+                    }
+                    // Réinitialisation de la quête pour la nouvelle période civile
                     q.current = 0;
-                    const days = q.category === 'daily' ? 1 : (q.category === 'weekly' ? 7 : 30);
-                    q.expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
+                    q.completed = false;
                 }
             });
+        
+            saveGame();
         }
 
+        function getCurrentWeekNumber(d) {
+            // Copie de la date pour éviter de modifier l'originale
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            // Décalage au jeudi le plus proche (norme ISO 8601 pour les semaines)
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            // Calcul du nombre de millisecondes écoulées depuis le 1er janvier
+            var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+            return weekNo;
+        }
+
+        function getCurrentMonthKey(d = new Date()) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0'); // 01 à 12
+            return `${year}-${month}`;
+        }
+        
         function loadGame() {
             const saved = localStorage.getItem('quest_knights_save');
             if (saved) {
@@ -1334,8 +1374,9 @@
                 const target = targetInput ? (parseInt(targetInput.value) || 1) : 1;
         
                 // Calcul de la deadline selon la catégorie choisie
-                const days = category === 'daily' ? 1 : (category === 'weekly' ? 7 : (category === 'monthly' ? 30 : 365));
-                const expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
+                const currentDayStr = new Date().toISOString().split('T')[0];
+                const currentWeek = getCurrentWeekNumber(new Date());
+                const currentMonthKey = getCurrentMonthKey(new Date());
         
                 // Ajout de la quête dans le tableau global
                 gameState.quests.push({
@@ -1347,7 +1388,9 @@
                     current: 0, 
                     target: target,
                     completed: false,
-                    expiresAt: expiresAt
+                    civilRef: currentDayStr,
+                    civilWeek: currentWeek,
+                    civilMonthKey: currentMonthKey
                 });
         
                 // Fermeture de la modale et réinitialisation du formulaire
@@ -1425,8 +1468,9 @@
                 alert("Cette quête est déjà présente dans votre journal !");
                 return;
             }
-        const days = item.category === 'daily' ? 1 : (item.category === 'weekly' ? 7 : 30);
-        const expiresAt = Date.now() + (days * 24 * 60 * 60 * 1000);
+            const currentDayStr = new Date().toISOString().split('T')[0];
+            const currentWeek = getCurrentWeekNumber(new Date());
+            const currentMonthKey = getCurrentMonthKey(new Date());
             
             gameState.quests.push({
                 id: Date.now().toString(),
@@ -1437,7 +1481,9 @@
                 current: 0,
                 target: item.target,
                 completed: false,
-                expiresAt: expiresAt
+                civilRef: currentDayStr,
+                civilWeek: currentWeek,
+                civilMonthKey: currentMonthKey
             });
 
             closeModal('add-quest-modal');
