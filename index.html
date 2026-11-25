@@ -867,14 +867,34 @@
         };
         
         const TITLE_ICONS = {
-            "Écuyer novice": "fa-solid fa-circle-user",
-            "Garde de la Tour": "fa-solid fa-gopuram",
-            "Chevalier Errant": "fa-solid fa-shield-halved",
-            "Capitaine de la Garde": "fa-solid fa-shield-heart",
-            "Paladin du Royaume": "fa-brands fa-empire",
-            "Seigneur de Guerre": "fa-brands fa-rebel",
-            "Légende Vivante": "fa-solid fa-crown"
+            "Écuyer novice": "images/garde.profile.png",
+            "Garde de la Tour": "images/garde.profile.png",
+            "Chevalier Errant": "images/chevalier.profile.png",
+            "Capitaine de la Garde": "images/capitaine.profile.png",
+            "Paladin du Royaume": "images/paladin.profile.png",
+            "Seigneur de Guerre": "images/seigneur.profile.png",
+            "Légende Vivante": "images/legende.profile.png"
         };
+
+        function renderTitleIconElement(iconValue, altText = "Avatar du héros", extraImgClass = "w-full h-full object-cover") {
+            if (!iconValue) {
+                return `<i class="fa-solid fa-circle-user"></i>`;
+            }
+            const isImage =
+                iconValue.includes("/") ||
+                iconValue.includes("\\") ||
+                iconValue.startsWith("http") ||
+                iconValue.startsWith("data:image") ||
+                /\.(png|jpg|jpeg|webp|gif|svg)$/i.test(iconValue);
+        
+            if (isImage) {
+                return `<img src="${iconValue}" alt="${altText}" class="${extraImgClass}">`;
+            }
+            const faClass = iconValue.startsWith("fa-") && !iconValue.includes(" ")
+                ? `fa-solid ${iconValue}`
+                : iconValue;
+            return `<i class="${faClass}"></i>`;
+        }
         
         const QUEST_TYPES = {
             spirituel:  { bgClass: 'bg-purple-950/40 border-purple-900/60' },
@@ -1174,18 +1194,19 @@
             const h = gameState.hero;
             if (!h) return; // Sécurité au cas où gameState n'est pas encore prêt
 
-            const iconClass = gameState.hero.icon || "fa-solid fa-circle-user";
+            const iconValue = h.icon || associatedIcon;
             const avatarDisplay = document.getElementById('hero-avatar-display');
             if (avatarDisplay) {
-                avatarDisplay.innerHTML = `<i class="fa-solid ${iconClass}"></i>`;
+                avatarDisplay.className = "w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-300 shadow-[0_0_30px_rgba(212,175,55,0.25)] overflow-hidden";
+                avatarDisplay.innerHTML = renderTitleIconElement(iconValue, h.name || "Héros", "w-full h-full object-cover");
             }
             
             // 2. Calcul du titre
             h.title = getHeroTitle(h.level);
 
             const currentTitle = h.title;
-            const associatedIcon = TITLE_ICONS[currentTitle] || "fa-solid fa-circle-user";
-            if (!h.unlockedIcons) h.unlockedIcons = ["fa-solid fa-circle-user"];
+            const associatedIcon = TITLE_ICONS[currentTitle] || "images/garde.profile.png";
+            if (!h.unlockedIcons) h.unlockedIcons = ["images/garde.profile.png"];
             if (!h.unlockedIcons.includes(associatedIcon)) {
                 h.unlockedIcons.push(associatedIcon);
             }
@@ -1920,19 +1941,19 @@
             
             // Dictionnaire pour associer chaque classe/icône à un nom joli dans la liste
             const iconLabels = {
-                "fa-solid fa-circle-user": "Visage de voyageur",
-                "fa-solid fa-gopuram": "Tour de guet du Garde",
-                "fa-solid fa-shield-halved": "Bouclier du Chevalier",
-                "fa-solid fa-shield-heart": "Blason du Capitaine",
-                "fa-brands fa-empire": "Empire mené par le Paladin",
-                "fa-brands fa-rebel": "Rébellion du Seigneur de Guerre",
-                "fa-solid fa-crown": "Couronne de la Légende Vivante"
+                "images/garde.profile.png": "Visage de voyageur",
+                "images/garde.profile.png": "Tour de guet du Garde",
+                "images/chevalier.profile.png": "Bouclier du Chevalier",
+                "images/capitaine.profile.png": "Blason du Capitaine",
+                "images/paladin.profile.png": "Empire mené par le Paladin",
+                "images/seigneur.profile.png": "Rébellion du Seigneur de Guerre",
+                "images/legende.profile.png": "Couronne de la Légende Vivante"
             };
         
             // On peuple le select avec un texte lisible au lieu du code brut
-            iconSelect.innerHTML = gameState.hero.unlockedIcons.map(icon => {
-                const readableName = iconLabels[icon] || "Icône de chevalier";
-                return `<option value="${icon}" ${gameState.hero.icon === icon ? 'selected' : ''}>${readableName}</option>`;
+            iconSelect.innerHTML = gameState.hero.unlockedIcons.map(iconVal => {
+                const readableName = iconLabels[iconVal] || iconVal;
+                return `<option value="${iconVal}" ${gameState.hero.icon === iconVal ? 'selected' : ''}>${readableName}</option>`;
             }).join('');
         openModal('edit-hero-modal');
     }
