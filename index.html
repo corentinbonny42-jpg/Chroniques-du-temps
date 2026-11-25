@@ -1195,13 +1195,6 @@
             const h = gameState.hero;
             if (!h) return; // Sécurité au cas où gameState n'est pas encore prêt
 
-            const iconValue = h.icon || associatedIcon;
-            const avatarDisplay = document.getElementById('hero-avatar-display');
-            if (avatarDisplay) {
-                avatarDisplay.className = "w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-300 shadow-[0_0_30px_rgba(212,175,55,0.25)] overflow-hidden";
-                avatarDisplay.innerHTML = renderTitleIconElement(iconValue, h.name || "Héros", "w-full h-full object-cover");
-            }
-            
             // 2. Calcul du titre
             h.title = getHeroTitle(h.level);
 
@@ -1210,6 +1203,13 @@
             if (!h.unlockedIcons) h.unlockedIcons = ["images/voyageur.profile.png"];
             if (!h.unlockedIcons.includes(associatedIcon)) {
                 h.unlockedIcons.push(associatedIcon);
+            }
+            
+            const iconValue = h.icon || associatedIcon;
+            const avatarDisplay = document.getElementById('hero-avatar-display');
+            if (avatarDisplay) {
+                avatarDisplay.className = "w-36 h-36 rounded-full bg-gradient-to-b from-stone-800 to-black border-4 border-amber-500/80 flex items-center justify-center text-6xl text-amber-300 shadow-[0_0_30px_rgba(212,175,55,0.25)] overflow-hidden";
+                avatarDisplay.innerHTML = renderTitleIconElement(iconValue, h.name || "Héros", "w-full h-full object-cover");
             }
                     
             // 3. Encart de description de l'Ordre (Niveau 6+)
