@@ -867,7 +867,7 @@
         };
         
         const TITLE_ICONS = {
-            "Écuyer novice": "images/garde.profile.png",
+            "Écuyer novice": "images/voyageur.profile.png",
             "Garde de la Tour": "images/garde.profile.png",
             "Chevalier Errant": "images/chevalier.profile.png",
             "Capitaine de la Garde": "images/capitaine.profile.png",
@@ -1205,8 +1205,8 @@
             h.title = getHeroTitle(h.level);
 
             const currentTitle = h.title;
-            const associatedIcon = TITLE_ICONS[currentTitle] || "images/garde.profile.png";
-            if (!h.unlockedIcons) h.unlockedIcons = ["images/garde.profile.png"];
+            const associatedIcon = TITLE_ICONS[currentTitle] || "images/voyageur.profile.png";
+            if (!h.unlockedIcons) h.unlockedIcons = ["images/voyageur.profile.png"];
             if (!h.unlockedIcons.includes(associatedIcon)) {
                 h.unlockedIcons.push(associatedIcon);
             }
@@ -1941,7 +1941,7 @@
             
             // Dictionnaire pour associer chaque classe/icône à un nom joli dans la liste
             const iconLabels = {
-                "images/garde.profile.png": "Visage de voyageur",
+                "images/voyageur.profile.png": "Visage de voyageur",
                 "images/garde.profile.png": "Tour de guet du Garde",
                 "images/chevalier.profile.png": "Bouclier du Chevalier",
                 "images/capitaine.profile.png": "Blason du Capitaine",
